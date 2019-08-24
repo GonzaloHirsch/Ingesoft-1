@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "909241013967",
+    "firebase_url": "https://ingesoft-1-itba.firebaseio.com",
+    "project_id": "ingesoft-1-itba",
+    "storage_bucket": "ingesoft-1-itba.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:909241013967:android:691e1887b5a7da1e",
+        "android_client_info": {
+          "package_name": "ar.edu.itba.ingesoft"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "909241013967-km0k45sn65h54eu56ba01ivo8mm9cjh4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ar.edu.itba.ingesoft",
+            "certificate_hash": "f650a272abdacb21c67957543cc420828b3d989c"
+          }
+        },
+        {
+          "client_id": "909241013967-dr0v5ocpioaj7vrs4c7tisaj11kejo28.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAqeirPKhlpl4STAYF4QyOagT1CCLcHVtM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "909241013967-dr0v5ocpioaj7vrs4c7tisaj11kejo28.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
