@@ -9,4 +9,7 @@
     <string name="e_mail">eMail</string>
     <string name="create_account">Create Account</string>
     <string name="tutory">Tutory</string>
+    <string name="name">Name</string>
+    <string name="surname">Surname</string>
+    <string name="university_name">University Name</string>
 </resources>
