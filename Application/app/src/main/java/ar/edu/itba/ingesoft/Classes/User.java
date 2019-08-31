@@ -8,7 +8,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-public class User {
+import ar.edu.itba.ingesoft.Interfaces.DatabaseObject;
+
+public class User implements DatabaseObject {
 
     private String mail;
     private String name;
@@ -40,6 +42,20 @@ public class User {
         this.appointments = new HashMap<>();
         this.chats = new HashMap<>();
         this.universidad = universidad;
+    }
+
+    public Map<String, Object> getDataToUpdate(){
+        Map<String, Object> data = new HashMap<>();
+
+        data.put("name", this.name);
+        data.put("surname", this.surname);
+        data.put("isProfessor", this.isProfessor);
+        data.put("materias", this.materias);
+        data.put("appointments", this.appointments);
+        data.put("universidad", this.universidad);
+        data.put("chats", this.chats);
+
+        return data;
     }
 
     public String getMail() {

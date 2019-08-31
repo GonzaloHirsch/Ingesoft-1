@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public class Chat {
+import ar.edu.itba.ingesoft.Interfaces.DatabaseObject;
+
+public class Chat implements DatabaseObject {
 
     private Long chatID;
     private String from;
@@ -70,5 +72,10 @@ public class Chat {
     @Override
     public int hashCode() {
         return Objects.hash(chatID);
+    }
+
+    @Override
+    public Map<String, Object> getDataToUpdate() {
+        return null;
     }
 }

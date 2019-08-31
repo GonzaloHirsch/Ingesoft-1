@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public class Universidad {
+import ar.edu.itba.ingesoft.Interfaces.DatabaseObject;
+
+public class Universidad implements DatabaseObject {
 
     private String name;
     private List<Materia> materias;
@@ -56,5 +58,10 @@ public class Universidad {
     @Override
     public int hashCode() {
         return Objects.hash(name);
+    }
+
+    @Override
+    public Map<String, Object> getDataToUpdate() {
+        return null;
     }
 }

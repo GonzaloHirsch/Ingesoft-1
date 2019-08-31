@@ -2,7 +2,9 @@ package ar.edu.itba.ingesoft.Classes;
 
 import java.util.Map;
 
-public class Materia {
+import ar.edu.itba.ingesoft.Interfaces.DatabaseObject;
+
+public class Materia implements DatabaseObject {
 
     private String name;
 
@@ -20,5 +22,10 @@ public class Materia {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public Map<String, Object> getDataToUpdate() {
+        return null;
     }
 }
