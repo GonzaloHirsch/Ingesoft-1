@@ -19,7 +19,7 @@ public class User implements DatabaseObject {
     private List<Materia> materias;
     private Map<Date, Appointment> appointments;
     private Universidad universidad;
-    private Map<Long, Chat> chats;
+    //private Map<Long, Chat> chats;
 
     @SuppressWarnings("unchecked")
     public User(Map<String, Object> data){
@@ -29,7 +29,7 @@ public class User implements DatabaseObject {
         this.isProfessor = (boolean) data.get("isProfessor");
         this.materias = (List<Materia>) data.get("materias");
         this.appointments = (Map<Date, Appointment>) data.get("appointments");
-        this.chats = (Map<Long, Chat>) data.get("chats");
+        //this.chats = (Map<Long, Chat>) data.get("chats");
         this.universidad = (Universidad) data.get("universidad");
     }
 
@@ -40,7 +40,7 @@ public class User implements DatabaseObject {
         this.isProfessor = false;
         this.materias = new ArrayList<>();
         this.appointments = new HashMap<>();
-        this.chats = new HashMap<>();
+        //this.chats = new HashMap<>();
         this.universidad = universidad;
     }
 
@@ -53,7 +53,7 @@ public class User implements DatabaseObject {
         data.put("materias", this.materias);
         data.put("appointments", this.appointments);
         data.put("universidad", this.universidad);
-        data.put("chats", this.chats);
+        //data.put("chats", this.chats);
 
         return data;
     }
@@ -122,6 +122,7 @@ public class User implements DatabaseObject {
         return this.appointments.keySet();
     }
 
+    /*
     public Map<Long, Chat> getChats() {
         return chats;
     }
@@ -129,6 +130,9 @@ public class User implements DatabaseObject {
     public void addChat(Chat chat) {
         this.chats.put(chat.getChatID(), chat);
     }
+
+
+     */
 
     public Universidad getUniversidad() {
         return universidad;

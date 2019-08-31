@@ -5,25 +5,25 @@ import java.util.Map;
 
 public class Appointment {
 
-    private Date date;
+    private Long date;
     private String userEmail;
 
     public Appointment(Map<String, Object> data){
-        this.date = (Date) data.get("date");
+        this.date = (Long) data.get("date");
         this.userEmail = (String) data.get("userEmail");
     }
 
     public Appointment(Date date, String userEmail){
-        this.date = date;
+        this.date = date.getTime();
         this.userEmail = userEmail;
     }
 
-    public Date getDate() {
+    public Long getDate() {
         return date;
     }
 
     public void setDate(Date date) {
-        this.date = date;
+        this.date = date.getTime();
     }
 
     public String getUserEmail() {

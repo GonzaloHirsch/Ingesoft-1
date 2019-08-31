@@ -1,6 +1,7 @@
 package ar.edu.itba.ingesoft.Classes;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -10,22 +11,22 @@ import ar.edu.itba.ingesoft.Interfaces.DatabaseObject;
 public class Chat implements DatabaseObject {
 
     private Long chatID;
-    private String from;
-    private String to;
+    private String userA;
+    private String userB;
     private List<Message> messages;
 
     @SuppressWarnings("unchecked")
     public Chat(Map<String, Object> data){
-        this.from = (String) data.get("from");
-        this.to = (String) data.get("to");
+        this.userA = (String) data.get("userA");
+        this.userB = (String) data.get("userB");
         this.chatID = (Long) data.get("chatID");
         this.messages = (List<Message>) data.get("messages");
     }
 
-    public Chat(Long chatID, String from, String to){
+    public Chat(Long chatID, String userA, String userB){
         this.chatID = chatID;
-        this.to = to;
-        this.from = from;
+        this.userB = userB;
+        this.userA = userA;
         this.messages = new ArrayList<>();
     }
 
@@ -38,27 +39,27 @@ public class Chat implements DatabaseObject {
     }
 
     public String getFrom() {
-        return from;
+        return userA;
     }
 
-    public void setFrom(String from) {
-        this.from = from;
+    public void setFrom(String userA) {
+        this.userA = userA;
     }
 
     public String getTo() {
-        return to;
+        return userB;
     }
 
-    public void setTo(String to) {
-        this.to = to;
+    public void setTo(String userB) {
+        this.userB = userB;
     }
 
     public List<Message> getMensajes() {
         return messages;
     }
 
-    public void addMensaje(Message mensaje) {
-        this.messages.add(mensaje);
+    public void addMensaje(Message message) {
+        this.messages.add(message);
     }
 
     @Override
@@ -76,6 +77,10 @@ public class Chat implements DatabaseObject {
 
     @Override
     public Map<String, Object> getDataToUpdate() {
-        return null;
+        Map<String, Object> data = new HashMap<>();
+
+        data.put("messages", this.messages);
+
+        return data;
     }
 }
