@@ -18,6 +18,8 @@ public class DatabaseConnection {
 
     public static final String TAG = "DATABASE_CONNECTION";
 
+    /**--------------------------------------USERS----------------------------------------*/
+
     /**
      * Inserts the user into the database.
      * @param user to be inserted
