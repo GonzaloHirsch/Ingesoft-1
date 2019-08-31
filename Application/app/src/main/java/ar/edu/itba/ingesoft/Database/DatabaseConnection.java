@@ -314,7 +314,6 @@ public class DatabaseConnection {
      * @param chat to be updated.
      */
     public static void UpdateChat(final Chat chat){
-        // Update the user in the given document
         MainActivity.Instance.getDb().collection("Chats")
                 .document(chat.getChatID().toString())
                 .update(chat.getDataToUpdate())
