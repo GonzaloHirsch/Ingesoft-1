@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">App</string>
+    <string name="user_name">User Name</string>
+    <string name="password">Password</string>
+    <string name="sign_in">Sign In</string>
+    <string name="or_create_account">Or create an account</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_sign_up">SignUp</string>
+    <string name="e_mail">eMail</string>
+    <string name="create_account">Create Account</string>
 </resources>
