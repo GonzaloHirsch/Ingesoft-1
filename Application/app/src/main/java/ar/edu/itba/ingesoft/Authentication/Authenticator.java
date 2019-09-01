@@ -22,31 +22,43 @@ import ar.edu.itba.ingesoft.Database.DatabaseConnection;
 public class Authenticator {
     private  FirebaseAuth auth = FirebaseAuth.getInstance();
 
+    /** Creates an user and inserts it in the database */
     public Task<AuthResult> registerUser(String email, String password, String name, String surname, String university){
         User user = new User(name, surname, email, new Universidad(university));
         DatabaseConnection.InsertUser(user);
         return auth.createUserWithEmailAndPassword(email, password);
     }
 
+    /** Authenticates the email and password in Firebase */
     public Task<AuthResult> signInUser(String email, String password){
         return auth.signInWithEmailAndPassword(email, password);
     }
 
+    /** Returns the currently logged user */
     FirebaseUser getCurrentUser(){
         return auth.getCurrentUser();
     }
 
+    /** Return an Intent associated with the activity and GoogleSignInOptions */
     public Intent signInIntent(Activity activity, GoogleSignInOptions gso){
         GoogleSignInClient googleSignInClient = GoogleSignIn.getClient(activity, gso);
         return googleSignInClient.getSignInIntent();
     }
 
-    public AuthCredential getAccount(Intent intent) throws ApiException{
+    /** Returns the task associated with the intent */
+    public Task<AuthResult> getTask(Intent intent) throws ApiException{
         Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(intent);
         GoogleSignInAccount account = task.getResult(ApiException.class);
         if(account == null)
-            throw new IllegalStateException("Login failed");
-        return GoogleAuthProvider.getCredential(account.getIdToken(), null);
+            return null;
+        else
+            return firebaseAuth(account);
+    }
+
+    /** Makes the authentication with firebase */
+    private Task<AuthResult> firebaseAuth(GoogleSignInAccount account){
+        AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
+        return auth.signInWithCredential(credential);
     }
 
     public void signOut(){
