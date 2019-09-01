@@ -15,10 +15,16 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
+import ar.edu.itba.ingesoft.Classes.Universidad;
+import ar.edu.itba.ingesoft.Classes.User;
+import ar.edu.itba.ingesoft.Database.DatabaseConnection;
+
 public class Authenticator {
     private  FirebaseAuth auth = FirebaseAuth.getInstance();
 
-    public Task<AuthResult> registerUser(String email, String password){
+    public Task<AuthResult> registerUser(String email, String password, String name, String surname, String university){
+        User user = new User(name, surname, email, new Universidad(university));
+        DatabaseConnection.InsertUser(user);
         return auth.createUserWithEmailAndPassword(email, password);
     }
 
