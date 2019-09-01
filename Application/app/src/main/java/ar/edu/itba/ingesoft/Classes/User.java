@@ -16,7 +16,7 @@ public class User implements DatabaseObject {
     private String name;
     private String surname;
     private boolean isProfessor;
-    private List<Materia> materias;
+    private List<Course> courses;
     private Map<Date, Appointment> appointments;
     private Universidad universidad;
     //private Map<Long, Chat> chats;
@@ -27,7 +27,7 @@ public class User implements DatabaseObject {
         this.surname = (String) data.get("surname");
         this.mail = (String) data.get("mail");
         this.isProfessor = (boolean) data.get("isProfessor");
-        this.materias = (List<Materia>) data.get("materias");
+        this.courses = (List<Course>) data.get("courses");
         this.appointments = (Map<Date, Appointment>) data.get("appointments");
         //this.chats = (Map<Long, Chat>) data.get("chats");
         this.universidad = (Universidad) data.get("universidad");
@@ -38,7 +38,7 @@ public class User implements DatabaseObject {
         this.surname = surname;
         this.mail = mail;
         this.isProfessor = false;
-        this.materias = new ArrayList<>();
+        this.courses = new ArrayList<>();
         this.appointments = new HashMap<>();
         //this.chats = new HashMap<>();
         this.universidad = universidad;
@@ -50,7 +50,7 @@ public class User implements DatabaseObject {
         data.put("name", this.name);
         data.put("surname", this.surname);
         data.put("isProfessor", this.isProfessor);
-        data.put("materias", this.materias);
+        data.put("courses", this.courses);
         data.put("appointments", this.appointments);
         data.put("universidad", this.universidad);
         //data.put("chats", this.chats);
@@ -90,20 +90,20 @@ public class User implements DatabaseObject {
         isProfessor = professor;
     }
 
-    public List<Materia> getMaterias() {
-        return materias;
+    public List<Course> getCourses() {
+        return courses;
     }
 
-    public void addMaterias(List<Materia> materias) {
-        this.materias.addAll(materias);
+    public void addCourses(List<Course> courses) {
+        this.courses.addAll(courses);
     }
 
-    public void addMateria(Materia materia) {
-        this.materias.add(materia);
+    public void addCourse(Course course) {
+        this.courses.add(course);
     }
 
-    public void deleteMateria(Materia materia) {
-        this.materias.remove(materia);
+    public void deleteCourse(Course course) {
+        this.courses.remove(course);
     }
 
     public Map<Date, Appointment> getAppointments() {

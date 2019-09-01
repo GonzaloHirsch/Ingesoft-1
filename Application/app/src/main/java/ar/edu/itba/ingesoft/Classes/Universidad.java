@@ -10,17 +10,17 @@ import ar.edu.itba.ingesoft.Interfaces.DatabaseObject;
 public class Universidad implements DatabaseObject {
 
     private String name;
-    private List<Materia> materias;
+    private List<Course> courses;
 
     @SuppressWarnings("unchecked")
     public Universidad(Map<String, Object> data){
         this.name = (String) data.get("name");
-        this.materias = (List<Materia>) data.get("materias");
+        this.courses = (List<Course>) data.get("courses");
     }
 
     public Universidad(String name){
         this.name = name;
-        this.materias = new ArrayList<>();
+        this.courses = new ArrayList<>();
     }
 
     public String getName() {
@@ -31,20 +31,20 @@ public class Universidad implements DatabaseObject {
         this.name = name;
     }
 
-    public List<Materia> getMaterias() {
-        return materias;
+    public List<Course> getCourses() {
+        return courses;
     }
 
-    public void addMaterias(List<Materia> materias) {
-        this.materias.addAll(materias);
+    public void addCourses(List<Course> courses) {
+        this.courses.addAll(courses);
     }
 
-    public void addMateria(Materia materia) {
-        this.materias.add(materia);
+    public void addCourse(Course course) {
+        this.courses.add(course);
     }
 
-    public void deleteMateria(Materia materia) {
-        this.materias.remove(materia);
+    public void deleteCourse(Course courses) {
+        this.courses.remove(courses);
     }
 
     @Override

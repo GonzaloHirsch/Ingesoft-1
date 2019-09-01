@@ -4,15 +4,15 @@ import java.util.Map;
 
 import ar.edu.itba.ingesoft.Interfaces.DatabaseObject;
 
-public class Materia implements DatabaseObject {
+public class Course implements DatabaseObject {
 
     private String name;
 
-    public Materia(Map<String, Object> data){
+    public Course(Map<String, Object> data){
         this.name = (String) data.get("name");
     }
 
-    public Materia(String name){
+    public Course(String name){
         this.name = name;
     }
 
