@@ -3,7 +3,7 @@
     <string name="user_name">User Name</string>
     <string name="password">Password</string>
     <string name="sign_in">Sign In</string>
-    <string name="or_create_account">Or create an account</string>
+    <string name="or_create_account">Create an account</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="title_activity_sign_up">SignUp</string>
     <string name="e_mail">eMail</string>
@@ -12,12 +12,14 @@
     <string name="name">Name</string>
     <string name="surname">Surname</string>
     <string name="university_name">University Name</string>
-    <string name="or_proceed_without_logging_in">Or Proceed Without Logging In</string>
-    <string name="proceed_without_logging_in">Proceed Without Logging In</string>
+    <string name="or_proceed_without_logging_in">Or continue without account</string>
+    <string name="proceed_without_logging_in">Continue without account</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="proceed">Proceed</string>
+    <string name="continue_text">Continue</string>
+    <string name="back">Back</string>
     <string name="choose_university">Choose University</string>
     <string name="select_university">Select University</string>
 </resources>

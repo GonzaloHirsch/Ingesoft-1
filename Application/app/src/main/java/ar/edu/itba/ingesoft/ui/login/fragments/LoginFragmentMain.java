@@ -20,7 +20,7 @@ import ar.edu.itba.ingesoft.R;
 public class LoginFragmentMain extends Fragment {
 
     private TextView createAccountTextView;
-    private Button continueWithoutLoggingInButton;
+    private TextView continueWithoutLoggingInTV;
 
     private NavController navController;
 
@@ -48,8 +48,8 @@ public class LoginFragmentMain extends Fragment {
 
 
         //Continue Without Logging In Button
-        continueWithoutLoggingInButton = view.findViewById(R.id.proceedWithoutLoginButton);
-        continueWithoutLoggingInButton.setOnClickListener(new View.OnClickListener() {
+        continueWithoutLoggingInTV = view.findViewById(R.id.proceedWithoutLoginTV);
+        continueWithoutLoggingInTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 navController.navigate(R.id.action_loginFragmentMain_to_continueWithoutSigningInFragment);
