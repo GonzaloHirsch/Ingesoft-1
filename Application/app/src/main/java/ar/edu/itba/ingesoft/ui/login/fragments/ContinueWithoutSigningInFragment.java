@@ -8,7 +8,11 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import ar.edu.itba.ingesoft.R;
 
 /**
@@ -16,6 +20,9 @@ import ar.edu.itba.ingesoft.R;
  */
 public class ContinueWithoutSigningInFragment extends Fragment {
 
+    private Button goBackButton;
+
+    private NavController navController;
 
     public ContinueWithoutSigningInFragment() {
         // Required empty public constructor
@@ -27,6 +34,18 @@ public class ContinueWithoutSigningInFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_continue_without_signing_in, container, false);
+
+        navController = Navigation.findNavController(getActivity(), R.id.login_navHostFragment);
+
+        //Sign Up TextView
+        goBackButton = view.findViewById(R.id.goBackButton);
+        goBackButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navController.navigate(R.id.action_continueWithoutSigningInFragment_to_loginFragmentMain);
+            }
+        });
+
         return view;
     }
 

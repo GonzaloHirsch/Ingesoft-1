@@ -37,5 +37,6 @@ dependencies {
     // Java Navigations
     implementation "androidx.navigation:navigation-fragment:2.2.0-alpha01"
     implementation "androidx.navigation:navigation-ui:2.2.0-alpha01"
+    implementation 'androidx.navigation:navigation-runtime:2.0.0'
 
 }
