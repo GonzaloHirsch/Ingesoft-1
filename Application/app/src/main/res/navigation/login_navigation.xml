@@ -34,13 +34,5 @@
         android:id="@+id/continueWithoutSigningInFragment"
         android:name="ar.edu.itba.ingesoft.ui.login.fragments.ContinueWithoutSigningInFragment"
         android:label="fragment_continue_without_signing_in"
-        tools:layout="@layout/fragment_continue_without_signing_in" >
-        <action
-            android:id="@+id/action_continueWithoutSigningInFragment_to_loginFragmentMain"
-            app:destination="@+id/loginFragmentMain"
-            app:enterAnim="@anim/slide_in_left"
-            app:exitAnim="@anim/slide_out_right"
-            app:popEnterAnim="@anim/slide_in_right"
-            app:popExitAnim="@anim/slide_out_left" />
-    </fragment>
+        tools:layout="@layout/fragment_continue_without_signing_in" />
 </navigation>
