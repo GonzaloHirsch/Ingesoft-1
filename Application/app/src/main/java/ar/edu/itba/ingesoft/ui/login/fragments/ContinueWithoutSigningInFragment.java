@@ -42,7 +42,7 @@ public class ContinueWithoutSigningInFragment extends Fragment {
         goBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                navController.navigate(R.id.action_continueWithoutSigningInFragment_to_loginFragmentMain);
+                getActivity().onBackPressed();
             }
         });
 
