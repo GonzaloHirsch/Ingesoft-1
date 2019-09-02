@@ -90,7 +90,7 @@
     <Button
         android:id="@+id/regular_signin_button"
         android:layout_marginTop="20dp"
-        android:layout_marginBottom="15dp"
+        android:layout_marginBottom="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/colorButtonBlue"
@@ -111,7 +111,7 @@
         android:layout_width="match_parent"
         app:layout_constraintTop_toBottomOf="@id/regular_signin_button"
         app:layout_constraintBottom_toTopOf="@id/google_signin_button"
-        android:paddingHorizontal="60dp"
+        android:paddingHorizontal="75dp"
         android:layout_height="wrap_content">
 
         <View
@@ -126,7 +126,7 @@
     <com.google.android.gms.common.SignInButton
         android:layout_alignBottom="@id/divider"
         android:id="@+id/google_signin_button"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:shadowDx="2"

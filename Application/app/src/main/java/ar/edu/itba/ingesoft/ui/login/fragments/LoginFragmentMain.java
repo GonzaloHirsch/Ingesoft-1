@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import ar.edu.itba.ingesoft.R;
+import ar.edu.itba.ingesoft.ui.main.MainFragment;
 
 
 public class LoginFragmentMain extends Fragment {
@@ -23,6 +24,10 @@ public class LoginFragmentMain extends Fragment {
     private TextView continueWithoutLoggingInTV;
 
     private NavController navController;
+
+    public static LoginFragmentMain newInstance() {
+        return new LoginFragmentMain();
+    }
 
     public LoginFragmentMain() {
         // Required empty public constructor
