@@ -22,4 +22,14 @@
     <string name="back">Back</string>
     <string name="choose_university">Choose University</string>
     <string name="select_university">Select University</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="search">Search</string>
+    <string name="chats">Chats</string>
+    <string name="profile">Profile</string>
+    <string name="title_search">Search</string>
+    <string name="title_profile">Profile</string>
+    <string name="title_chats">Chats</string>
 </resources>
