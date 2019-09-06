@@ -6,9 +6,11 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -39,7 +41,7 @@ public class DatabaseConnection {
      */
     public static void InsertUser(User user){
         // Add the new document for the user using the email as the ID of the document
-        MainActivity.Instance.getDb().collection("Users")
+        FirebaseFirestore.getInstance().collection("Users")
                 .document(user.getMail())
                 .set(user)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -63,7 +65,7 @@ public class DatabaseConnection {
      */
     public static void UpdateUser(final User user){
         // Update the user in the given document
-        MainActivity.Instance.getDb().collection("Users")
+        FirebaseFirestore.getInstance().collection("Users")
                 .document(user.getMail())
                 .update(user.getDataToUpdate())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -87,7 +89,8 @@ public class DatabaseConnection {
     public static void GetUser(String email, final OnUserEventListener eventListener){
 
         // Add the new document for the user using the email as the ID of the document
-        MainActivity.Instance.getDb().collection("Users")
+        FirebaseFirestore.getInstance().collection("Users");
+        FirebaseFirestore.getInstance().collection("Users")
                 .document(email)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -123,7 +126,7 @@ public class DatabaseConnection {
      */
     public static void GetUsers(final OnUserEventListener eventListener){
         // Add the new document for the user using the email as the ID of the document
-        MainActivity.Instance.getDb().collection("Users")
+        FirebaseFirestore.getInstance().collection("Users")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -155,7 +158,7 @@ public class DatabaseConnection {
      * @param eventListener with callback to this function.
      */
     public static void GetTeachers(final OnUserEventListener eventListener){
-        MainActivity.Instance.getDb().collection("Users")
+        FirebaseFirestore.getInstance().collection("Users")
                 .whereEqualTo("isTeacher", true)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -193,7 +196,7 @@ public class DatabaseConnection {
      */
     public static void InsertContact(String userEmail, Contact contact){
         // Add the new document for the user using the email as the ID of the document
-        MainActivity.Instance.getDb().collection("Contacts")
+        FirebaseFirestore.getInstance().collection("Contacts")
                 .document(userEmail)
                 .collection("Contacts")
                 .document(contact.getUser())
@@ -218,7 +221,7 @@ public class DatabaseConnection {
      * @param eventListener that has the callback to this function.
      */
     public static void GetContacts(String userEmail, final OnContactEventListener eventListener){
-        MainActivity.Instance.getDb().collection("Contacts")
+        FirebaseFirestore.getInstance().collection("Contacts")
                 .document(userEmail)
                 .collection("Contacts")
                 .get()
@@ -255,7 +258,7 @@ public class DatabaseConnection {
      * @param chat to be inserted.
      */
     public static void InsertChat(Chat chat){
-        MainActivity.Instance.getDb().collection("Chats")
+        FirebaseFirestore.getInstance().collection("Chats")
                 .document(chat.getChatID().toString())
                 .set(chat)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -278,7 +281,7 @@ public class DatabaseConnection {
      * @param eventListener that has the callback to this function.
      */
     public static void GetChat(Long chatID, final OnChatEventListener eventListener){
-        MainActivity.Instance.getDb().collection("Chats")
+        FirebaseFirestore.getInstance().collection("Chats")
                 .document(chatID.toString())
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -314,7 +317,7 @@ public class DatabaseConnection {
      * @param chat to be updated.
      */
     public static void UpdateChat(final Chat chat){
-        MainActivity.Instance.getDb().collection("Chats")
+        FirebaseFirestore.getInstance().collection("Chats")
                 .document(chat.getChatID().toString())
                 .update(chat.getDataToUpdate())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -332,7 +335,7 @@ public class DatabaseConnection {
     }
 
     public static void SetUpChatListener(Long chatID){
-        DocumentReference ref = MainActivity.Instance.getDb().collection("Chats").document(chatID.toString());
+        DocumentReference ref = FirebaseFirestore.getInstance().collection("Chats").document(chatID.toString());
 
         ref.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override

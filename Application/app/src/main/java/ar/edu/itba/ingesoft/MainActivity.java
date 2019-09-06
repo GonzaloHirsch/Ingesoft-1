@@ -3,6 +3,7 @@ package ar.edu.itba.ingesoft;
 import android.os.Bundle;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,7 +15,7 @@ import androidx.navigation.ui.NavigationUI;
 public class MainActivity extends AppCompatActivity {
 
 
-    private FirebaseFirestore db;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
     public static MainActivity Instance;
     public FirebaseFirestore getDb(){
         return db;
@@ -36,6 +37,8 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
+
+        FirebaseAuth.getInstance().signInWithEmailAndPassword("igrib98@gmail.com", "ssssssssaa");
     }
 
 }

@@ -9,7 +9,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
+        android:fontFamily="@font/roboto_light"
         android:text="@string/title"
+        android:textAppearance="@style/AppTheme"
         android:textSize="24sp" />
 
     <TextView
@@ -18,5 +20,6 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginTop="5dp"
+        android:fontFamily="@font/roboto_thin"
         android:text="@string/specification" />
 </LinearLayout>
