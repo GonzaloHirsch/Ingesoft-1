@@ -1,5 +1,6 @@
 package ar.edu.itba.ingesoft.recyclerviews.Adapters;
 
+import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,9 +25,9 @@ public class ProfileDataAdapter extends RecyclerView.Adapter<ProfileDataAdapter.
 
     public void setNewUserData(User user){
         if(dataSet.isEmpty()) {
-            dataSet.add(new Pair<>("EMail", user.getMail()));
+            dataSet.add(new Pair<>("Email", user.getMail()));
             dataSet.add(new Pair<>("University", "Itba"));
-            dataSet.add(new Pair<>("Courses Taught", "Algebra"));
+            dataSet.add(new Pair<>("Course", "Algebra"));
         }
         else
         {

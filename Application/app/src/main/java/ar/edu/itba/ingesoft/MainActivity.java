@@ -1,5 +1,6 @@
 package ar.edu.itba.ingesoft;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -16,9 +17,9 @@ public class MainActivity extends AppCompatActivity {
 
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    public static MainActivity Instance;
-    public FirebaseFirestore getDb(){
-        return db;
+    public Context context;
+    public Context getContext(){
+        return context;
     }
 
     @Override
@@ -27,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         BottomNavigationView navView = findViewById(R.id.nav_view);
 
-        Instance = this; //todo borrar esto
+        context = this; //todo borrar esto
 
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.

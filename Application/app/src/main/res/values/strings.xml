@@ -34,4 +34,7 @@
     <string name="title_chats">Chats</string>
     <string name="title">Title</string>
     <string name="specification">Specification</string>
+    <string name="email">Email</string>
+    <string name="university">University</string>
+    <string name="courses_taught">Courses Taught</string>
 </resources>

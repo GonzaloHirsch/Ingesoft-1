@@ -20,6 +20,7 @@ public class ProfileViewModel extends ViewModel {
 
     private MutableLiveData<User> currentUserLiveData = new MutableLiveData<>();
     private MutableLiveData<List<Course>> coursesTaughtLiveData = new MutableLiveData<>();
+    private MutableLiveData<Boolean> loading = new MutableLiveData<Boolean>(true);
 
     public ProfileViewModel() {
 
@@ -31,10 +32,13 @@ public class ProfileViewModel extends ViewModel {
         if(currentUserLiveData.getValue() == null){
 
             FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+            loading.setValue(true);
             DatabaseConnection.GetUser(currentUser.getEmail(), new OnUserEventListener() {
                 @Override
                 public void onUserRetrieved(User user) {
                     currentUserLiveData.postValue(user);
+                    loading.setValue(false);
+                    Log.v("ProfileViewModel", "");
                 }
 
                 @Override
@@ -49,8 +53,12 @@ public class ProfileViewModel extends ViewModel {
 
     public MutableLiveData<List<Course>> getCourses(){
        if(coursesTaughtLiveData.getValue() == null){
-           FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
        }
        return coursesTaughtLiveData;
+    }
+
+    public MutableLiveData<Boolean> getLoading(){
+        return loading;
     }
 }

@@ -22,10 +22,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import ar.edu.itba.ingesoft.Classes.Chat;
 import ar.edu.itba.ingesoft.Classes.Contact;
+import ar.edu.itba.ingesoft.Classes.Course;
 import ar.edu.itba.ingesoft.Classes.Message;
 import ar.edu.itba.ingesoft.Classes.User;
 import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnChatEventListener;
 import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnContactEventListener;
+import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnCourseEventListener;
 import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnUserEventListener;
 import ar.edu.itba.ingesoft.MainActivity;
 
@@ -408,6 +410,28 @@ public class DatabaseConnection {
                     }
                 }
             }
+        });
+    }
+
+    public static void GetCourseByReference(String theReference, OnCourseEventListener listener){
+        FirebaseFirestore.getInstance().document(theReference).get().addOnCompleteListener(task -> {
+                if(task.isSuccessful()){
+                    DocumentSnapshot document = task.getResult();
+                    if(document !=null && document.exists()){
+                        Map<String, Object> data = document.getData();
+                        if(data!=null){
+                            Course course = new Course(data);
+                            listener.onCourseRetrieved(course);
+                            Log.v("getCourseByReference", "everything successful");
+                        }
+                        else{
+                            Log.v("getCourseByReference", "data null");
+                        }
+                    }
+                    else{
+                        Log.v("getCourseByReference", "document null or non-existing");
+                    }
+                }
         });
     }
 }
