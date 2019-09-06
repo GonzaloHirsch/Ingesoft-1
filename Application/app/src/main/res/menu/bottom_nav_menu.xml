@@ -7,12 +7,12 @@
         android:title="@string/search" />
 
     <item
-        android:id="@+id/navigation_profile"
+        android:id="@+id/navigation_chats"
         android:icon="@drawable/baseline_chat_24"
         android:title="@string/chats" />
 
     <item
-        android:id="@+id/navigation_chats"
+        android:id="@+id/navigation_profile"
         android:icon="@drawable/baseline_person_24"
         android:title="@string/profile" />
 

@@ -32,4 +32,6 @@
     <string name="title_search">Search</string>
     <string name="title_profile">Profile</string>
     <string name="title_chats">Chats</string>
+    <string name="title">Title</string>
+    <string name="specification">Specification</string>
 </resources>

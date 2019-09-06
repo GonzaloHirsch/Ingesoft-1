@@ -23,13 +23,7 @@ public class ChatsFragment extends Fragment {
         chatsViewModel =
                 ViewModelProviders.of(this).get(ChatsViewModel.class);
         View root = inflater.inflate(R.layout.fragment_chats, container, false);
-        final TextView textView = root.findViewById(R.id.text_notifications);
-        chatsViewModel.getText().observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
+
         return root;
     }
 }
