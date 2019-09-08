@@ -3,6 +3,8 @@ package ar.edu.itba.ingesoft;
 import android.content.Context;
 import android.os.Bundle;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 >>>>>>> Stashed changes
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -15,8 +17,7 @@ import androidx.navigation.ui.NavigationUI;
 
 public class MainActivity extends AppCompatActivity {
 
-    private FirebaseFirestore db;
-    public static MainActivity Instance;
+    private FirebaseAuth mAuth;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     public Context context;
@@ -33,19 +34,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         BottomNavigationView navView = findViewById(R.id.nav_view);
 
-        // Save instance in the static variable
-        Instance = this;
-
         setContentView(R.layout.main_activity);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.container, MainFragment.newInstance())
                     .commitNow();
         }
-    }
-
-    public FirebaseFirestore getDb() {
-        return db;
     }
 }
 
