@@ -15,7 +15,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import ar.edu.itba.ingesoft.R;
-import ar.edu.itba.ingesoft.ui.main.MainFragment;
 
 
 public class LoginFragmentMain extends Fragment {

@@ -1,38 +1,45 @@
 package ar.edu.itba.ingesoft;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.content.Context;
 import android.os.Bundle;
 
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import ar.edu.itba.ingesoft.ui.main.MainFragment;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
 
 public class MainActivity extends AppCompatActivity {
 
-    private FirebaseFirestore db;
-    public static MainActivity Instance;
+
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    public Context context;
+    public Context getContext(){
+        return context;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        BottomNavigationView navView = findViewById(R.id.nav_view);
 
-        // Save instance in the static variable
-        Instance = this;
+        context = this; //todo borrar esto
 
-        setContentView(R.layout.main_activity);
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.container, MainFragment.newInstance())
-                    .commitNow();
-        }
+        // Passing each menu ID as a set of Ids because each
+        // menu should be considered as top level destinations.
+        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.navigation_search, R.id.navigation_chats, R.id.navigation_profile)
+                .build();
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+        NavigationUI.setupWithNavController(navView, navController);
 
-        // Get reference to the database
-        this.db = FirebaseFirestore.getInstance();
+        FirebaseAuth.getInstance().signInWithEmailAndPassword("igrib98@gmail.com", "ssssssssaa");
     }
 
-    public FirebaseFirestore getDb() {
-        return db;
-    }
 }
