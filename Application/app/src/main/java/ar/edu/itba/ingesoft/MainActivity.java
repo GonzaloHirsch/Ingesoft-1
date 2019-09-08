@@ -3,10 +3,8 @@ package ar.edu.itba.ingesoft;
 import android.content.Context;
 import android.os.Bundle;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.FirebaseDatabase;
->>>>>>> Stashed changes
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,16 +15,11 @@ import androidx.navigation.ui.NavigationUI;
 
 public class MainActivity extends AppCompatActivity {
 
-    private FirebaseAuth mAuth;
-
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
     public Context context;
+
     public Context getContext(){
         return context;
     }
-=======
-    private FirebaseAuth mAuth;
->>>>>>> Stashed changes
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,23 +27,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         BottomNavigationView navView = findViewById(R.id.nav_view);
 
-        setContentView(R.layout.main_activity);
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.container, MainFragment.newInstance())
-                    .commitNow();
-        }
-    }
-}
-
-<<<<<<< Updated upstream
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.auth.FirebaseAuth;
-=======
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
         context = this; //todo borrar esto
 
         // Passing each menu ID as a set of Ids because each
@@ -65,5 +41,4 @@ import com.google.firebase.auth.FirebaseUser;
         FirebaseAuth.getInstance().signInWithEmailAndPassword("igrib98@gmail.com", "ssssssssaa");
     }
 
-=======
->>>>>>> Stashed changes
+}
