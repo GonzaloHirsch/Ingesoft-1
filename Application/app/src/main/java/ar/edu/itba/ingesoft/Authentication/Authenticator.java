@@ -20,7 +20,7 @@ import ar.edu.itba.ingesoft.Classes.User;
 import ar.edu.itba.ingesoft.Database.DatabaseConnection;
 
 public class Authenticator {
-    private  FirebaseAuth auth = FirebaseAuth.getInstance();
+    private FirebaseAuth auth = FirebaseAuth.getInstance();
 
     /** Creates an user and inserts it in the database */
     public Task<AuthResult> registerUser(String email, String password, String name, String surname, String university){
