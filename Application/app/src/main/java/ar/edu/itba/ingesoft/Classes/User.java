@@ -49,7 +49,7 @@ public class User implements DatabaseObject {
         this.universidad = universidad;
     }
 
-    public Map<String, Object> getDataToUpdate(){
+    public Map<String, Object> generateDataToUpdate(){
         Map<String, Object> data = new HashMap<>();
 
         data.put("name", this.name);
