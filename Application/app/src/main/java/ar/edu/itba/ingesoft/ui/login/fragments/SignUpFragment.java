@@ -119,20 +119,21 @@ public class SignUpFragment extends Fragment {
                                 {
                                     Log.d(TAG, "onComplete: weak_password");
 
-                                    showError(R.string.error_password_weak);
+                                    passwordLayout.setError(getString(R.string.error_password_weak));
+                                    repeatPasswordLayout.setError(getString(R.string.error_password_weak));
                                 }
                                 // if user enters wrong password.
                                 catch (FirebaseAuthInvalidCredentialsException malformedEmail)
                                 {
                                     Log.d(TAG, "onComplete: malformed_email");
 
-                                    showError(R.string.error_email_invalid);
+                                    emailLayout.setError(getString(R.string.error_email_invalid));
                                 }
                                 catch (FirebaseAuthUserCollisionException existEmail)
                                 {
                                     Log.d(TAG, "onComplete: exist_email");
 
-                                    showError(R.string.error_email_used);
+                                    emailLayout.setError(getString(R.string.error_email_used));
                                 }
                                 catch (Exception e)
                                 {
