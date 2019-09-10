@@ -2,6 +2,7 @@ package ar.edu.itba.ingesoft.Authentication;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.util.Log;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -54,13 +55,15 @@ public class Authenticator {
     }
 
     /** Returns the task associated with the intent */
-    public Task<AuthResult> getTask(Intent intent) throws ApiException{
+    public Task<AuthResult> getTask(Intent intent){
         Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(intent);
-        GoogleSignInAccount account = task.getResult(ApiException.class);
-        if(account == null)
-            return null;
-        else
+        try {
+            GoogleSignInAccount account = task.getResult(ApiException.class);
             return firebaseAuth(account);
+        } catch (ApiException e){
+            Log.d("Auth", "auth:get_task_api_exception", task.getException());
+        }
+        return null;
     }
 
 

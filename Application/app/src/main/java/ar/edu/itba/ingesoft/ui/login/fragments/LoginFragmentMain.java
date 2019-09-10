@@ -17,24 +17,36 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 
 import ar.edu.itba.ingesoft.Authentication.Authenticator;
 import ar.edu.itba.ingesoft.Database.DatabaseConnection;
 import ar.edu.itba.ingesoft.MainActivity;
 import ar.edu.itba.ingesoft.R;
+import ar.edu.itba.ingesoft.ui.login.LoginActivity;
+import ar.edu.itba.ingesoft.utils.Validations;
 
 
 public class LoginFragmentMain extends Fragment {
 
     public static final String TAG = "LogInFragment";
+    private static final int RC_SIGN_IN_GOOGLE = 7;
 
 
     private TextView createAccountTextView;
@@ -71,6 +83,7 @@ public class LoginFragmentMain extends Fragment {
         this.emailLayout = view.findViewById(R.id.signInUsernameTextInputLayout);
         this.passwordLayout = view.findViewById(R.id.signInPasswordTextInputLayout);
 
+        //Regular Login with email and password
         view.findViewById(R.id.regular_signin_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -117,6 +130,22 @@ public class LoginFragmentMain extends Fragment {
             }
         });
 
+        //Login with Google Account
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+        GoogleSignInClient client = GoogleSignIn.getClient(getActivity(), gso);
+        view.findViewById(R.id.google_signin_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Authenticator authenticator = new Authenticator();
+                Intent intent = client.getSignInIntent();
+                startActivityForResult(intent, RC_SIGN_IN_GOOGLE);
+
+            }
+        });
+
         //Sign Up TextView
         createAccountTextView = view.findViewById(R.id.createNewAccountTV);
         createAccountTextView.setOnClickListener(new View.OnClickListener() {
@@ -144,8 +173,38 @@ public class LoginFragmentMain extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == RC_SIGN_IN_GOOGLE){
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            try {
+                GoogleSignInAccount account = task.getResult(ApiException.class);
+                firebaseAuth(account);
+            } catch (ApiException e){
+                Log.d(TAG, "auth:get_task_api_exception", task.getException());
+            }
+        }
+    }
 
+    private void firebaseAuth(GoogleSignInAccount account){
+        AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
+        FirebaseAuth.getInstance().signInWithCredential(credential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if(task.isSuccessful()){
+                    Log.d(TAG,"sign_in_with_google:success");
+                    FirebaseUser user = new Authenticator().getSignedInUser();
+
+                    Intent intent = new Intent(getContext(), MainActivity.class);
+                    startActivity(intent);
+                } else {
+                    Log.w(TAG, "sign_in_with_google:failure", task.getException());
+                }
+            }
+        });
     }
 
     private void showError(int errorID){
@@ -164,9 +223,12 @@ public class LoginFragmentMain extends Fragment {
             this.passwordLayout.setErrorEnabled(false);
         }
 
-        if(emailTV.getText().toString().isEmpty()){
+        if(emailTV.getText().toString().isEmpty()) {
             status = false;
             this.emailLayout.setError(getString(R.string.error_complete_field));
+        } else if(!Validations.ValidateEmail(emailTV.getText().toString())){
+            status = false;
+            this.emailLayout.setError(getString(R.string.error_email_invalid));
         } else {
             this.emailLayout.setErrorEnabled(false);
         }
