@@ -38,8 +38,8 @@ public class SearchFragment extends Fragment {
         layoutManager = new LinearLayoutManager(getContext());
 
         searchRecyclerView.setLayoutManager(layoutManager);
-        searchCoursesAdapter = new SearchCoursesAdapter();
-        searchRecyclerView.setAdapter(searchCoursesAdapter);
+        //searchCoursesAdapter = new SearchCoursesAdapter(new List<Pair<Course, List<User>>>);
+        //searchRecyclerView.setAdapter(searchCoursesAdapter);
 
 
 

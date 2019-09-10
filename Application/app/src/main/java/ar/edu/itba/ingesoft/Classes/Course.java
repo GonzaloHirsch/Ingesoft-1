@@ -14,6 +14,8 @@ public class Course implements DatabaseObject {
         this.name = (String) data.get("name");
     }
 
+    public Course(){}
+
     public Course(String name, String code){
         this.name = name;
         this.code = code;

@@ -1,5 +1,7 @@
 package ar.edu.itba.ingesoft.Classes;
 
+import com.google.firebase.firestore.DocumentReference;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -16,7 +18,7 @@ public class User implements DatabaseObject {
     private String name;
     private String surname;
     private boolean isProfessor;
-    private List<Course> courses;
+    private List<DocumentReference> courses;
     //private Map<Long, Appointment> appointments;
     private Universidad universidad;
     //private Map<Long, Chat> chats;
@@ -27,7 +29,7 @@ public class User implements DatabaseObject {
         this.surname = (String) data.get("surname");
         this.mail = (String) data.get("mail");
         this.isProfessor = (Boolean) data.get("professor");
-        this.courses = (List<Course>) data.get("courses");
+        this.courses = (List<DocumentReference>) data.get("courses");
         //this.appointments = (Map<Long, Appointment>) data.get("appointments");
         //this.chats = (Map<Long, Chat>) data.get("chats");
         this.universidad = new Universidad((Map<String, Object>)data.get("universidad"));
@@ -95,15 +97,15 @@ public class User implements DatabaseObject {
         isProfessor = professor;
     }
 
-    public List<Course> getCourses() {
+    public List<DocumentReference> getCourses() {
         return courses;
     }
 
-    public void addCourses(List<Course> courses) {
+    public void addCourses(List<DocumentReference> courses) {
         this.courses.addAll(courses);
     }
 
-    public void addCourse(Course course) {
+    public void addCourse(DocumentReference course) {
         this.courses.add(course);
     }
 
