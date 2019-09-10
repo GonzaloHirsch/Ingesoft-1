@@ -13,5 +13,5 @@ public interface OnCourseEventListener {
     void onCourseRetrieved(Course course);
     void onCoursesRetrieved(List<Course> courses);
     void onCoursesReferencesRetrieved(List<DocumentReference> courses);
-    void onTeachersPerCourseRetrieved(Map<DocumentReference, List<User>> drToUser);
+    void onTeachersPerCourseRetrieved(Map<Course, List<User>> drToUser);
 }

@@ -457,7 +457,8 @@ public class DatabaseConnection {
 
                     List<User> teachers = new ArrayList<>();
 
-                    Map<DocumentReference, List<User>> coursesToUsers = new HashMap<>();
+                    Map<DocumentReference, List<User>> refToUsers = new HashMap<>();
+                    Map<Course, List<User>> coursesToUsers = new HashMap<>();
 
                     // Fill the user list
                     if (document != null){
@@ -470,15 +471,35 @@ public class DatabaseConnection {
                         for (User teacher : teachers){
                             for (DocumentReference dr : teacher.getCourses()){
                                 List<User> aux;
-                                if (coursesToUsers.containsKey(dr)){
-                                    aux = coursesToUsers.get(dr);
+                                if (refToUsers.containsKey(dr)){
+                                    aux = refToUsers.get(dr);
                                 } else {
                                     aux = new ArrayList<>();
                                 }
                                 aux.add(teacher);
-                                coursesToUsers.put(dr, aux);
+                                refToUsers.put(dr, aux);
                             }
                         }
+
+                        // Recupera el curso para cada una
+                        for (DocumentReference dr : refToUsers.keySet()){
+                            GetCourseByReference(dr.toString(), new OnCourseEventListener() {
+                                @Override
+                                public void onCourseRetrieved(Course course) {
+                                    coursesToUsers.put(course, refToUsers.get(dr));
+                                }
+
+                                @Override
+                                public void onCoursesRetrieved(List<Course> courses) {}
+
+                                @Override
+                                public void onCoursesReferencesRetrieved(List<DocumentReference> courses) {}
+
+                                @Override
+                                public void onTeachersPerCourseRetrieved(Map<Course, List<User>> drToUser) {}
+                            });
+                        }
+
                         listener.onTeachersPerCourseRetrieved(coursesToUsers);
                     } else {
                         Log.d(TAG, "Query GetAllCoursesReferences returned null");
