@@ -24,7 +24,9 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import ar.edu.itba.ingesoft.Authentication.Authenticator;
 import ar.edu.itba.ingesoft.Classes.User;
+import ar.edu.itba.ingesoft.MainActivity;
 import ar.edu.itba.ingesoft.recyclerviews.Adapters.ProfileDataAdapter;
 import ar.edu.itba.ingesoft.R;
 import ar.edu.itba.ingesoft.ui.login.LoginActivity;
@@ -51,7 +53,7 @@ public class ProfileFragment extends Fragment {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch(item.getItemId()){
             case R.id.action_profile_logout:
-
+                new Authenticator().signOut();
                 Intent intent = new Intent(getContext(), LoginActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
@@ -76,7 +78,6 @@ public class ProfileFragment extends Fragment {
 
         //Name TextView
         nameTextView = root.findViewById(R.id.profileNameTextView);
-
 
         //The RecyclerView
         profileDataRecyclerView = root.findViewById(R.id.profileDataRecyclerView);

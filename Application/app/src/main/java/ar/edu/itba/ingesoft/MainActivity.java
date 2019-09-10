@@ -41,15 +41,6 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
 
-
-<<<<<<< HEAD
-
         //FirebaseAuth.getInstance().signInWithEmailAndPassword("igrib98@gmail.com", "ssssssssaa");
     }
 }
-=======
-    //options menu for different fragments
-
-
-}
->>>>>>> Branch_Main_Activity

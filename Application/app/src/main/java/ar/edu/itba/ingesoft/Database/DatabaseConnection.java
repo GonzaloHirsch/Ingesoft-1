@@ -70,7 +70,7 @@ public class DatabaseConnection {
         // Update the user in the given document
         db.collection("Users")
                 .document(user.getMail())
-                .update(user.getDataToUpdate())
+                .update(user.generateDataToUpdate())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -321,7 +321,7 @@ public class DatabaseConnection {
     public void UpdateChat(final Chat chat){
         db.collection("Chats")
                 .document(chat.getChatID().toString())
-                .update(chat.getDataToUpdate())
+                .update(chat.generateDataToUpdate())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
