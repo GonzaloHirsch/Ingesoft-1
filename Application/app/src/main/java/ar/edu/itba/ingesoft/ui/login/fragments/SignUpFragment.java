@@ -148,6 +148,13 @@ public class SignUpFragment extends Fragment {
             }
         });
 
+        view.findViewById(R.id.goBackButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().onBackPressed();
+            }
+        });
+
         return view;
     }
 
