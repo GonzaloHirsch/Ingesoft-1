@@ -15,6 +15,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -413,8 +414,114 @@ public class DatabaseConnection {
         });
     }
 
-    public static void GetCourseByReference(String theReference, OnCourseEventListener listener){
-        FirebaseFirestore.getInstance().document(theReference).get().addOnCompleteListener(task -> {
+    /**
+     * Getter for all the courses, by object.
+     * @param listener for the event to use the data.
+     */
+    public void GetAllCourses(OnCourseEventListener listener){
+        db.collection("Courses").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    QuerySnapshot document = task.getResult();
+
+                    List<Course> courses = new ArrayList<>();
+
+                    if (document != null){
+                        for (DocumentSnapshot ds : document) {
+                            if (ds.getData() != null){
+                                courses.add(new Course(ds.getData()));
+                            }
+                        }
+                        listener.onCoursesRetrieved(courses);
+                    } else {
+                        Log.d(TAG, "Query GetAllCourses returned null");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
+    }
+
+    /**
+     * Getter for the teacher for each course, grouped by course.
+     * @param listener for the event.
+     */
+    public void GetTeachersPerCourse(OnCourseEventListener listener){
+        db.collection("Users").whereEqualTo("professor", true).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    QuerySnapshot document = task.getResult();
+
+                    List<User> teachers = new ArrayList<>();
+
+                    Map<DocumentReference, List<User>> coursesToUsers = new HashMap<>();
+
+                    // Fill the user list
+                    if (document != null){
+                        for (DocumentSnapshot ds : document) {
+                            if (ds.getData() != null){
+                                teachers.add(new User(ds.getData()));
+                            }
+                        }
+
+                        for (User teacher : teachers){
+                            for (DocumentReference dr : teacher.getCourses()){
+                                List<User> aux;
+                                if (coursesToUsers.containsKey(dr)){
+                                    aux = coursesToUsers.get(dr);
+                                } else {
+                                    aux = new ArrayList<>();
+                                }
+                                aux.add(teacher);
+                                coursesToUsers.put(dr, aux);
+                            }
+                        }
+                        listener.onTeachersPerCourseRetrieved(coursesToUsers);
+                    } else {
+                        Log.d(TAG, "Query GetAllCoursesReferences returned null");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
+    }
+
+    /**
+     * Getter for all the courses, by reference to the document.
+     * @param listener for the event to use the data.
+     */
+    public void GetAllCoursesReferences(OnCourseEventListener listener){
+        db.collection("Courses").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    QuerySnapshot document = task.getResult();
+
+                    List<DocumentReference> courses = new ArrayList<>();
+
+                    if (document != null){
+                        for (DocumentSnapshot ds : document) {
+                            if (ds.getData() != null){
+                                courses.add(ds.getReference());
+                            }
+                        }
+                        listener.onCoursesReferencesRetrieved(courses);
+                    } else {
+                        Log.d(TAG, "Query GetAllCoursesReferences returned null");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
+    }
+
+    public void GetCourseByReference(String theReference, OnCourseEventListener listener){
+        db.document(theReference).get().addOnCompleteListener(task -> {
                 if(task.isSuccessful()){
                     DocumentSnapshot document = task.getResult();
                     if(document !=null && document.exists()){
