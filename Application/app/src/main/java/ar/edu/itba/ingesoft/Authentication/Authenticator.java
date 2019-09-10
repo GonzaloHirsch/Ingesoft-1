@@ -29,6 +29,10 @@ public class Authenticator {
         return auth.createUserWithEmailAndPassword(email, password);
     }
 
+    public FirebaseUser getSignedInUser(){
+        return this.auth.getCurrentUser();
+    }
+
     public Task<AuthResult> registerUser(String email, String password){
         return auth.createUserWithEmailAndPassword(email, password);
     }
