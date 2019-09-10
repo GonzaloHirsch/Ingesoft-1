@@ -33,7 +33,7 @@ public class ProfileViewModel extends ViewModel {
 
             FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
             loading.setValue(true);
-            DatabaseConnection.GetUser(currentUser.getEmail(), new OnUserEventListener() {
+            new DatabaseConnection().GetUser(currentUser.getEmail(), new OnUserEventListener() {
                 @Override
                 public void onUserRetrieved(User user) {
                     currentUserLiveData.postValue(user);

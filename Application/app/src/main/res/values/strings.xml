@@ -15,6 +15,14 @@
     <string name="or_proceed_without_logging_in">Or continue without account</string>
     <string name="proceed_without_logging_in">Continue without account</string>
 
+    <string name="error_complete_field">Please complete this field</string>
+    <string name="error_password_match">Passwords don´t match</string>
+    <string name="error_password_invalid">Invalid password</string>
+    <string name="error_email_invalid">Invalid email</string>
+    <string name="error_password_weak">Weak password</string>
+    <string name="error_email_used">Email already used</string>
+    <string name="error_unknown">Unknown error</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="proceed">Proceed</string>

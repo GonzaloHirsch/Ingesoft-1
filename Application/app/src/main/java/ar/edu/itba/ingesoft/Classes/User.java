@@ -33,6 +33,11 @@ public class User implements DatabaseObject {
         this.universidad = (Universidad) data.get("universidad");
     }
 
+    public User(){
+        this.courses = new ArrayList<>();
+        this.appointments = new HashMap<>();
+    }
+
     public User(String name, String surname, String mail, Universidad universidad){
         this.name = name;
         this.surname = surname;

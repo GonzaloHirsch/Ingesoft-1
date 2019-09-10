@@ -1,10 +1,11 @@
 package ar.edu.itba.ingesoft.utils;
 
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Validations {
 
-    private static final String PASSWORD_PATTERN = "((?=.*[a-z])(?=.*\\\\d)(?=.*[A-Z])(?=.*[@#$%!]).{8,40})";
+    private static final String PASSWORD_PATTERN = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^\\da-zA-Z]).{8,15}$";
     private static final String EMAIL_PATTERN = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
 
     /**
@@ -18,7 +19,9 @@ public class Validations {
      * @return true if valid, false if invalid.
      */
     public static boolean ValidatePassword(final String pass){
-        return (Pattern.matches(PASSWORD_PATTERN, pass));
+        Pattern p = Pattern.compile(PASSWORD_PATTERN);
+        Matcher m = p.matcher(pass);
+        return (m.matches());
     }
 
     /**

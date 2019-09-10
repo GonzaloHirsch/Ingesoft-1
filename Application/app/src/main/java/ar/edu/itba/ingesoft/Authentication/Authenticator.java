@@ -14,6 +14,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.auth.SignInMethodQueryResult;
 
 import ar.edu.itba.ingesoft.Classes.Universidad;
 import ar.edu.itba.ingesoft.Classes.User;
@@ -25,7 +26,10 @@ public class Authenticator {
     /** Creates an user and inserts it in the database */
     public Task<AuthResult> registerUser(String email, String password, String name, String surname, String university){
         User user = new User(name, surname, email, new Universidad(university));
-        new DatabaseConnection().InsertUser(user);
+        return auth.createUserWithEmailAndPassword(email, password);
+    }
+
+    public Task<AuthResult> registerUser(String email, String password){
         return auth.createUserWithEmailAndPassword(email, password);
     }
 
@@ -53,6 +57,11 @@ public class Authenticator {
             return null;
         else
             return firebaseAuth(account);
+    }
+
+
+    public Task<SignInMethodQueryResult> verifyMail(String mail){
+        return auth.fetchSignInMethodsForEmail(mail);
     }
 
     /** Makes the authentication with firebase */
