@@ -76,7 +76,7 @@ public class Chat implements DatabaseObject {
     }
 
     @Override
-    public Map<String, Object> getDataToUpdate() {
+    public Map<String, Object> generateDataToUpdate() {
         Map<String, Object> data = new HashMap<>();
 
         data.put("messages", this.messages);
