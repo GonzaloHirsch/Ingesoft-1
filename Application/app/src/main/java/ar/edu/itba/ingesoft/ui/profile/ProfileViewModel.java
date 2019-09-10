@@ -6,20 +6,28 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import ar.edu.itba.ingesoft.Classes.Course;
 import ar.edu.itba.ingesoft.Classes.User;
 import ar.edu.itba.ingesoft.Database.DatabaseConnection;
+import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnCourseEventListener;
 import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnUserEventListener;
 
 public class ProfileViewModel extends ViewModel {
 
     private MutableLiveData<User> currentUserLiveData = new MutableLiveData<>();
-    private MutableLiveData<List<Course>> coursesTaughtLiveData = new MutableLiveData<>();
+    private MutableLiveData<String> coursesTaughtLiveData = new MutableLiveData<>();
     private MutableLiveData<Boolean> loading = new MutableLiveData<Boolean>(true);
 
     public ProfileViewModel() {
@@ -37,8 +45,18 @@ public class ProfileViewModel extends ViewModel {
                 @Override
                 public void onUserRetrieved(User user) {
                     currentUserLiveData.postValue(user);
-                    loading.setValue(false);
                     Log.v("ProfileViewModel", "");
+                    List<Task<DocumentSnapshot>> tasks = new ArrayList<>();
+                    for(DocumentReference documentReference : user.getCourses()){
+                        Task<DocumentSnapshot> documentSnapshotTask = documentReference.get();
+                        tasks.add(documentSnapshotTask);
+                    }
+                    Tasks.whenAllSuccess(tasks).addOnSuccessListener(new OnSuccessListener<List<Object>>() {
+                        @Override
+                        public void onSuccess(List<Object> objects) {
+                            //todo get courses
+                            loading.setValue(false);
+                    }});
                 }
 
                 @Override
@@ -51,7 +69,7 @@ public class ProfileViewModel extends ViewModel {
         return currentUserLiveData;
     }
 
-    public MutableLiveData<List<Course>> getCourses(){
+    public MutableLiveData<String> getCourses(){
        if(coursesTaughtLiveData.getValue() == null){
 
        }

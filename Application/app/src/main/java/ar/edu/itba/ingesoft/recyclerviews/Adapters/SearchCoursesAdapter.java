@@ -12,11 +12,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ar.edu.itba.ingesoft.Classes.Course;
+import ar.edu.itba.ingesoft.Classes.User;
 import ar.edu.itba.ingesoft.R;
+import ar.edu.itba.ingesoft.utils.Pair;
 
 public class SearchCoursesAdapter extends RecyclerView.Adapter<SearchCoursesAdapter.SearchCoursesViewHolder> {
 
-    List<Course> courseList = new ArrayList<>();
+    private List<Pair<Course, List<User>>> courseList;
+
+    public SearchCoursesAdapter(List<Pair<Course, List<User>>> courseList){
+        this.courseList = courseList;
+    }
 
     @NonNull
     @Override
@@ -27,7 +33,8 @@ public class SearchCoursesAdapter extends RecyclerView.Adapter<SearchCoursesAdap
 
     @Override
     public void onBindViewHolder(@NonNull SearchCoursesViewHolder holder, int position) {
-
+            Pair<Course, List<User>> aux = courseList.get(position);
+            holder.courseNameTextView.setText(aux.first.getName());
     }
 
     @Override

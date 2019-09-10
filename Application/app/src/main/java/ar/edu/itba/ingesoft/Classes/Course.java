@@ -6,11 +6,13 @@ import ar.edu.itba.ingesoft.Interfaces.DatabaseObject;
 
 public class Course implements DatabaseObject {
 
-    private String name;
+    public String name;
 
     public Course(Map<String, Object> data){
         this.name = (String) data.get("name");
     }
+
+    public Course(){}
 
     public Course(String name){
         this.name = name;

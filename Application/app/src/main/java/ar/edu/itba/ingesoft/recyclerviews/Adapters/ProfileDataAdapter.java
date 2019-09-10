@@ -10,12 +10,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.selection.ItemDetailsLookup;
 import androidx.recyclerview.selection.SelectionTracker;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import ar.edu.itba.ingesoft.Classes.Course;
 import ar.edu.itba.ingesoft.Classes.User;
 import ar.edu.itba.ingesoft.R;
+import ar.edu.itba.ingesoft.recyclerviews.diffutil_callbacks.ProfileDataDiffUtilCallback;
 import ar.edu.itba.ingesoft.utils.Pair;
 
 public class ProfileDataAdapter extends RecyclerView.Adapter<ProfileDataAdapter.ProfileDataViewHolder> {
@@ -26,13 +30,18 @@ public class ProfileDataAdapter extends RecyclerView.Adapter<ProfileDataAdapter.
     public void setNewUserData(User user){
         if(dataSet.isEmpty()) {
             dataSet.add(new Pair<>("Email", user.getMail()));
-            dataSet.add(new Pair<>("University", "Itba"));
-            dataSet.add(new Pair<>("Course", "Algebra"));
+            dataSet.add(new Pair<>("University",""));
+            dataSet.add(new Pair<>("Courses Taught", ""));
         }
         else
         {
         }
          notifyDataSetChanged();
+    }
+
+    public void setCourses(String courses){
+        dataSet.get(2).second = courses;
+        notifyItemChanged(2);
     }
 
     @NonNull
@@ -48,7 +57,6 @@ public class ProfileDataAdapter extends RecyclerView.Adapter<ProfileDataAdapter.
     public void onBindViewHolder(@NonNull ProfileDataViewHolder holder, int position) {
         holder.itemTitle.setText(dataSet.get(position).first);
         holder.itemDescription.setText(dataSet.get(position).second);
-        //Change status when selected, inform tracker
     }
 
     @Override

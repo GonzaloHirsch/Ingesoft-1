@@ -2,11 +2,14 @@ package ar.edu.itba.ingesoft;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -41,5 +44,8 @@ public class MainActivity extends AppCompatActivity {
 
         FirebaseAuth.getInstance().signInWithEmailAndPassword("igrib98@gmail.com", "ssssssssaa");
     }
+
+    //options menu for different fragments
+
 
 }
