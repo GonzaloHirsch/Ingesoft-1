@@ -6,10 +6,12 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -25,10 +27,12 @@ import ar.edu.itba.ingesoft.Classes.Chat;
 import ar.edu.itba.ingesoft.Classes.Contact;
 import ar.edu.itba.ingesoft.Classes.Course;
 import ar.edu.itba.ingesoft.Classes.Message;
+import ar.edu.itba.ingesoft.Classes.Universidad;
 import ar.edu.itba.ingesoft.Classes.User;
 import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnChatEventListener;
 import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnContactEventListener;
 import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnCourseEventListener;
+import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnUniversityEventListener;
 import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnUserEventListener;
 import ar.edu.itba.ingesoft.MainActivity;
 
@@ -188,6 +192,71 @@ public class DatabaseConnection {
                     }
                 });
     }
+
+    /*--------------------------------------UNIVERSITIES----------------------------------------*/
+
+    public void GetUniversities(final OnUniversityEventListener eventListener){
+        // Add the new document for the user using the email as the ID of the document
+        db.collection("Universities")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            QuerySnapshot document = task.getResult();
+
+                            List<Universidad> universities = new ArrayList<>();
+
+                            if (document != null){
+                                for (DocumentSnapshot ds : document) {
+                                    if (ds.getData() != null){
+                                        universities.add(new Universidad(ds.getData()));
+                                    }
+                                }
+                                eventListener.onUniversitiesRetrieved(universities);
+                            } else {
+                                Log.d(TAG, "Query GetUniversities returned null");
+                            }
+                        } else {
+                            Log.d(TAG, "get failed with ", task.getException());
+                        }
+                    }
+                });
+    }
+
+    public void GetUniversity(String name, final OnUniversityEventListener eventListener){
+
+        // Add the new document for the user using the email as the ID of the document
+        db.collection("Universities")
+                .document(name)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document != null && document.exists()) {
+                                Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+
+                                Map<String, Object> data = document.getData();
+
+                                if (data != null){
+                                    // Stores all the info in the class
+                                    Universidad uni = new Universidad(data);
+                                    eventListener.onUnievrsityRetrieved(uni);
+                                } else {
+                                    Log.d(TAG, "No data in document");
+                                }
+                            } else {
+                                Log.d(TAG, "No such document");
+                            }
+                        } else {
+                            Log.d(TAG, "get failed with ", task.getException());
+                        }
+                    }
+                });
+    }
+
 
     /*--------------------------------------CONTACTS----------------------------------------*/
 
@@ -414,11 +483,13 @@ public class DatabaseConnection {
         });
     }
 
+    /*--------------------------------------COURSES----------------------------------------*/
+
     /**
      * Getter for all the courses, by object.
      * @param listener for the event to use the data.
      */
-    public void GetAllCourses(OnCourseEventListener listener){
+    public void GetAllCourses(final OnCourseEventListener listener){
         db.collection("Courses").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -444,6 +515,14 @@ public class DatabaseConnection {
         });
     }
 
+    public void AddCourse(String email, DocumentReference ref, final OnCourseEventListener listener){
+        db.collection("Users").document(email).update("courses", FieldValue.arrayUnion(ref));
+    }
+
+    public void RemoveCourse(String email, DocumentReference ref, final OnCourseEventListener listener){
+        db.collection("Users").document(email).update("courses", FieldValue.arrayRemove(ref));
+    }
+
     /**
      * Getter for the teacher for each course, grouped by course.
      * @param listener for the event.
@@ -457,7 +536,7 @@ public class DatabaseConnection {
 
                     List<User> teachers = new ArrayList<>();
 
-                    Map<DocumentReference, List<User>> refToUsers = new HashMap<>();
+                    Map<String, List<User>> refToUsers = new HashMap<>();
                     Map<Course, List<User>> coursesToUsers = new HashMap<>();
 
                     // Fill the user list
@@ -471,15 +550,31 @@ public class DatabaseConnection {
                         for (User teacher : teachers){
                             for (DocumentReference dr : teacher.getCourses()){
                                 List<User> aux;
-                                if (refToUsers.containsKey(dr)){
-                                    aux = refToUsers.get(dr);
+                                if (refToUsers.containsKey(dr.toString())){
+                                    aux = refToUsers.get(dr.toString());
                                 } else {
                                     aux = new ArrayList<>();
                                 }
                                 aux.add(teacher);
-                                refToUsers.put(dr, aux);
+                                refToUsers.put(dr.toString(), aux);
                             }
                         }
+
+
+                        /*
+                        List<Task<DocumentSnapshot>> tasks = new ArrayList<>();
+
+                        for (DocumentReference dr : refToUsers.keySet()){
+                            Task<DocumentSnapshot> documentSnapshotTask = dr.get();
+                            tasks.add(documentSnapshotTask);
+                        }
+
+                        Tasks.whenAllComplete(tasks).addOnSuccessListener(new OnSuccessListener<List<Task<?>>>() {
+                            @Override
+                            public void onSuccess(List<Task<?>> tasks) {
+
+                            }
+                        })
 
                         // Recupera el curso para cada una
                         for (DocumentReference dr : refToUsers.keySet()){
@@ -500,7 +595,7 @@ public class DatabaseConnection {
                             });
                         }
 
-                        listener.onTeachersPerCourseRetrieved(coursesToUsers);
+                        listener.onTeachersPerCourseRetrieved(coursesToUsers);*/
                     } else {
                         Log.d(TAG, "Query GetAllCoursesReferences returned null");
                     }
