@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorPrimary">#1e88e5</color>
+    <color name="colorPrimaryDark">#005cb2</color>
     <color name="colorAccent">#1976d2</color>
     <!--> Some colors for Views <-->
 
@@ -10,4 +10,6 @@
     <color name="colorEditTextTextBlue">#801976d2</color>
 
     <color name="colorButtonBlue">#1976d2</color>
+
+    <color name="colorError">#F50057</color>
 </resources>

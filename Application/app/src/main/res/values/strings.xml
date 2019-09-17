@@ -15,6 +15,17 @@
     <string name="or_proceed_without_logging_in">Or continue without account</string>
     <string name="proceed_without_logging_in">Continue without account</string>
 
+    <string name="error_complete_field">Please complete this field</string>
+    <string name="error_password_match">Passwords don´t match</string>
+    <string name="error_password_invalid">Invalid password</string>
+    <string name="error_email_invalid">Invalid email</string>
+    <string name="error_password_weak">Weak password</string>
+    <string name="error_email_used">Email already used</string>
+    <string name="error_password_incorrect">Wrong password</string>
+    <string name="error_email_not_registered">There is no account linked with that email</string>
+    <string name="error_unknown">Unknown error</string>
+
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="proceed">Proceed</string>
@@ -22,4 +33,21 @@
     <string name="back">Back</string>
     <string name="choose_university">Choose University</string>
     <string name="select_university">Select University</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="search">Search</string>
+    <string name="chats">Chats</string>
+    <string name="profile">Profile</string>
+    <string name="title_search">Search</string>
+    <string name="title_profile">Profile</string>
+    <string name="title_chats">Chats</string>
+    <string name="title">Title</string>
+    <string name="specification">Specification</string>
+    <string name="email">Email</string>
+    <string name="university">University</string>
+    <string name="courses_taught">Courses Taught</string>
+    <string name="loading">Loading...</string>
+    <string name="log_out">Log Out</string>
 </resources>

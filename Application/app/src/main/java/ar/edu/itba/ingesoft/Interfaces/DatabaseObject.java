@@ -4,5 +4,5 @@ import java.util.Map;
 
 public interface DatabaseObject {
 
-    Map<String, Object> getDataToUpdate();
+    Map<String, Object> generateDataToUpdate();
 }

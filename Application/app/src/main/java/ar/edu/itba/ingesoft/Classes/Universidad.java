@@ -61,7 +61,7 @@ public class Universidad implements DatabaseObject {
     }
 
     @Override
-    public Map<String, Object> getDataToUpdate() {
+    public Map<String, Object> generateDataToUpdate() {
         return null;
     }
 }

@@ -1,0 +1,82 @@
+package ar.edu.itba.ingesoft.ui.profile;
+
+import android.util.Log;
+
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
+
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import ar.edu.itba.ingesoft.Classes.Course;
+import ar.edu.itba.ingesoft.Classes.User;
+import ar.edu.itba.ingesoft.Database.DatabaseConnection;
+import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnCourseEventListener;
+import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnUserEventListener;
+
+public class ProfileViewModel extends ViewModel {
+
+    private MutableLiveData<User> currentUserLiveData = new MutableLiveData<>();
+    private MutableLiveData<String> coursesTaughtLiveData = new MutableLiveData<>();
+    private MutableLiveData<Boolean> loading = new MutableLiveData<Boolean>(true);
+
+    public ProfileViewModel() {
+
+        Log.v("ProfileViewModel", "ViewModel Initialized");
+
+    }
+
+    public MutableLiveData<User> getCurrentUserLiveData() {
+        if(currentUserLiveData.getValue() == null){
+
+            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+            loading.setValue(true);
+            new DatabaseConnection().GetUser(currentUser.getEmail(), new OnUserEventListener() {
+                @Override
+                public void onUserRetrieved(User user) {
+                    currentUserLiveData.postValue(user);
+                    Log.v("ProfileViewModel", "");
+                    List<Task<DocumentSnapshot>> tasks = new ArrayList<>();
+                    for(DocumentReference documentReference : user.getCourses()){
+                        Task<DocumentSnapshot> documentSnapshotTask = documentReference.get();
+                        tasks.add(documentSnapshotTask);
+                    }
+                    Tasks.whenAllSuccess(tasks).addOnSuccessListener(new OnSuccessListener<List<Object>>() {
+                        @Override
+                        public void onSuccess(List<Object> objects) {
+                            //todo get courses
+                            loading.setValue(false);
+                    }});
+                }
+
+                @Override
+                public void onUsersRetrieved(List<User> users) {}
+
+                @Override
+                public void onTeachersRetrieved(List<User> teachers) {}
+            });
+        }
+        return currentUserLiveData;
+    }
+
+    public MutableLiveData<String> getCourses(){
+       if(coursesTaughtLiveData.getValue() == null){
+
+       }
+       return coursesTaughtLiveData;
+    }
+
+    public MutableLiveData<Boolean> getLoading(){
+        return loading;
+    }
+}

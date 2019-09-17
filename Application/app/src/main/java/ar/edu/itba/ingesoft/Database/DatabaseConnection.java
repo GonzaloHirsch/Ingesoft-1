@@ -6,13 +6,16 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,16 +23,19 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import ar.edu.itba.ingesoft.Classes.Chat;
 import ar.edu.itba.ingesoft.Classes.Contact;
+import ar.edu.itba.ingesoft.Classes.Course;
 import ar.edu.itba.ingesoft.Classes.Message;
 import ar.edu.itba.ingesoft.Classes.User;
 import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnChatEventListener;
 import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnContactEventListener;
+import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnCourseEventListener;
 import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnUserEventListener;
 import ar.edu.itba.ingesoft.MainActivity;
 
 public class DatabaseConnection {
 
     public static final String TAG = "DATABASE_CONNECTION";
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     /*--------------------------------------USERS----------------------------------------*/
 
@@ -37,9 +43,9 @@ public class DatabaseConnection {
      * Inserts the user into the database.
      * @param user to be inserted
      */
-    public static void InsertUser(User user){
+    public void InsertUser(User user){
         // Add the new document for the user using the email as the ID of the document
-        MainActivity.Instance.getDb().collection("Users")
+        db.collection("Users")
                 .document(user.getMail())
                 .set(user)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -61,11 +67,11 @@ public class DatabaseConnection {
      * Uses the getter for the updateable fields.-
      * @param user to be updated.
      */
-    public static void UpdateUser(final User user){
+    public void UpdateUser(final User user){
         // Update the user in the given document
-        MainActivity.Instance.getDb().collection("Users")
+        db.collection("Users")
                 .document(user.getMail())
-                .update(user.getDataToUpdate())
+                .update(user.generateDataToUpdate())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -84,10 +90,10 @@ public class DatabaseConnection {
      * Gets the user identified by the given email.
      * @param email of the user to get
      */
-    public static void GetUser(String email, final OnUserEventListener eventListener){
+    public void GetUser(String email, final OnUserEventListener eventListener){
 
         // Add the new document for the user using the email as the ID of the document
-        MainActivity.Instance.getDb().collection("Users")
+        db.collection("Users")
                 .document(email)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -121,9 +127,9 @@ public class DatabaseConnection {
      * Getter for all the users in the database.
      * @param eventListener with callback to this function.
      */
-    public static void GetUsers(final OnUserEventListener eventListener){
+    public void GetUsers(final OnUserEventListener eventListener){
         // Add the new document for the user using the email as the ID of the document
-        MainActivity.Instance.getDb().collection("Users")
+        db.collection("Users")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -154,8 +160,8 @@ public class DatabaseConnection {
      * Getter for all the teachers in the system.
      * @param eventListener with callback to this function.
      */
-    public static void GetTeachers(final OnUserEventListener eventListener){
-        MainActivity.Instance.getDb().collection("Users")
+    public void GetTeachers(final OnUserEventListener eventListener){
+        db.collection("Users")
                 .whereEqualTo("isTeacher", true)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -191,9 +197,9 @@ public class DatabaseConnection {
      * @param userEmail of the user who has the new contact.
      * @param contact of the user given before.
      */
-    public static void InsertContact(String userEmail, Contact contact){
+    public void InsertContact(String userEmail, Contact contact){
         // Add the new document for the user using the email as the ID of the document
-        MainActivity.Instance.getDb().collection("Contacts")
+        db.collection("Contacts")
                 .document(userEmail)
                 .collection("Contacts")
                 .document(contact.getUser())
@@ -217,8 +223,8 @@ public class DatabaseConnection {
      * @param userEmail of the user who has the contacts.
      * @param eventListener that has the callback to this function.
      */
-    public static void GetContacts(String userEmail, final OnContactEventListener eventListener){
-        MainActivity.Instance.getDb().collection("Contacts")
+    public void GetContacts(String userEmail, final OnContactEventListener eventListener){
+        db.collection("Contacts")
                 .document(userEmail)
                 .collection("Contacts")
                 .get()
@@ -254,8 +260,8 @@ public class DatabaseConnection {
      * Inserts the new chat in the chat documents.
      * @param chat to be inserted.
      */
-    public static void InsertChat(Chat chat){
-        MainActivity.Instance.getDb().collection("Chats")
+    public void InsertChat(Chat chat){
+        db.collection("Chats")
                 .document(chat.getChatID().toString())
                 .set(chat)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -277,8 +283,8 @@ public class DatabaseConnection {
      * @param chatID of the given chat.
      * @param eventListener that has the callback to this function.
      */
-    public static void GetChat(Long chatID, final OnChatEventListener eventListener){
-        MainActivity.Instance.getDb().collection("Chats")
+    public void GetChat(Long chatID, final OnChatEventListener eventListener){
+        db.collection("Chats")
                 .document(chatID.toString())
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -313,10 +319,10 @@ public class DatabaseConnection {
      * Updates the given chat.
      * @param chat to be updated.
      */
-    public static void UpdateChat(final Chat chat){
-        MainActivity.Instance.getDb().collection("Chats")
+    public void UpdateChat(final Chat chat){
+        db.collection("Chats")
                 .document(chat.getChatID().toString())
-                .update(chat.getDataToUpdate())
+                .update(chat.generateDataToUpdate())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -331,8 +337,8 @@ public class DatabaseConnection {
                 });
     }
 
-    public static void SetUpChatListener(Long chatID){
-        DocumentReference ref = MainActivity.Instance.getDb().collection("Chats").document(chatID.toString());
+    public void SetUpChatListener(Long chatID){
+        DocumentReference ref = db.collection("Chats").document(chatID.toString());
 
         ref.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
@@ -405,6 +411,155 @@ public class DatabaseConnection {
                     }
                 }
             }
+        });
+    }
+
+    /**
+     * Getter for all the courses, by object.
+     * @param listener for the event to use the data.
+     */
+    public void GetAllCourses(OnCourseEventListener listener){
+        db.collection("Courses").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    QuerySnapshot document = task.getResult();
+
+                    List<Course> courses = new ArrayList<>();
+
+                    if (document != null){
+                        for (DocumentSnapshot ds : document) {
+                            if (ds.getData() != null){
+                                courses.add(new Course(ds.getData()));
+                            }
+                        }
+                        listener.onCoursesRetrieved(courses);
+                    } else {
+                        Log.d(TAG, "Query GetAllCourses returned null");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
+    }
+
+    /**
+     * Getter for the teacher for each course, grouped by course.
+     * @param listener for the event.
+     */
+    public void GetTeachersPerCourse(OnCourseEventListener listener){
+        db.collection("Users").whereEqualTo("professor", true).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    QuerySnapshot document = task.getResult();
+
+                    List<User> teachers = new ArrayList<>();
+
+                    Map<DocumentReference, List<User>> refToUsers = new HashMap<>();
+                    Map<Course, List<User>> coursesToUsers = new HashMap<>();
+
+                    // Fill the user list
+                    if (document != null){
+                        for (DocumentSnapshot ds : document) {
+                            if (ds.getData() != null){
+                                teachers.add(new User(ds.getData()));
+                            }
+                        }
+
+                        for (User teacher : teachers){
+                            for (DocumentReference dr : teacher.getCourses()){
+                                List<User> aux;
+                                if (refToUsers.containsKey(dr)){
+                                    aux = refToUsers.get(dr);
+                                } else {
+                                    aux = new ArrayList<>();
+                                }
+                                aux.add(teacher);
+                                refToUsers.put(dr, aux);
+                            }
+                        }
+
+                        // Recupera el curso para cada una
+                        for (DocumentReference dr : refToUsers.keySet()){
+                            GetCourseByReference(dr.toString(), new OnCourseEventListener() {
+                                @Override
+                                public void onCourseRetrieved(Course course) {
+                                    coursesToUsers.put(course, refToUsers.get(dr));
+                                }
+
+                                @Override
+                                public void onCoursesRetrieved(List<Course> courses) {}
+
+                                @Override
+                                public void onCoursesReferencesRetrieved(List<DocumentReference> courses) {}
+
+                                @Override
+                                public void onTeachersPerCourseRetrieved(Map<Course, List<User>> drToUser) {}
+                            });
+                        }
+
+                        listener.onTeachersPerCourseRetrieved(coursesToUsers);
+                    } else {
+                        Log.d(TAG, "Query GetAllCoursesReferences returned null");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
+    }
+
+    /**
+     * Getter for all the courses, by reference to the document.
+     * @param listener for the event to use the data.
+     */
+    public void GetAllCoursesReferences(OnCourseEventListener listener){
+        db.collection("Courses").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    QuerySnapshot document = task.getResult();
+
+                    List<DocumentReference> courses = new ArrayList<>();
+
+                    if (document != null){
+                        for (DocumentSnapshot ds : document) {
+                            if (ds.getData() != null){
+                                courses.add(ds.getReference());
+                            }
+                        }
+                        listener.onCoursesReferencesRetrieved(courses);
+                    } else {
+                        Log.d(TAG, "Query GetAllCoursesReferences returned null");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
+    }
+
+    public void GetCourseByReference(String theReference, OnCourseEventListener listener){
+        db.document(theReference).get().addOnCompleteListener(task -> {
+                if(task.isSuccessful()){
+                    DocumentSnapshot document = task.getResult();
+                    if(document !=null && document.exists()){
+                        Map<String, Object> data = document.getData();
+                        if(data!=null){
+                            Course course = new Course(data);
+                            listener.onCourseRetrieved(course);
+                            Log.v("getCourseByReference", "everything successful");
+                        }
+                        else{
+                            Log.v("getCourseByReference", "data null");
+                        }
+                    }
+                    else{
+                        Log.v("getCourseByReference", "document null or non-existing");
+                    }
+                }
         });
     }
 }

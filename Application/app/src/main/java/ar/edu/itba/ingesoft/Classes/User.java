@@ -1,5 +1,7 @@
 package ar.edu.itba.ingesoft.Classes;
 
+import com.google.firebase.firestore.DocumentReference;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -16,8 +18,8 @@ public class User implements DatabaseObject {
     private String name;
     private String surname;
     private boolean isProfessor;
-    private List<Course> courses;
-    private Map<Date, Appointment> appointments;
+    private List<DocumentReference> courses;
+    //private Map<Long, Appointment> appointments;
     private Universidad universidad;
     //private Map<Long, Chat> chats;
 
@@ -26,11 +28,16 @@ public class User implements DatabaseObject {
         this.name = (String) data.get("name");
         this.surname = (String) data.get("surname");
         this.mail = (String) data.get("mail");
-        this.isProfessor = (boolean) data.get("isProfessor");
-        this.courses = (List<Course>) data.get("courses");
-        this.appointments = (Map<Date, Appointment>) data.get("appointments");
+        this.isProfessor = (Boolean) data.get("professor");
+        this.courses = (List<DocumentReference>) data.get("courses");
+        //this.appointments = (Map<Long, Appointment>) data.get("appointments");
         //this.chats = (Map<Long, Chat>) data.get("chats");
-        this.universidad = (Universidad) data.get("universidad");
+        this.universidad = new Universidad((Map<String, Object>)data.get("universidad"));
+    }
+
+    public User(){
+        this.courses = new ArrayList<>();
+        //this.appointments = new HashMap<>();
     }
 
     public User(String name, String surname, String mail, Universidad universidad){
@@ -39,19 +46,19 @@ public class User implements DatabaseObject {
         this.mail = mail;
         this.isProfessor = false;
         this.courses = new ArrayList<>();
-        this.appointments = new HashMap<>();
+        //this.appointments = new HashMap<>();
         //this.chats = new HashMap<>();
         this.universidad = universidad;
     }
 
-    public Map<String, Object> getDataToUpdate(){
+    public Map<String, Object> generateDataToUpdate(){
         Map<String, Object> data = new HashMap<>();
 
         data.put("name", this.name);
         data.put("surname", this.surname);
-        data.put("isProfessor", this.isProfessor);
+        data.put("professor", this.isProfessor);
         data.put("courses", this.courses);
-        data.put("appointments", this.appointments);
+        //data.put("appointments", this.appointments);
         data.put("universidad", this.universidad);
         //data.put("chats", this.chats);
 
@@ -90,15 +97,15 @@ public class User implements DatabaseObject {
         isProfessor = professor;
     }
 
-    public List<Course> getCourses() {
+    public List<DocumentReference> getCourses() {
         return courses;
     }
 
-    public void addCourses(List<Course> courses) {
+    public void addCourses(List<DocumentReference> courses) {
         this.courses.addAll(courses);
     }
 
-    public void addCourse(Course course) {
+    public void addCourse(DocumentReference course) {
         this.courses.add(course);
     }
 
@@ -106,22 +113,23 @@ public class User implements DatabaseObject {
         this.courses.remove(course);
     }
 
-    public Map<Date, Appointment> getAppointments() {
+    /*
+    public Map<Long, Appointment> getAppointments() {
         return appointments;
     }
 
     public void addAppointment(Date date, Appointment appointment) {
-        this.appointments.put(date, appointment);
+        //this.appointments.put(date.getTime(), appointment);
     }
 
     public boolean hasAppointment(Date date) {
-        return this.appointments.containsKey(date);
+        return this.appointments.containsKey(date.getTime());
     }
 
-    public Set<Date> getAppointmentDates() {
+    public Set<Long> getAppointmentDates() {
         return this.appointments.keySet();
     }
-
+*/
     /*
     public Map<Long, Chat> getChats() {
         return chats;
