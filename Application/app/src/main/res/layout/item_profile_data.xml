@@ -24,4 +24,10 @@
         android:layout_marginBottom="2dp"
         android:fontFamily="@font/roboto_thin"
         android:text="@string/specification" />
+
+    <View
+        android:id="@+id/divider2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider" />
 </LinearLayout>

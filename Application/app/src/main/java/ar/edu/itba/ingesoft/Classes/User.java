@@ -28,11 +28,16 @@ public class User implements DatabaseObject {
         this.name = (String) data.get("name");
         this.surname = (String) data.get("surname");
         this.mail = (String) data.get("mail");
-        this.isProfessor = (Boolean) data.get("professor");
+        //todo wtf
+        if(data.get("isProfessor") != null)
+            this.isProfessor = (Boolean) data.get("isProfessor");
+        else
+            this.isProfessor = false;
         this.courses = (List<DocumentReference>) data.get("courses");
         //this.appointments = (Map<Long, Appointment>) data.get("appointments");
         //this.chats = (Map<Long, Chat>) data.get("chats");
-        this.universidad = new Universidad((Map<String, Object>)data.get("universidad"));
+        this.universidad = new Universidad((Map<String, Object>) data.get("Universidad"));
+
     }
 
     public User(){

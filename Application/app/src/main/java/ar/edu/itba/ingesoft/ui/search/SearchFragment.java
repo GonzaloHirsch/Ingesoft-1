@@ -1,6 +1,7 @@
 package ar.edu.itba.ingesoft.ui.search;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.api.Distribution;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import ar.edu.itba.ingesoft.Classes.Course;
+import ar.edu.itba.ingesoft.Classes.User;
 import ar.edu.itba.ingesoft.R;
 import ar.edu.itba.ingesoft.recyclerviews.Adapters.SearchCoursesAdapter;
 
@@ -38,10 +45,20 @@ public class SearchFragment extends Fragment {
         layoutManager = new LinearLayoutManager(getContext());
 
         searchRecyclerView.setLayoutManager(layoutManager);
-        //searchCoursesAdapter = new SearchCoursesAdapter(new List<Pair<Course, List<User>>>);
-        //searchRecyclerView.setAdapter(searchCoursesAdapter);
+        searchCoursesAdapter = new SearchCoursesAdapter(new ArrayList<>());
+        searchRecyclerView.setAdapter(searchCoursesAdapter);
 
+        searchViewModel.getDisplayedData().observe(getActivity(), new Observer<List<Map.Entry<Course, List<User>>>>() {
+            @Override
+            public void onChanged(List<Map.Entry<Course, List<User>>> entries) {
 
+                //todo remove this
+                for(Map.Entry<Course, List<User>> e : entries){
+                    Log.v("SearchFragment", e.getKey().getCode());
+                }
+                searchCoursesAdapter.update(entries);
+            }
+        });
 
         return root;
     }

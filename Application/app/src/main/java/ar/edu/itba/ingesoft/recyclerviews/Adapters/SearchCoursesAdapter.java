@@ -1,40 +1,60 @@
 package ar.edu.itba.ingesoft.recyclerviews.Adapters;
 
+import android.support.v4.media.MediaBrowserCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import ar.edu.itba.ingesoft.Classes.Course;
 import ar.edu.itba.ingesoft.Classes.User;
 import ar.edu.itba.ingesoft.R;
+import ar.edu.itba.ingesoft.recyclerviews.diffutil_callbacks.SearchDiffUtil;
 import ar.edu.itba.ingesoft.utils.Pair;
 
 public class SearchCoursesAdapter extends RecyclerView.Adapter<SearchCoursesAdapter.SearchCoursesViewHolder> {
 
-    private List<Pair<Course, List<User>>> courseList;
+    private List<Map.Entry<Course, List<User>>> courseList;
 
-    public SearchCoursesAdapter(List<Pair<Course, List<User>>> courseList){
+    public SearchCoursesAdapter(List<Map.Entry<Course, List<User>>> courseList){
         this.courseList = courseList;
+    }
+
+    //displaying updates to list contents
+    public void update(List<Map.Entry<Course, List<User>>> newList){
+
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new SearchDiffUtil(this.courseList, newList));
+        Log.v("SearchCAdapter", "new List");
+
+        courseList.clear();
+        courseList.addAll(newList);
+
+        diffResult.dispatchUpdatesTo(this);
+
+
     }
 
     @NonNull
     @Override
     public SearchCoursesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_search_course, parent);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_search_course, parent, false);
         return new SearchCoursesViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull SearchCoursesViewHolder holder, int position) {
-            Pair<Course, List<User>> aux = courseList.get(position);
-            holder.courseNameTextView.setText(aux.first.getName());
+            Log.v("SearchCAdapter", "onBindViewHolder" + courseList.get(position).getKey().getName());
+            Map.Entry<Course, List<User>> aux = courseList.get(position);
+            holder.courseNameTextView.setText(aux.getKey().getName());
     }
 
     @Override

@@ -8,6 +8,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -33,15 +34,15 @@ import ar.edu.itba.ingesoft.ui.login.LoginActivity;
 
 public class ProfileFragment extends Fragment {
 
-    private RecyclerView profileDataRecyclerView;
-    private ProfileDataAdapter profileDataAdapter;
-    private LinearLayoutManager profileDataLayoutManager;
     private ProgressBar theProgressBar;
     private TextView loadingTextView;
 
     private ProfileViewModel profileViewModel;
 
     private TextView nameTextView;
+    private TextView emailTextView;
+    private TextView universityTextView;
+    private TextView coursesTextView;
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
@@ -79,42 +80,50 @@ public class ProfileFragment extends Fragment {
         //Name TextView
         nameTextView = root.findViewById(R.id.profileNameTextView);
 
-        //The RecyclerView
-        profileDataRecyclerView = root.findViewById(R.id.profileDataRecyclerView);
-        profileDataLayoutManager = new LinearLayoutManager(getContext());
-        profileDataRecyclerView.setLayoutManager(profileDataLayoutManager);
-        profileDataAdapter = new ProfileDataAdapter();
-        profileDataRecyclerView.setAdapter(profileDataAdapter);
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getActivity(), profileDataLayoutManager.getOrientation());
-        profileDataRecyclerView.addItemDecoration(dividerItemDecoration);
+        //Email
+        LinearLayout ll = root.findViewById(R.id.profileEmail);
+        emailTextView = ll.findViewById(R.id.itemProfileDataDescription);
+        ((TextView)ll.findViewById(R.id.itemProfileDataTitle)).setText(R.string.email);
+        //University
+        ll = root.findViewById(R.id.profileUniversity);
+        universityTextView = ll.findViewById(R.id.itemProfileDataDescription);
+        ((TextView)ll.findViewById(R.id.itemProfileDataTitle)).setText(R.string.university);
+        //Courses
+        ll = root.findViewById(R.id.profileCourses);
+        coursesTextView = ll.findViewById(R.id.itemProfileDataDescription);
+        ((TextView)ll.findViewById(R.id.itemProfileDataTitle)).setText(R.string.courses_taught);
 
 
-        //The Observer for user
-        profileViewModel.getCurrentUserLiveData().observe(getActivity(), user -> {
-            profileDataAdapter.setNewUserData(user);
-            nameTextView.setText(user.getName() + " " + user.getSurname());
-        });
-
-        //The Observer for user's Courses
-        profileViewModel.getCourses().observe(getActivity(), courses->{
-           profileDataAdapter.setCourses(courses);
-        });
-
-        //The ProgressBar + LoadingTextView
-        loadingTextView = root.findViewById(R.id.loadingTextView);
+        //ProgressBar + Loading TextView
         theProgressBar = root.findViewById(R.id.profileProgressBar);
-        profileViewModel.getLoading().observe(getActivity(), loading -> {
-            if(loading){
-                //profileDataRecyclerView.setVisibility(View.INVISIBLE);
-                theProgressBar.setVisibility(View.VISIBLE);
-                loadingTextView.setVisibility(View.VISIBLE);
+        loadingTextView = root.findViewById(R.id.loadingTextView);
+
+        profileViewModel.getCurrentUserLiveData().observe(getActivity(), new Observer<User>(){
+            @Override
+            public void onChanged(User u) {
+                nameTextView.setText(u.getName());
+                emailTextView.setText(u.getMail());
+                //todo
+                universityTextView.setText("No University");
+                coursesTextView.setText("");
             }
-            else
-               // profileDataRecyclerView.setVisibility(View.VISIBLE);
-                theProgressBar.setVisibility(View.GONE);
-                loadingTextView.setVisibility(View.GONE);
         });
 
+        profileViewModel.getLoading().observe(getActivity(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean loading) {
+                if(loading){
+                    (root.findViewById(R.id.profileLinearLayout)).setVisibility(View.GONE);
+                    theProgressBar.setVisibility(View.VISIBLE);
+                    loadingTextView.setVisibility(View.VISIBLE);
+                }
+                else{
+                    (root.findViewById(R.id.profileLinearLayout)).setVisibility(View.VISIBLE);
+                    theProgressBar.setVisibility(View.GONE);
+                    loadingTextView.setVisibility(View.GONE);
+                }
+            }
+        });
 
         return root;
     }

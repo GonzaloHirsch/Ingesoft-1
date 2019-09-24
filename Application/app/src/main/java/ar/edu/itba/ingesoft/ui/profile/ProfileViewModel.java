@@ -36,6 +36,8 @@ public class ProfileViewModel extends ViewModel {
 
     }
 
+    //todo mover a DatabaseConnection
+
     public MutableLiveData<User> getCurrentUserLiveData() {
         if(currentUserLiveData.getValue() == null){
 

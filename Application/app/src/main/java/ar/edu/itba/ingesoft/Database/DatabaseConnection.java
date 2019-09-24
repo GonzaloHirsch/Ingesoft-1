@@ -106,7 +106,17 @@ public class DatabaseConnection {
 
                                 Map<String, Object> data = document.getData();
 
+
+
+
                                 if (data != null){
+
+                                    //todo delete this test
+
+                                    for(Map.Entry e : data.entrySet()){
+                                        Log.v("DBC-GetUser", e.getKey() + e.getValue().toString());
+                                    }
+
                                     // Stores all the info in the class
                                     User user = new User(data);
                                     eventListener.onUserRetrieved(user);
