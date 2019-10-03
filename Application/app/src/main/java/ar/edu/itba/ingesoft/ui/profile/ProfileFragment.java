@@ -50,6 +50,7 @@ public class ProfileFragment extends Fragment {
         inflater.inflate(R.menu.profile_appbar_menu, menu);
     }
 
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch(item.getItemId()){

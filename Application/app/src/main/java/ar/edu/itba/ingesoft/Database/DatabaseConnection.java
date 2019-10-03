@@ -108,7 +108,6 @@ public class DatabaseConnection {
 
 
 
-
                                 if (data != null){
 
                                     //todo delete this test

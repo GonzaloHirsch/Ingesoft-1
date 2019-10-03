@@ -4,6 +4,6 @@
     <item android:title="@string/log_out"
         android:id="@+id/action_profile_logout"
         android:icon="@drawable/baseline_exit_to_app_24"
-        app:showAsAction="always"
+        app:showAsAction= "always"
         ></item>
 </menu>
