@@ -21,6 +21,7 @@ import androidx.lifecycle.ViewModelProviders;
 import ar.edu.itba.ingesoft.Authentication.Authenticator;
 import ar.edu.itba.ingesoft.Classes.User;
 import ar.edu.itba.ingesoft.R;
+import ar.edu.itba.ingesoft.ui.coursestaught.CoursesTaughtActivity;
 import ar.edu.itba.ingesoft.ui.login.LoginActivity;
 
 public class ProfileFragment extends Fragment {
@@ -84,7 +85,10 @@ public class ProfileFragment extends Fragment {
         ll = root.findViewById(R.id.profileCourses);
         coursesTextView = ll.findViewById(R.id.itemProfileDataDescription);
         ((TextView)ll.findViewById(R.id.itemProfileDataTitle)).setText(R.string.courses_taught);
-
+        ll.setOnClickListener(x->{
+            Intent intent = new Intent(getContext(), CoursesTaughtActivity.class);
+            startActivity(intent);
+        });
 
         //ProgressBar + Loading TextView
         theProgressBar = root.findViewById(R.id.profileProgressBar);
