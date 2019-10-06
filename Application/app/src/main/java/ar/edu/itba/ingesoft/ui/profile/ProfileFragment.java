@@ -17,18 +17,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.selection.SelectionPredicates;
-import androidx.recyclerview.selection.SelectionTracker;
-import androidx.recyclerview.selection.StableIdKeyProvider;
-import androidx.recyclerview.selection.StorageStrategy;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import ar.edu.itba.ingesoft.Authentication.Authenticator;
 import ar.edu.itba.ingesoft.Classes.User;
-import ar.edu.itba.ingesoft.MainActivity;
-import ar.edu.itba.ingesoft.recyclerviews.Adapters.ProfileDataAdapter;
 import ar.edu.itba.ingesoft.R;
 import ar.edu.itba.ingesoft.ui.login.LoginActivity;
 

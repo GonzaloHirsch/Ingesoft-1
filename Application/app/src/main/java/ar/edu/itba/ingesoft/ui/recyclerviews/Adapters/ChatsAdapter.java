@@ -1,4 +1,4 @@
-package ar.edu.itba.ingesoft.recyclerviews.Adapters;
+package ar.edu.itba.ingesoft.ui.recyclerviews.Adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ar.edu.itba.ingesoft.Classes.Chat;
-import ar.edu.itba.ingesoft.Classes.Course;
 import ar.edu.itba.ingesoft.R;
 import de.hdodenhof.circleimageview.CircleImageView;
 

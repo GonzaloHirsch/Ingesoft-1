@@ -5,17 +5,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.google.api.Distribution;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +20,7 @@ import java.util.Map;
 import ar.edu.itba.ingesoft.Classes.Course;
 import ar.edu.itba.ingesoft.Classes.User;
 import ar.edu.itba.ingesoft.R;
-import ar.edu.itba.ingesoft.recyclerviews.Adapters.SearchCoursesAdapter;
+import ar.edu.itba.ingesoft.ui.recyclerviews.Adapters.SearchCoursesAdapter;
 
 public class SearchFragment extends Fragment {
 
