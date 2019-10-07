@@ -73,20 +73,25 @@
                 android:layout_height="1dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:layout_marginBottom="10dp"
                 android:background="@color/colorAccent" />
 
             <include
                 android:id="@+id/profileEmail"
-                layout="@layout/item_profile_data" />
+                layout="@layout/item_profile_data"
+                android:clickable="true"
+                android:focusable="true" />
 
             <include
                 android:id="@+id/profileUniversity"
-                layout="@layout/item_profile_data" />
+                layout="@layout/item_profile_data"
+                android:clickable="true"
+                android:focusable="true" />
 
             <include
                 android:id="@+id/profileCourses"
-                layout="@layout/item_profile_data" />
+                layout="@layout/item_profile_data"
+                android:clickable="true"
+                android:focusable="true" />
 
         </LinearLayout>
     </ScrollView>

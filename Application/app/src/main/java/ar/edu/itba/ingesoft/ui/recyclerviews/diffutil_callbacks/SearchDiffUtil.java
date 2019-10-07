@@ -1,4 +1,4 @@
-package ar.edu.itba.ingesoft.recyclerviews.diffutil_callbacks;
+package ar.edu.itba.ingesoft.ui.recyclerviews.diffutil_callbacks;
 
 import androidx.recyclerview.widget.DiffUtil;
 

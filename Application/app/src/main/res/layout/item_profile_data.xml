@@ -2,7 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:clickable="true"
+    android:focusable="true"
+    android:focusableInTouchMode="false"
+    android:orientation="vertical"
+    android:background="@drawable/ripple">
 
     <TextView
         android:id="@+id/itemProfileDataTitle"
@@ -20,10 +24,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
         android:layout_marginTop="3dp"
-        android:textSize="18sp"
         android:layout_marginBottom="2dp"
         android:fontFamily="@font/roboto_thin"
-        android:text="@string/specification" />
+        android:text="@string/specification"
+        android:textSize="18sp" />
 
     <View
         android:id="@+id/divider2"

@@ -1,6 +1,5 @@
-package ar.edu.itba.ingesoft.recyclerviews.Adapters;
+package ar.edu.itba.ingesoft.ui.recyclerviews.Adapters;
 
-import android.support.v4.media.MediaBrowserCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,15 +10,13 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import ar.edu.itba.ingesoft.Classes.Course;
 import ar.edu.itba.ingesoft.Classes.User;
 import ar.edu.itba.ingesoft.R;
-import ar.edu.itba.ingesoft.recyclerviews.diffutil_callbacks.SearchDiffUtil;
-import ar.edu.itba.ingesoft.utils.Pair;
+import ar.edu.itba.ingesoft.ui.recyclerviews.diffutil_callbacks.SearchDiffUtil;
 
 public class SearchCoursesAdapter extends RecyclerView.Adapter<SearchCoursesAdapter.SearchCoursesViewHolder> {
 
