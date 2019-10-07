@@ -30,25 +30,37 @@ public class SearchCoursesAdapter extends RecyclerView.Adapter<SearchCoursesAdap
 
     private List<Course> courseList;
     private List<Course> courseListFiltered;
-
+    private List<Course> currentList;
 
     public SearchCoursesAdapter(List<Course> courseList){
         this.courseList = courseList;
+        this.currentList = new ArrayList<>(courseList);
         courseListFiltered = new ArrayList<>();
     }
 
     //displaying updates to list contents
     public void update(List<Course> newList){
 
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new SearchDiffUtil(this.courseList, newList));
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new SearchDiffUtil(this.currentList, newList));
         Log.v("SearchCAdapter", "new List");
 
         if(newList!=null) {
+            currentList.clear();
             courseList.clear();
+            currentList.addAll(newList);
             courseList.addAll(newList);
         }
         diffResult.dispatchUpdatesTo(this);
 
+    }
+
+    public void updateFilter(List<Course> newList){
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new SearchDiffUtil(this.currentList, newList));
+        if(newList!=null){
+            currentList.clear();
+            currentList.addAll(newList);
+        }
+        diffResult.dispatchUpdatesTo(this);
     }
 
     @NonNull
@@ -60,15 +72,15 @@ public class SearchCoursesAdapter extends RecyclerView.Adapter<SearchCoursesAdap
 
     @Override
     public void onBindViewHolder(@NonNull SearchCoursesViewHolder holder, int position) {
-            Log.v("SearchCAdapter", "onBindViewHolder" + courseList.get(position).getName());
-            Course aux = courseList.get(position);
+            Log.v("SearchCAdapter", "onBindViewHolder" + currentList.get(position).getName());
+            Course aux = currentList.get(position);
             holder.courseNameTextView.setText(aux.getName());
             holder.universityTextView.setText(aux.getCode());
     }
 
     @Override
     public int getItemCount() {
-        return courseList.size();
+        return currentList.size();
     }
 
     @Override
@@ -79,7 +91,7 @@ public class SearchCoursesAdapter extends RecyclerView.Adapter<SearchCoursesAdap
             protected FilterResults performFiltering(CharSequence constraint) {
 
                 String query = constraint.toString().toLowerCase();
-
+                courseListFiltered.clear();
                 if(query == null){
                     courseListFiltered = courseList;
                 }
@@ -101,7 +113,7 @@ public class SearchCoursesAdapter extends RecyclerView.Adapter<SearchCoursesAdap
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
                     courseListFiltered = (List<Course>) results.values;
-                    update(courseListFiltered);
+                    updateFilter(courseListFiltered);
             }
         };
     }
