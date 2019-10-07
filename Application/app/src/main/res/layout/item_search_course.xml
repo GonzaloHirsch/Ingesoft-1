@@ -33,7 +33,8 @@
             android:background="@drawable/ripple_white"
             android:clickable="true"
             android:fadingEdge="horizontal|vertical"
-            android:focusable="true">
+            android:focusable="true"
+            android:id="@+id/itemSearchCourseClickable">
 
             <ImageView
                 android:id="@+id/coursePersonIcon"

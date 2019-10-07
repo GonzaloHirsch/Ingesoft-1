@@ -32,12 +32,18 @@ public class SearchDiffUtil extends DiffUtil.Callback {
 
     @Override
     public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-        return oldList.get(oldItemPosition).getCode().equals(newList.get(newItemPosition).getCode());
+        String oldItemCode = oldList.get(oldItemPosition).getCode();
+        String newItemCode = newList.get(newItemPosition).getCode();
+
+        //return oldList.get(oldItemPosition).getCode().equals(newList.get(newItemPosition).getCode());
+        if(oldItemCode!=null && newItemCode!=null)
+        return oldItemCode.equals(newItemCode);
+        else return false;
     }
 
     @Override
     public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-        //todo compare courses list
-        return false;
+        return areItemsTheSame(oldItemPosition, newItemPosition);
+        //return oldList.get(oldItemPosition).getName().equals(newList.get(newItemPosition).getName());
     }
 }
