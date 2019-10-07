@@ -5,25 +5,23 @@
     android:id="@+id/linearLayout3"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:clickable="true"
+    android:focusable="true"
     android:orientation="vertical">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
         android:layout_marginBottom="10dp"
-        android:clickable="true"
-        android:descendantFocusability="beforeDescendants"
-        android:elevation="2dp"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        app:cardBackgroundColor="#FFFFFF"
+        android:descendantFocusability="afterDescendants"
+        android:elevation="5dp"
+        app:cardBackgroundColor="#ffffff"
         app:cardCornerRadius="2dp"
         app:cardElevation="2dp"
         app:cardMaxElevation="2dp"
-        app:contentPadding="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -32,13 +30,16 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fadingEdge="horizontal|vertical">
+            android:background="@drawable/ripple_white"
+            android:clickable="true"
+            android:fadingEdge="horizontal|vertical"
+            android:focusable="true">
 
             <ImageView
                 android:id="@+id/coursePersonIcon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="invisible"
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/courseNameTextView"
                 app:srcCompat="@drawable/baseline_person_24" />
@@ -47,8 +48,11 @@
                 android:id="@+id/courseNameTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginBottom="10dp"
                 android:text="TextView"
                 android:textSize="24sp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/universityNameTextView" />
 
@@ -57,6 +61,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="TextView"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -64,6 +69,8 @@
                 android:id="@+id/universityNameTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
                 android:text="TextView"
                 android:textSize="18sp"
                 app:layout_constraintStart_toStartOf="parent"
@@ -74,7 +81,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="TextView"
-                android:visibility="invisible"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@+id/coursePersonIcon"
                 app:layout_constraintStart_toEndOf="@+id/coursePersonIcon"
                 app:layout_constraintTop_toTopOf="@+id/coursePersonIcon" />

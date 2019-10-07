@@ -4,12 +4,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -18,12 +21,14 @@ import ar.edu.itba.ingesoft.Classes.User;
 import ar.edu.itba.ingesoft.R;
 import ar.edu.itba.ingesoft.ui.recyclerviews.diffutil_callbacks.SearchDiffUtil;
 
-public class SearchCoursesAdapter extends RecyclerView.Adapter<SearchCoursesAdapter.SearchCoursesViewHolder> {
+public class SearchCoursesAdapter extends RecyclerView.Adapter<SearchCoursesAdapter.SearchCoursesViewHolder>{
 
     private List<Course> courseList;
+    private List<Course> courseListFiltered;
 
     public SearchCoursesAdapter(List<Course> courseList){
         this.courseList = courseList;
+        courseListFiltered = new ArrayList<>();
     }
 
     //displaying updates to list contents
@@ -32,11 +37,11 @@ public class SearchCoursesAdapter extends RecyclerView.Adapter<SearchCoursesAdap
         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new SearchDiffUtil(this.courseList, newList));
         Log.v("SearchCAdapter", "new List");
 
-        courseList.clear();
-        courseList.addAll(newList);
-
+        if(newList!=null) {
+            courseList.clear();
+            courseList.addAll(newList);
+        }
         diffResult.dispatchUpdatesTo(this);
-
 
     }
 
@@ -52,13 +57,16 @@ public class SearchCoursesAdapter extends RecyclerView.Adapter<SearchCoursesAdap
             Log.v("SearchCAdapter", "onBindViewHolder" + courseList.get(position).getName());
             Course aux = courseList.get(position);
             holder.courseNameTextView.setText(aux.getName());
-            holder.universityTextView.setText(aux.getCode().substring(aux.getCode().indexOf("-")));
+            holder.universityTextView.setText(aux.getCode());
     }
 
     @Override
     public int getItemCount() {
         return courseList.size();
     }
+
+
+
 
     public class SearchCoursesViewHolder extends RecyclerView.ViewHolder {
 

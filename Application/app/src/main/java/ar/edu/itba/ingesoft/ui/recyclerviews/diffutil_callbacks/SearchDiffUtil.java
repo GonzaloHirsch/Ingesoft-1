@@ -25,7 +25,9 @@ public class SearchDiffUtil extends DiffUtil.Callback {
 
     @Override
     public int getNewListSize() {
-        return newList.size();
+        if(newList!=null)
+            return newList.size();
+        return 0;
     }
 
     @Override

@@ -1,11 +1,17 @@
 package ar.edu.itba.ingesoft.ui.search;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -25,7 +31,7 @@ import java.util.Map;
 import ar.edu.itba.ingesoft.Classes.Course;
 import ar.edu.itba.ingesoft.Classes.User;
 import ar.edu.itba.ingesoft.R;
-import ar.edu.itba.ingesoft.recyclerviews.Adapters.SearchCoursesAdapter;
+import ar.edu.itba.ingesoft.ui.recyclerviews.Adapters.SearchCoursesAdapter;
 
 public class SearchFragment extends Fragment {
 
@@ -37,6 +43,23 @@ public class SearchFragment extends Fragment {
 
     private ProgressBar progressBar;
     private TextView loadingTextView;
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        return super.onOptionsItemSelected(item);
+    }
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -77,12 +100,8 @@ public class SearchFragment extends Fragment {
             }
         });
 
-
-
-
-
-
-
         return root;
     }
+
+
 }
