@@ -38,6 +38,7 @@
                 android:id="@+id/coursePersonIcon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:visibility="invisible"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/courseNameTextView"
                 app:srcCompat="@drawable/baseline_person_24" />
@@ -73,6 +74,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="TextView"
+                android:visibility="invisible"
                 app:layout_constraintBottom_toBottomOf="@+id/coursePersonIcon"
                 app:layout_constraintStart_toEndOf="@+id/coursePersonIcon"
                 app:layout_constraintTop_toTopOf="@+id/coursePersonIcon" />

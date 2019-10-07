@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -34,12 +35,14 @@ public class SearchFragment extends Fragment {
     private SearchCoursesAdapter searchCoursesAdapter;
     private LinearLayoutManager layoutManager;
 
+    private ProgressBar progressBar;
+    private TextView loadingTextView;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         searchViewModel =
-                ViewModelProviders.of(this).get(SearchViewModel.class);
+                ViewModelProviders.of(getActivity()).get(SearchViewModel.class);
         View root = inflater.inflate(R.layout.fragment_search, container, false);
-
 
         searchRecyclerView = root.findViewById(R.id.searchRecyclerView);
         layoutManager = new LinearLayoutManager(getContext());
@@ -48,12 +51,37 @@ public class SearchFragment extends Fragment {
         searchCoursesAdapter = new SearchCoursesAdapter(new ArrayList<>());
         searchRecyclerView.setAdapter(searchCoursesAdapter);
 
+
+        progressBar = root.findViewById(R.id.searchProgressBar);
+        loadingTextView = root.findViewById(R.id.searchLoadingTextView);
+        searchViewModel.getLoading().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if(aBoolean){
+                    searchRecyclerView.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.VISIBLE);
+                    loadingTextView.setVisibility(View.VISIBLE);
+                }else{
+                    searchRecyclerView.setVisibility(View.VISIBLE);
+                    progressBar.setVisibility(View.GONE);
+                    loadingTextView.setVisibility(View.GONE);
+                }
+            }
+        });
+
+
         searchViewModel.getDisplayedData().observe(this, new Observer<List<Course>>() {
             @Override
             public void onChanged(List<Course> courses) {
                 searchCoursesAdapter.update(courses);
             }
         });
+
+
+
+
+
+
 
         return root;
     }

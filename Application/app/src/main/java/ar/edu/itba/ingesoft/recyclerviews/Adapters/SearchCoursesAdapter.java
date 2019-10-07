@@ -55,6 +55,7 @@ public class SearchCoursesAdapter extends RecyclerView.Adapter<SearchCoursesAdap
             Log.v("SearchCAdapter", "onBindViewHolder" + courseList.get(position).getName());
             Course aux = courseList.get(position);
             holder.courseNameTextView.setText(aux.getName());
+            holder.universityTextView.setText(aux.getCode().substring(aux.getCode().indexOf("-")));
     }
 
     @Override
