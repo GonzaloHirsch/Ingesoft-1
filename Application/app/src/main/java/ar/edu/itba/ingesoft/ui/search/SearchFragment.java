@@ -48,15 +48,10 @@ public class SearchFragment extends Fragment {
         searchCoursesAdapter = new SearchCoursesAdapter(new ArrayList<>());
         searchRecyclerView.setAdapter(searchCoursesAdapter);
 
-        searchViewModel.getDisplayedData().observe(getActivity(), new Observer<List<Map.Entry<Course, List<User>>>>() {
+        searchViewModel.getDisplayedData().observe(this, new Observer<List<Course>>() {
             @Override
-            public void onChanged(List<Map.Entry<Course, List<User>>> entries) {
-
-                //todo remove this
-                for(Map.Entry<Course, List<User>> e : entries){
-                    Log.v("SearchFragment", e.getKey().getCode());
-                }
-                searchCoursesAdapter.update(entries);
+            public void onChanged(List<Course> courses) {
+                searchCoursesAdapter.update(courses);
             }
         });
 

@@ -36,8 +36,6 @@ public class DatabaseConnection {
 
     public static final String TAG = "DATABASE_CONNECTION";
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    
-
 
     /*--------------------------------------USERS----------------------------------------*/
 

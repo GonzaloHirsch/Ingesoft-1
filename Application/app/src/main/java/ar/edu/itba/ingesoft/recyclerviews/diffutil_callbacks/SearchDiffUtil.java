@@ -10,10 +10,10 @@ import ar.edu.itba.ingesoft.Classes.User;
 
 public class SearchDiffUtil extends DiffUtil.Callback {
 
-    List<Map.Entry<Course,List<User>>> oldList;
-    List<Map.Entry<Course,List<User>>> newList;
+    List<Course> oldList;
+    List<Course> newList;
 
-    public SearchDiffUtil(List<Map.Entry<Course,List<User>>> oldList, List<Map.Entry<Course,List<User>>> newList){
+    public SearchDiffUtil(List<Course> oldList, List<Course> newList){
         this.oldList = oldList;
         this.newList = newList;
     }
@@ -30,7 +30,7 @@ public class SearchDiffUtil extends DiffUtil.Callback {
 
     @Override
     public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-        return oldList.get(oldItemPosition).getKey().getCode().equals(newList.get(newItemPosition).getKey().getCode());
+        return oldList.get(oldItemPosition).getCode().equals(newList.get(newItemPosition).getCode());
     }
 
     @Override

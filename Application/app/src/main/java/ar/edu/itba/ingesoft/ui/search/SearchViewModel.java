@@ -24,20 +24,18 @@ import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnCourseEventListe
 
 public class SearchViewModel extends ViewModel {
 
-    private MutableLiveData<List<Map.Entry<Course, List<User>>>> displayedData = new MutableLiveData<>();
+    //private MutableLiveData<List<Map.Entry<Course, List<User>>>> displayedData = new MutableLiveData<>();
+    private MutableLiveData<List<Course>> displayedData = new MutableLiveData<>();
     private DatabaseConnection dbc = new DatabaseConnection();
 
+    public SearchViewModel() {}
 
-    public SearchViewModel() {
-    }
-
-    public MutableLiveData<List<Map.Entry<Course, List<User>>>> getDisplayedData() {
+    public MutableLiveData<List<Course>> getDisplayedData() {
 
         if(displayedData.getValue()==null){
 
             Log.v("SearchViewModel", "MutableLiveDataCreation");
-            displayedData.setValue(new ArrayList<Map.Entry<Course, List<User>>>());
-            dbc.GetTeachersPerCourse(new OnCourseEventListener() {
+            dbc.GetAllCourses(new OnCourseEventListener() {
                 @Override
                 public void onCourseRetrieved(Course course) {
 
@@ -45,7 +43,7 @@ public class SearchViewModel extends ViewModel {
 
                 @Override
                 public void onCoursesRetrieved(List<Course> courses) {
-
+                    displayedData.postValue(courses);
                 }
 
                 @Override
@@ -55,33 +53,10 @@ public class SearchViewModel extends ViewModel {
 
                 @Override
                 public void onTeachersPerCourseRetrieved(Map<Course, List<User>> drToUser) {
-                    Log.v("SearchViewModel", "Retrieved sth?");
 
-
-                    for(Map.Entry<Course, List<User>> e : drToUser.entrySet()){
-                        Log.v("SearchViewModel", "Retrieved Teachers" + e.getKey().getCode() + " ");
-                    }
                 }
             });
         }
-
-        //todo test
-        Map<Course,List<User>> list = new HashMap<>();
-        Course c = new Course();
-        c.setCode("code");
-        c.setName("name");
-        User u = new User();
-        u.setName("i");
-        u.setProfessor(true);
-        u.setMail("i@mail.ru");
-        u.setSurname("q");
-        Universidad ud = new Universidad("Itba");
-        u.setUniversidad(ud);
-        List<User> l = new ArrayList<>();
-        l.add(u);
-        list.put(c, l);
-
-        displayedData.setValue(new ArrayList<>(list.entrySet()));
 
         return displayedData;
     }

@@ -23,14 +23,14 @@ import ar.edu.itba.ingesoft.utils.Pair;
 
 public class SearchCoursesAdapter extends RecyclerView.Adapter<SearchCoursesAdapter.SearchCoursesViewHolder> {
 
-    private List<Map.Entry<Course, List<User>>> courseList;
+    private List<Course> courseList;
 
-    public SearchCoursesAdapter(List<Map.Entry<Course, List<User>>> courseList){
+    public SearchCoursesAdapter(List<Course> courseList){
         this.courseList = courseList;
     }
 
     //displaying updates to list contents
-    public void update(List<Map.Entry<Course, List<User>>> newList){
+    public void update(List<Course> newList){
 
         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new SearchDiffUtil(this.courseList, newList));
         Log.v("SearchCAdapter", "new List");
@@ -52,9 +52,9 @@ public class SearchCoursesAdapter extends RecyclerView.Adapter<SearchCoursesAdap
 
     @Override
     public void onBindViewHolder(@NonNull SearchCoursesViewHolder holder, int position) {
-            Log.v("SearchCAdapter", "onBindViewHolder" + courseList.get(position).getKey().getName());
-            Map.Entry<Course, List<User>> aux = courseList.get(position);
-            holder.courseNameTextView.setText(aux.getKey().getName());
+            Log.v("SearchCAdapter", "onBindViewHolder" + courseList.get(position).getName());
+            Course aux = courseList.get(position);
+            holder.courseNameTextView.setText(aux.getName());
     }
 
     @Override
