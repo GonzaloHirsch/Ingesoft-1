@@ -457,7 +457,7 @@ public class DatabaseConnection {
      * Getter for the teacher for each course, grouped by course.
      * @param listener for the event.
      */
-    public void GetTeachersPerCourse(OnCourseEventListener listener){
+   /* public void GetTeachersPerCourse(OnCourseEventListener listener){
         db.collection("Users").whereEqualTo("professor", true).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -519,7 +519,7 @@ public class DatabaseConnection {
             }
         });
     }
-
+*/
     /**
      * Getter for all the courses, by reference to the document.
      * @param listener for the event to use the data.

@@ -8,12 +8,12 @@ import java.util.Map;
 import ar.edu.itba.ingesoft.Classes.Course;
 import ar.edu.itba.ingesoft.Classes.User;
 
-public class SearchDiffUtil extends DiffUtil.Callback {
+public class CourseListDiffUtil extends DiffUtil.Callback {
 
     List<Course> oldList;
     List<Course> newList;
 
-    public SearchDiffUtil(List<Course> oldList, List<Course> newList){
+    public CourseListDiffUtil(List<Course> oldList, List<Course> newList){
         this.oldList = oldList;
         this.newList = newList;
     }

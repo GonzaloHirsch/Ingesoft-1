@@ -17,6 +17,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import ar.edu.itba.ingesoft.Classes.Course;
 import ar.edu.itba.ingesoft.Classes.User;
@@ -29,6 +30,7 @@ public class ProfileViewModel extends ViewModel {
     private MutableLiveData<User> currentUserLiveData = new MutableLiveData<>();
     private MutableLiveData<String> coursesTaughtLiveData = new MutableLiveData<>();
     private MutableLiveData<Boolean> loading = new MutableLiveData<Boolean>(true);
+
 
     public ProfileViewModel() {
 
@@ -48,6 +50,7 @@ public class ProfileViewModel extends ViewModel {
                 public void onUserRetrieved(User user) {
                     currentUserLiveData.postValue(user);
                     Log.v("ProfileViewModel", "");
+                    /*
                     List<Task<DocumentSnapshot>> tasks = new ArrayList<>();
                     for(DocumentReference documentReference : user.getCourses()){
                         Task<DocumentSnapshot> documentSnapshotTask = documentReference.get();
@@ -57,8 +60,9 @@ public class ProfileViewModel extends ViewModel {
                         @Override
                         public void onSuccess(List<Object> objects) {
                             //todo get courses
-                            loading.setValue(false);
                     }});
+                     */
+                    loading.setValue(false);
                 }
 
                 @Override

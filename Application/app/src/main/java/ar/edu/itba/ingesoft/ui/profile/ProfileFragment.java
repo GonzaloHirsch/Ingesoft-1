@@ -18,11 +18,16 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import java.util.List;
+import java.util.Map;
+
 import ar.edu.itba.ingesoft.Authentication.Authenticator;
+import ar.edu.itba.ingesoft.Classes.Course;
 import ar.edu.itba.ingesoft.Classes.User;
 import ar.edu.itba.ingesoft.R;
 import ar.edu.itba.ingesoft.ui.coursestaught.CoursesTaughtActivity;
 import ar.edu.itba.ingesoft.ui.login.LoginActivity;
+import ar.edu.itba.ingesoft.ui.search.SearchViewModel;
 
 public class ProfileFragment extends Fragment {
 
@@ -30,6 +35,7 @@ public class ProfileFragment extends Fragment {
     private TextView loadingTextView;
 
     private ProfileViewModel profileViewModel;
+    private SearchViewModel searchViewModel;
 
     private TextView nameTextView;
     private TextView emailTextView;
@@ -52,6 +58,7 @@ public class ProfileFragment extends Fragment {
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 getActivity().finish();
+
                 break;
         }
 
@@ -68,6 +75,8 @@ public class ProfileFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         profileViewModel =
                 ViewModelProviders.of(getActivity()).get(ProfileViewModel.class);
+        searchViewModel = ViewModelProviders.of(getActivity()).get(SearchViewModel.class);
+
         View root = inflater.inflate(R.layout.fragment_profile, container, false);
 
         //Name TextView
@@ -87,12 +96,14 @@ public class ProfileFragment extends Fragment {
         ((TextView)ll.findViewById(R.id.itemProfileDataTitle)).setText(R.string.courses_taught);
         ll.setOnClickListener(x->{
             Intent intent = new Intent(getContext(), CoursesTaughtActivity.class);
+            intent.putExtra(getActivity().getString(R.string.user_parcel), profileViewModel.getCurrentUserLiveData().getValue());
             startActivity(intent);
         });
 
         //ProgressBar + Loading TextView
         theProgressBar = root.findViewById(R.id.profileProgressBar);
         loadingTextView = root.findViewById(R.id.loadingTextView);
+
 
         profileViewModel.getCurrentUserLiveData().observe(getActivity(), new Observer<User>(){
             @Override
@@ -101,7 +112,7 @@ public class ProfileFragment extends Fragment {
                 emailTextView.setText(u.getMail());
                 //todo
                 universityTextView.setText("No University");
-                coursesTextView.setText("");
+                coursesTextView.setText(u.getCourses().size() + " courses");
             }
         });
 

@@ -4,7 +4,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
@@ -18,13 +17,10 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import ar.edu.itba.ingesoft.Classes.Course;
-import ar.edu.itba.ingesoft.Classes.User;
-import ar.edu.itba.ingesoft.Interfaces.AdapterListeners.OnItemClickListener;
 import ar.edu.itba.ingesoft.R;
-import ar.edu.itba.ingesoft.ui.recyclerviews.diffutil_callbacks.SearchDiffUtil;
+import ar.edu.itba.ingesoft.ui.recyclerviews.diffutil_callbacks.CourseListDiffUtil;
 
 public class SearchCoursesAdapter extends RecyclerView.Adapter<SearchCoursesAdapter.SearchCoursesViewHolder> implements Filterable{
 
@@ -41,7 +37,7 @@ public class SearchCoursesAdapter extends RecyclerView.Adapter<SearchCoursesAdap
     //displaying updates to list contents
     public void update(List<Course> newList){
 
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new SearchDiffUtil(this.currentList, newList));
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new CourseListDiffUtil(this.currentList, newList));
         Log.v("SearchCAdapter", "new List");
 
         if(newList!=null) {
@@ -55,7 +51,7 @@ public class SearchCoursesAdapter extends RecyclerView.Adapter<SearchCoursesAdap
     }
 
     public void updateFilter(List<Course> newList){
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new SearchDiffUtil(this.currentList, newList));
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new CourseListDiffUtil(this.currentList, newList));
         if(newList!=null){
             currentList.clear();
             currentList.addAll(newList);

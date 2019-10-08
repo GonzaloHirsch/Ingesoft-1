@@ -24,16 +24,19 @@ import java.util.List;
 import java.util.Map;
 
 import ar.edu.itba.ingesoft.Classes.Course;
+import ar.edu.itba.ingesoft.Classes.User;
 import ar.edu.itba.ingesoft.Database.DatabaseConnection;
 
 import ar.edu.itba.ingesoft.Database.DatabaseConnection;
+import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnCourseEventListener;
 
 public class CoursesTaughtViewModel extends ViewModel {
 
-    MutableLiveData<List<Course>> courses = new MutableLiveData<>();
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
-    String email;
-    DatabaseConnection dbc;
+    private MutableLiveData<List<Course>> courses = new MutableLiveData<>();
+    private MutableLiveData<User> user = new MutableLiveData<>();
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private String email;
+    private DatabaseConnection dbc;
 
     public CoursesTaughtViewModel(){
         email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
@@ -43,31 +46,32 @@ public class CoursesTaughtViewModel extends ViewModel {
     public MutableLiveData<List<Course>> getCourses() {
 
         if(courses.getValue()==null){
-            db.collection("Users").document(email).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            dbc.GetAllCourses(new OnCourseEventListener() {
                 @Override
-                public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                    Map<String, Object> map = documentSnapshot.getData();
-                    Log.v("CoursesTViewModel", map.get("name").toString() + " " + map.get("surname") + " " + map.get("mail"));
-                    List<Task<DocumentSnapshot>> tasks = new ArrayList<>();
-                    ArrayList<DocumentReference> courses = (ArrayList<DocumentReference>) map.get("courses");
-                    for(DocumentReference dr : courses){
-                        tasks.add(dr.get());
-                    }
-                    Tasks.whenAllSuccess(tasks).addOnSuccessListener(new OnSuccessListener<List<Object>>() {
-                        @Override
-                        public void onSuccess(List<Object> objects) {
-                            for(Object o : objects){
-                                DocumentSnapshot ds = (DocumentSnapshot) o;
+                public void onCourseRetrieved(Course course) {
 
-                                Log.v("CoursesTViewModel", String.valueOf(ds.exists()));
-                            }
-
-                        }
-                    });
                 }
 
+                @Override
+                public void onCoursesRetrieved(List<Course> courss) {
+                    courses.postValue(courss);
+                }
+
+                @Override
+                public void onCoursesReferencesRetrieved(List<DocumentReference> courses) {
+
+                }
+
+                @Override
+                public void onTeachersPerCourseRetrieved(Map<Course, List<User>> drToUser) {
+
+                }
             });
         }
         return courses;
+    }
+
+    public MutableLiveData<User> getUser() {
+        return user;
     }
 }
