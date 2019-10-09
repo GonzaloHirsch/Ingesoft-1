@@ -1,0 +1,114 @@
+package ar.edu.itba.ingesoft.ui.coursestaught;
+
+import android.content.Context;
+import android.net.Uri;
+import android.os.Bundle;
+
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import ar.edu.itba.ingesoft.Classes.Course;
+import ar.edu.itba.ingesoft.R;
+import ar.edu.itba.ingesoft.ui.recyclerviews.Adapters.CoursesTaughtAdapter;
+
+public class CoursesTaughtListFragment extends Fragment {
+
+
+    NavController navController;
+    CoursesTaughtViewModel viewModel;
+    RecyclerView coursesTaughtRecyclerView;
+    CoursesTaughtAdapter coursesTaughtAdapter = new CoursesTaughtAdapter();
+    LinearLayoutManager linearLayoutManager;
+    FloatingActionButton fab;
+
+    public CoursesTaughtListFragment() {
+        // Required empty public constructor
+    }
+
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View root =  inflater.inflate(R.layout.fragment_courses_taught_list, container, false);
+
+        //navController
+        navController = Navigation.findNavController(getActivity(), R.id.coursesTaughtNavHost);
+
+
+        //Fab
+        fab = getActivity().findViewById(R.id.coursesTaughtAdd);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navController.navigate(R.id.action_coursesTaughtListFragment_to_addCourseFragment);
+                fab.setVisibility(View.GONE);
+                getActivity().setTitle(getActivity().getResources().getString(R.string.add_course));
+            }
+        });
+
+        //RecyclerView
+        RecyclerView rV = root.findViewById(R.id.coursesTaughtRecyclerView);
+        rV.setAdapter(coursesTaughtAdapter);
+        linearLayoutManager = new LinearLayoutManager(getActivity());
+        rV.setLayoutManager(linearLayoutManager);
+        rV.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if (dy > 0 || dy < 0 && fab.isShown())
+                    fab.hide();
+            }
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                if (newState == RecyclerView.SCROLL_STATE_IDLE)
+                    fab.show();
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+        });
+
+
+        //guardo el User que retrievee en la MainActivity
+        viewModel = (CoursesTaughtViewModel) ViewModelProviders.of(getActivity()).get(CoursesTaughtViewModel.class);
+        viewModel.getUser().setValue(getActivity().getIntent().getExtras().getParcelable(getString(R.string.user_parcel)));
+        //Log.v("Courses Taught", us.getCourses().get(0));
+
+        //observar cambios en la lista total de cursos
+        viewModel.getCourses().observe(this, new Observer<List<Course>>() {
+            @Override
+            public void onChanged(List<Course> courses) {
+                List<Course> aux = new ArrayList<>();
+                for(Course c : courses){
+                    if(viewModel.getUser().getValue().getCourses().contains(c.getCode()))
+                        aux.add(c);
+                }
+                coursesTaughtAdapter.update(aux);
+            }
+        });
+
+        return root;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(fab.getVisibility()==View.GONE)
+            fab.setVisibility(View.VISIBLE);
+        getActivity().setTitle(getActivity().getResources().getString(R.string.courses_taught));
+    }
+}
