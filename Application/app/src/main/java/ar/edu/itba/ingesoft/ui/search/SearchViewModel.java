@@ -45,10 +45,8 @@ public class SearchViewModel extends ViewModel {
                     displayedData.postValue(courses);
                     loading.postValue(false);
                 }
-
                 @Override
                 public void onCoursesReferencesRetrieved(List<DocumentReference> courses) {                }
-
                 @Override
                 public void onTeachersPerCourseRetrieved(Map<Course, List<User>> drToUser) {                }
             });
