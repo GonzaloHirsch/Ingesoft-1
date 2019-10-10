@@ -3,7 +3,6 @@ package ar.edu.itba.ingesoft.ui.search;
 import android.app.SearchManager;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,15 +21,10 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.api.Distribution;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import ar.edu.itba.ingesoft.Classes.Course;
-import ar.edu.itba.ingesoft.Classes.User;
-import ar.edu.itba.ingesoft.Interfaces.AdapterListeners.OnItemClickListener;
 import ar.edu.itba.ingesoft.R;
 import ar.edu.itba.ingesoft.ui.recyclerviews.Adapters.SearchCoursesAdapter;
 

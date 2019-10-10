@@ -33,6 +33,9 @@ public class CoursesTaughtActivity extends AppCompatActivity {
 
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        CoursesTaughtViewModel viewModel = ViewModelProviders.of(this).get(CoursesTaughtViewModel.class);
+        viewModel.getUser().setValue(getIntent().getExtras().getParcelable(getString(R.string.user_parcel)));
     }
 
     @Override

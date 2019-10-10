@@ -423,6 +423,8 @@ public class DatabaseConnection {
         });
     }
 
+    //************************************COURSES**********************************
+
     /**
      * Getter for all the courses, by object.
      * @param listener for the event to use the data.
@@ -451,6 +453,11 @@ public class DatabaseConnection {
                 }
             }
         });
+    }
+
+    public void UpdateCourses(String email, List<String> courses){
+
+        db.collection("Users").document(email).update("courses", courses);
     }
 
     /**

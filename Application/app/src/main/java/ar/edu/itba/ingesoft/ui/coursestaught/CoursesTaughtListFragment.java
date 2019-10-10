@@ -1,9 +1,9 @@
 package ar.edu.itba.ingesoft.ui.coursestaught;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -13,6 +13,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -22,31 +25,40 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ar.edu.itba.ingesoft.Classes.Course;
+import ar.edu.itba.ingesoft.Interfaces.Adapters.OnListContentUpdatedListener;
+import ar.edu.itba.ingesoft.Interfaces.Adapters.OnSelectionModeListener;
 import ar.edu.itba.ingesoft.R;
 import ar.edu.itba.ingesoft.ui.recyclerviews.Adapters.CoursesTaughtAdapter;
 
-public class CoursesTaughtListFragment extends Fragment {
-
+public class CoursesTaughtListFragment extends Fragment implements OnSelectionModeListener, OnListContentUpdatedListener<String> {
 
     NavController navController;
     CoursesTaughtViewModel viewModel;
     RecyclerView coursesTaughtRecyclerView;
-    CoursesTaughtAdapter coursesTaughtAdapter = new CoursesTaughtAdapter();
+    CoursesTaughtAdapter coursesTaughtAdapter;
     LinearLayoutManager linearLayoutManager;
     FloatingActionButton fab;
+    Menu actionBarMenu;
+
+    //Lifecycle methods
 
     public CoursesTaughtListFragment() {
         // Required empty public constructor
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View root =  inflater.inflate(R.layout.fragment_courses_taught_list, container, false);
+        viewModel = (CoursesTaughtViewModel) ViewModelProviders.of(getActivity()).get(CoursesTaughtViewModel.class);
 
-        //navController
+
         navController = Navigation.findNavController(getActivity(), R.id.coursesTaughtNavHost);
 
 
@@ -57,12 +69,13 @@ public class CoursesTaughtListFragment extends Fragment {
             public void onClick(View v) {
                 navController.navigate(R.id.action_coursesTaughtListFragment_to_addCourseFragment);
                 fab.setVisibility(View.GONE);
-                getActivity().setTitle(getActivity().getResources().getString(R.string.add_course));
+                //getActivity().setTitle(getActivity().getResources().getString(R.string.add_course));
             }
         });
 
         //RecyclerView
         RecyclerView rV = root.findViewById(R.id.coursesTaughtRecyclerView);
+        coursesTaughtAdapter = viewModel.getCoursesTaughtAdapterLiveData(this).getValue();
         rV.setAdapter(coursesTaughtAdapter);
         linearLayoutManager = new LinearLayoutManager(getActivity());
         rV.setLayoutManager(linearLayoutManager);
@@ -84,8 +97,8 @@ public class CoursesTaughtListFragment extends Fragment {
 
 
         //guardo el User que retrievee en la MainActivity
-        viewModel = (CoursesTaughtViewModel) ViewModelProviders.of(getActivity()).get(CoursesTaughtViewModel.class);
-        viewModel.getUser().setValue(getActivity().getIntent().getExtras().getParcelable(getString(R.string.user_parcel)));
+
+
         //Log.v("Courses Taught", us.getCourses().get(0));
 
         //observar cambios en la lista total de cursos
@@ -109,6 +122,45 @@ public class CoursesTaughtListFragment extends Fragment {
         super.onResume();
         if(fab.getVisibility()==View.GONE)
             fab.setVisibility(View.VISIBLE);
-        getActivity().setTitle(getActivity().getResources().getString(R.string.courses_taught));
+        //getActivity().setTitle(getActivity().getResources().getString(R.string.courses_taught));
+    }
+
+    //End of lifecycle methods
+
+    //ActionBar methods
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        getActivity().getMenuInflater().inflate(R.menu.courses_taught_menu, menu);
+        actionBarMenu = menu;
+        menu.findItem(R.id.menuItemDelete).setVisible(false);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        if(item.getItemId() == R.id.menuItemDelete){
+            coursesTaughtAdapter.deleteSelectedItems();
+        }
+        return true;
+    }
+
+    //End of ActionBar methods
+
+    @Override
+    public void onSelectionModeEnabled() {
+
+        actionBarMenu.findItem(R.id.menuItemDelete).setVisible(true);
+    }
+
+    @Override
+    public void onSelectionModeDisabled() {
+        actionBarMenu.findItem(R.id.menuItemDelete).setVisible(false);
+    }
+
+    @Override
+    public void onContentUpdated(List<String> newList) {
+        viewModel.getUser().getValue().setCourses(newList);
     }
 }

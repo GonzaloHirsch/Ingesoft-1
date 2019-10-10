@@ -121,6 +121,9 @@ public class User implements DatabaseObject, Parcelable {
         this.courses.remove(course);
     }
 
+    public void setCourses(List<String> courses){
+        this.courses = courses;
+    }
     /*
     public Map<Long, Appointment> getAppointments() {
         return appointments;
@@ -190,6 +193,8 @@ public class User implements DatabaseObject, Parcelable {
         this.mail = in.readString();
         this.courses = in.createStringArrayList();
     }
+
+
 
     public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>(){
         public User createFromParcel(Parcel source){

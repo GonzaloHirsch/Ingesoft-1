@@ -11,14 +11,18 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import ar.edu.itba.ingesoft.ui.profile.ProfileViewModel;
+
 public class MainActivity extends AppCompatActivity {
 
     public Context context;
+    public ProfileViewModel profileViewModel;
 
     public Context getContext(){
         return context;
@@ -29,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         BottomNavigationView navView = findViewById(R.id.nav_view);
+
+        profileViewModel = ViewModelProviders.of(this).get(ProfileViewModel.class);
 
         context = this; //todo borrar esto
 
@@ -42,5 +48,11 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navView, navController);
 
         //FirebaseAuth.getInstance().signInWithEmailAndPassword("igrib98@gmail.com", "ssssssssaa");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //profileViewModel.
     }
 }

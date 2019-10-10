@@ -1,25 +1,12 @@
 package ar.edu.itba.ingesoft.ui.coursestaught;
 
-import android.util.Log;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -27,13 +14,15 @@ import ar.edu.itba.ingesoft.Classes.Course;
 import ar.edu.itba.ingesoft.Classes.User;
 import ar.edu.itba.ingesoft.Database.DatabaseConnection;
 
-import ar.edu.itba.ingesoft.Database.DatabaseConnection;
+import ar.edu.itba.ingesoft.Interfaces.Adapters.OnSelectionModeListener;
 import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnCourseEventListener;
+import ar.edu.itba.ingesoft.ui.recyclerviews.Adapters.CoursesTaughtAdapter;
 
 public class CoursesTaughtViewModel extends ViewModel {
 
     private MutableLiveData<List<Course>> courses = new MutableLiveData<>();
     private MutableLiveData<User> user = new MutableLiveData<>();
+    private MutableLiveData<CoursesTaughtAdapter> coursesTaughtAdapterLiveData = new MutableLiveData<>();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private String email;
     private DatabaseConnection dbc;
@@ -73,5 +62,11 @@ public class CoursesTaughtViewModel extends ViewModel {
 
     public MutableLiveData<User> getUser() {
         return user;
+    }
+
+    public MutableLiveData<CoursesTaughtAdapter> getCoursesTaughtAdapterLiveData(OnSelectionModeListener listener) {
+        if(coursesTaughtAdapterLiveData.getValue()==null)
+            coursesTaughtAdapterLiveData.setValue(new CoursesTaughtAdapter(listener));
+        return coursesTaughtAdapterLiveData;
     }
 }

@@ -3,9 +3,10 @@ package ar.edu.itba.ingesoft.Classes;
 import java.util.Map;
 import java.util.Objects;
 
+import ar.edu.itba.ingesoft.Interfaces.Adapters.Selectable;
 import ar.edu.itba.ingesoft.Interfaces.DatabaseObject;
 
-public class Course implements DatabaseObject {
+public class Course extends Selectable implements DatabaseObject {
 
     private String name;
     private String code;
