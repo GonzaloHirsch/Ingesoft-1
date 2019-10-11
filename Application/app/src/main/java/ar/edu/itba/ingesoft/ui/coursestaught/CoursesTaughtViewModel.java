@@ -16,6 +16,7 @@ import ar.edu.itba.ingesoft.Database.DatabaseConnection;
 
 import ar.edu.itba.ingesoft.Interfaces.Adapters.OnSelectionModeListener;
 import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnCourseEventListener;
+import ar.edu.itba.ingesoft.ui.recyclerviews.Adapters.AddCourseAdapter;
 import ar.edu.itba.ingesoft.ui.recyclerviews.Adapters.CoursesTaughtAdapter;
 
 public class CoursesTaughtViewModel extends ViewModel {
@@ -23,6 +24,7 @@ public class CoursesTaughtViewModel extends ViewModel {
     private MutableLiveData<List<Course>> courses = new MutableLiveData<>();
     private MutableLiveData<User> user = new MutableLiveData<>();
     private MutableLiveData<CoursesTaughtAdapter> coursesTaughtAdapterLiveData = new MutableLiveData<>();
+    private MutableLiveData<AddCourseAdapter> addCourseAdapterMutableLiveData = new MutableLiveData<>();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private String email;
     private DatabaseConnection dbc;
@@ -68,5 +70,10 @@ public class CoursesTaughtViewModel extends ViewModel {
         if(coursesTaughtAdapterLiveData.getValue()==null)
             coursesTaughtAdapterLiveData.setValue(new CoursesTaughtAdapter(listener));
         return coursesTaughtAdapterLiveData;
+    }
+    public MutableLiveData<AddCourseAdapter> getAddCourseAdapterLiveData(OnSelectionModeListener listener) {
+        if(addCourseAdapterMutableLiveData.getValue()==null)
+            addCourseAdapterMutableLiveData.setValue(new AddCourseAdapter(listener));
+        return addCourseAdapterMutableLiveData;
     }
 }

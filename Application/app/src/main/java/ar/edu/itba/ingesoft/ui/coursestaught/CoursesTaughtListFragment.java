@@ -39,6 +39,7 @@ public class CoursesTaughtListFragment extends Fragment implements OnSelectionMo
     LinearLayoutManager linearLayoutManager;
     FloatingActionButton fab;
     Menu actionBarMenu;
+    boolean selectionMode = false;
 
     //Lifecycle methods
 
@@ -67,6 +68,7 @@ public class CoursesTaughtListFragment extends Fragment implements OnSelectionMo
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //coursesTaughtAdapter.clearSelection();
                 navController.navigate(R.id.action_coursesTaughtListFragment_to_addCourseFragment);
                 fab.setVisibility(View.GONE);
                 //getActivity().setTitle(getActivity().getResources().getString(R.string.add_course));
@@ -89,7 +91,7 @@ public class CoursesTaughtListFragment extends Fragment implements OnSelectionMo
 
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                if (newState == RecyclerView.SCROLL_STATE_IDLE)
+                if (newState == RecyclerView.SCROLL_STATE_IDLE && !selectionMode)
                     fab.show();
                 super.onScrollStateChanged(recyclerView, newState);
             }
@@ -150,13 +152,16 @@ public class CoursesTaughtListFragment extends Fragment implements OnSelectionMo
 
     @Override
     public void onSelectionModeEnabled() {
-
+        selectionMode=true;
         actionBarMenu.findItem(R.id.menuItemDelete).setVisible(true);
+        fab.hide();
     }
 
     @Override
     public void onSelectionModeDisabled() {
+        selectionMode=false;
         actionBarMenu.findItem(R.id.menuItemDelete).setVisible(false);
+        fab.show();
     }
 
     @Override
