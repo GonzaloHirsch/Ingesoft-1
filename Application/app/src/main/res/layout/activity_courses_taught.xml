@@ -20,14 +20,6 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/coursesTaughtAdd"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@drawable/round_add_white_24" />
-
     <include layout="@layout/content_courses_taught" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

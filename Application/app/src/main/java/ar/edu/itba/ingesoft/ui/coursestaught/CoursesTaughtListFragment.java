@@ -64,13 +64,12 @@ public class CoursesTaughtListFragment extends Fragment implements OnSelectionMo
 
 
         //Fab
-        fab = getActivity().findViewById(R.id.coursesTaughtAdd);
+        fab = root.findViewById(R.id.coursesTaughtAdd);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //coursesTaughtAdapter.clearSelection();
                 navController.navigate(R.id.action_coursesTaughtListFragment_to_addCourseFragment);
-                fab.setVisibility(View.GONE);
                 //getActivity().setTitle(getActivity().getResources().getString(R.string.add_course));
             }
         });
@@ -122,8 +121,7 @@ public class CoursesTaughtListFragment extends Fragment implements OnSelectionMo
     @Override
     public void onResume() {
         super.onResume();
-        if(fab.getVisibility()==View.GONE)
-            fab.setVisibility(View.VISIBLE);
+        coursesTaughtAdapter.clearSelection();
         //getActivity().setTitle(getActivity().getResources().getString(R.string.courses_taught));
     }
 
@@ -142,8 +140,12 @@ public class CoursesTaughtListFragment extends Fragment implements OnSelectionMo
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
+        int id = item.getItemId();
         if(item.getItemId() == R.id.menuItemDelete){
             coursesTaughtAdapter.deleteSelectedItems();
+        }
+        else if(item.getItemId() == android.R.id.home){
+            getActivity().onBackPressed();
         }
         return true;
     }

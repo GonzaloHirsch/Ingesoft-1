@@ -73,6 +73,7 @@ public class AddCourseFragment extends Fragment implements OnListContentUpdatedL
         });
 
         addCourseButton = root.findViewById(R.id.addCourseButton);
+        addCourseButton.setEnabled(false);
         addCourseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -91,7 +92,6 @@ public class AddCourseFragment extends Fragment implements OnListContentUpdatedL
 
     @Override
     public void onSelectionModeEnabled() {
-
         addCourseButton.setEnabled(true);
     }
 
