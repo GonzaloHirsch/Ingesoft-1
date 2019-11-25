@@ -575,7 +575,7 @@ public class DatabaseConnection {
                         }
 
 
-                        /*
+
                         List<Task<DocumentSnapshot>> tasks = new ArrayList<>();
 
                         for (DocumentReference dr : refToUsers.keySet()){
@@ -609,7 +609,8 @@ public class DatabaseConnection {
                             });
                         }
 
-                        listener.onTeachersPerCourseRetrieved(coursesToUsers);*/
+                        listener.onTeachersPerCourseRetrieved(coursesToUsers);
+
                     } else {
                         Log.d(TAG, "Query GetAllCoursesReferences returned null");
                     }
@@ -619,7 +620,9 @@ public class DatabaseConnection {
             }
         });
     }
-*/
+
+    */
+
     /**
      * Getter for all the courses, by reference to the document.
      * @param listener for the event to use the data.

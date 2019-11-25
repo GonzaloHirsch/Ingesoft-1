@@ -21,6 +21,8 @@ import ar.edu.itba.ingesoft.ui.profile.ProfileViewModel;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static final String CHAT_ID_EXTRA = "chat_id_extra";
+
     public Context context;
 
     public Context getContext(){

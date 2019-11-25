@@ -34,8 +34,6 @@ public class ChatsFragment extends Fragment {
         RecyclerView.LayoutManager manager = new LinearLayoutManager(getContext());
         chatsRecyclerView.setLayoutManager(manager);
 
-
-
         return root;
     }
 }
