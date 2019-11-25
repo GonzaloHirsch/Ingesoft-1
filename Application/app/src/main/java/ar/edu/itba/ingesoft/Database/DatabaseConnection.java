@@ -110,7 +110,16 @@ public class DatabaseConnection {
 
                                 Map<String, Object> data = document.getData();
 
+
+
                                 if (data != null){
+
+                                    //todo delete this test
+
+                                    for(Map.Entry e : data.entrySet()){
+                                        Log.v("DBC-GetUser", e.getKey() + e.getValue().toString());
+                                    }
+
                                     // Stores all the info in the class
                                     User user = new User(data);
                                     eventListener.onUserRetrieved(user);
@@ -515,6 +524,11 @@ public class DatabaseConnection {
         });
     }
 
+    public void UpdateCourses(String email, List<String> courses){
+
+        db.collection("Users").document(email).update("courses", courses);
+    }
+
     public void AddCourse(String email, DocumentReference ref, final OnCourseEventListener listener){
         db.collection("Users").document(email).update("courses", FieldValue.arrayUnion(ref));
     }
@@ -527,7 +541,7 @@ public class DatabaseConnection {
      * Getter for the teacher for each course, grouped by course.
      * @param listener for the event.
      */
-    public void GetTeachersPerCourse(OnCourseEventListener listener){
+   /* public void GetTeachersPerCourse(OnCourseEventListener listener){
         db.collection("Users").whereEqualTo("professor", true).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -605,7 +619,7 @@ public class DatabaseConnection {
             }
         });
     }
-
+*/
     /**
      * Getter for all the courses, by reference to the document.
      * @param listener for the event to use the data.

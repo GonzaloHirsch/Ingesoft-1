@@ -1,25 +1,17 @@
-package ar.edu.itba.ingesoft.recyclerviews.Adapters;
+package ar.edu.itba.ingesoft.ui.recyclerviews.Adapters;
 
-import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.selection.ItemDetailsLookup;
-import androidx.recyclerview.selection.SelectionTracker;
-import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import ar.edu.itba.ingesoft.Classes.Course;
 import ar.edu.itba.ingesoft.Classes.User;
 import ar.edu.itba.ingesoft.R;
-import ar.edu.itba.ingesoft.recyclerviews.diffutil_callbacks.ProfileDataDiffUtilCallback;
 import ar.edu.itba.ingesoft.utils.Pair;
 
 public class ProfileDataAdapter extends RecyclerView.Adapter<ProfileDataAdapter.ProfileDataViewHolder> {

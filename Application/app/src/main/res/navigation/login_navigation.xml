@@ -9,7 +9,8 @@
         android:id="@+id/loginFragmentMain"
         android:name="ar.edu.itba.ingesoft.ui.login.fragments.LoginFragmentMain"
         android:label="login_fragment_main"
-        tools:layout="@layout/login_fragment_main" >
+        tools:layout="@layout/login_fragment_main"
+        app:startDestination="@id/action_loginFragmentMain_to_signUpFragment">
         <action
             android:id="@+id/action_loginFragmentMain_to_signUpFragment"
             app:destination="@id/signUpFragment"

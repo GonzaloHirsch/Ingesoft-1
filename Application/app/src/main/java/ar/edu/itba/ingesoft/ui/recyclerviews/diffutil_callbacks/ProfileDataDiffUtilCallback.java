@@ -1,10 +1,9 @@
-package ar.edu.itba.ingesoft.recyclerviews.diffutil_callbacks;
+package ar.edu.itba.ingesoft.ui.recyclerviews.diffutil_callbacks;
 
 import androidx.recyclerview.widget.DiffUtil;
 
 import java.util.List;
 
-import ar.edu.itba.ingesoft.recyclerviews.Adapters.ProfileDataAdapter;
 import ar.edu.itba.ingesoft.utils.Pair;
 
 public class ProfileDataDiffUtilCallback extends DiffUtil.Callback {

@@ -50,4 +50,8 @@
     <string name="courses_taught">Courses Taught</string>
     <string name="loading">Loading...</string>
     <string name="log_out">Log Out</string>
+    <string name="title_activity_courses_taught">Courses Taught</string>
+    <string name="search_hint">search</string>
+    <string name="user_parcel">USER_PARCEL</string>
+    <string name="add_course">Add Course</string>
 </resources>

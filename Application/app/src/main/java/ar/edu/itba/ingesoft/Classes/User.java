@@ -1,5 +1,8 @@
 package ar.edu.itba.ingesoft.Classes;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.firebase.firestore.DocumentReference;
 
 import java.util.ArrayList;
@@ -12,13 +15,13 @@ import java.util.Set;
 
 import ar.edu.itba.ingesoft.Interfaces.DatabaseObject;
 
-public class User implements DatabaseObject {
+public class User implements DatabaseObject, Parcelable {
 
     private String mail;
     private String name;
     private String surname;
     private boolean isProfessor;
-    private List<DocumentReference> courses;
+    private List<String> courses;
     //private Map<Long, Appointment> appointments;
     private Universidad universidad;
     //private Map<Long, Chat> chats;
@@ -28,11 +31,16 @@ public class User implements DatabaseObject {
         this.name = (String) data.get("name");
         this.surname = (String) data.get("surname");
         this.mail = (String) data.get("mail");
-        this.isProfessor = (Boolean) data.get("professor");
-        this.courses = (List<DocumentReference>) data.get("courses");
+        //todo wtf
+        if(data.get("isProfessor") != null)
+            this.isProfessor = (Boolean) data.get("isProfessor");
+        else
+            this.isProfessor = false;
+        this.courses = (List<String>) data.get("courses");
         //this.appointments = (Map<Long, Appointment>) data.get("appointments");
         //this.chats = (Map<Long, Chat>) data.get("chats");
-        this.universidad = new Universidad((Map<String, Object>)data.get("universidad"));
+        this.universidad = new Universidad((Map<String, Object>) data.get("Universidad"));
+
     }
 
     public User(){
@@ -97,22 +105,25 @@ public class User implements DatabaseObject {
         isProfessor = professor;
     }
 
-    public List<DocumentReference> getCourses() {
+    public List<String> getCourses() {
         return courses;
     }
 
-    public void addCourses(List<DocumentReference> courses) {
+    public void addCourses(List<String> courses) {
         this.courses.addAll(courses);
     }
 
-    public void addCourse(DocumentReference course) {
+    public void addCourse(String course) {
         this.courses.add(course);
     }
 
-    public void deleteCourse(Course course) {
+    public void deleteCourse(String course) {
         this.courses.remove(course);
     }
 
+    public void setCourses(List<String> courses){
+        this.courses = courses;
+    }
     /*
     public Map<Long, Appointment> getAppointments() {
         return appointments;
@@ -162,4 +173,37 @@ public class User implements DatabaseObject {
     public int hashCode() {
         return Objects.hash(mail);
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.name);
+        dest.writeString(this.surname);
+        dest.writeString(this.mail);
+        dest.writeStringList(this.courses);
+    }
+
+    protected User(Parcel in){
+        this.name = in.readString();
+        this.surname = in.readString();
+        this.mail = in.readString();
+        this.courses = in.createStringArrayList();
+    }
+
+
+
+    public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>(){
+        public User createFromParcel(Parcel source){
+            return new User(source);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
 }

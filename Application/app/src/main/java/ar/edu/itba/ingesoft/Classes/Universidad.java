@@ -16,8 +16,14 @@ public class Universidad implements DatabaseObject {
 
     @SuppressWarnings("unchecked")
     public Universidad(Map<String, Object> data){
-        this.name = (String) data.get("name");
-        this.courses = (List<DocumentReference>) data.get("courses");
+        if(this.name!=null)
+            this.name = (String) data.get("name");
+        else //todo change this
+            this.name = "NoUniversityName";
+        if(this.courses !=null)
+            this.courses = (List<Course>) data.get("courses");
+        else //todo change this
+            this.courses = new ArrayList<Course>();
     }
 
     public Universidad(String name){
