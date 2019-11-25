@@ -1,6 +1,5 @@
 package ar.edu.itba.ingesoft.ui.chats;
 
-import android.os.Debug;
 import android.util.Log;
 
 import java.util.LinkedList;
@@ -33,6 +32,11 @@ public class ChatMessagesViewModel extends ViewModel {
                 if (chat != null)
                     chatObj = chat;
             }
+
+            @Override
+            public void onChatChanged(Chat chat) {
+                throw new RuntimeException("Not Implemented");
+            }
         });
     }
 
@@ -42,17 +46,37 @@ public class ChatMessagesViewModel extends ViewModel {
      */
     public void addMessage(Message message){
         // Store the new message in the object
-        this.chatObj.addMensaje(message);
+        this.chatObj.addMessage(message);
 
         // Update the database with the new message
         new DatabaseConnection().UpdateChat(this.chatObj);
+    }
+
+    /**
+     * Method to set up the chat change listener.
+     * The Fragment should send another listener to make a chain of listeners.
+     * @param chatID of the chat
+     * @param eventListener for the event of a chat change
+     */
+    public void setUpChatChangeListener(Long chatID, OnChatEventListener eventListener){
+        new DatabaseConnection().SetUpChatListener(chatID, new OnChatEventListener() {
+            @Override
+            public void onChatRetrieved(Chat chat) {
+                throw new RuntimeException("Not Implemented");
+            }
+
+            @Override
+            public void onChatChanged(Chat chat) {
+                eventListener.onChatChanged(chat);
+            }
+        });
     }
 
     public List<Message> retrieveMessages(){
         List<Message> messages = new LinkedList<>();
 
         if (chatID != null && chatObj != null){
-            messages = chatObj.getMensajes();
+            messages = chatObj.getMessages();
         } else {
             if (chatID == null)
                 Log.e(TAG, "Null chat ID");
@@ -67,7 +91,7 @@ public class ChatMessagesViewModel extends ViewModel {
         int count = 0;
 
         if (chatID != null && chatObj != null){
-            count = chatObj.getMensajes().size();
+            count = chatObj.getMessages().size();
         } else {
             if (chatID == null)
                 Log.e(TAG, "Null chat ID");

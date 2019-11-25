@@ -415,7 +415,7 @@ public class DatabaseConnection {
                 });
     }
 
-    public void SetUpChatListener(Long chatID){
+    public void SetUpChatListener(Long chatID, OnChatEventListener eventListener){
         DocumentReference ref = db.collection("Chats").document(chatID.toString());
 
         ref.addSnapshotListener(new EventListener<DocumentSnapshot>() {
@@ -433,60 +433,13 @@ public class DatabaseConnection {
                         //Recover the chat in the database
                         Chat chat = new Chat(data);
 
-                        /*
-                        //Verify there is a cache chat
-                        if (((DataCache) context.getApplicationContext()).getChats() != null){
-
-                            //Recover the cache chats
-                            Chat cacheChat = ((DataCache) context.getApplicationContext()).GetChat(chatID);
-                            if (cacheChat != null && cacheChat.getMessageCount() < chat.getMessageCount()) {
-
-                                //Instantiate a new list of messages
-                                List<ChatMessage> newMessages = new ArrayList<>();
-
-                                //Recover the list of messages from the database
-                                List<ChatMessage> recoveredMessages = chat.getMessages();
-
-                                //Insert the new messages
-                                for (int i = cacheChat.getMessageCount(); i < chat.getMessageCount(); i++){
-                                    //Store the instance temporarily
-                                    ChatMessage message = recoveredMessages.get(i);
-
-                                    //Inserting in the new list
-                                    newMessages.add(message);
-
-                                    //Inserting in the cache
-                                    ((DataCache) context.getApplicationContext()).AddMessageToChat(chatID, message);
-                                }
-
-                                //Notify the recycler that there are new messages
-                                if (newMessages.size() != 0) {
-                                    //Call the method to reload the recycler view
-                                    ((MessageRecyclerViewAdapter) recyclerView.getAdapter()).MessageWasAdded(newMessages);
-
-                                    recyclerView.smoothScrollToPosition(chat.getMessageCount() - 1);
-                                }
-                            }
-                        } else {
-                            //Recover the list of messages from the database
-                            List<ChatMessage> recoveredMessages = chat.getMessages();
-
-                            if (((DataCache) context.getApplicationContext()).getChats() == null){
-                                ((DataCache) context.getApplicationContext()).setChats(new HashMap<>());
-                            }
-
-                            ((DataCache) context.getApplicationContext()).AddChat(chat);
-
-                            //Notify the recycler that there are new messages
-                            if (recoveredMessages.size() != 0) {
-                                //Call the method to reload the recycler view
-                                ((MessageRecyclerViewAdapter) recyclerView.getAdapter()).MessageWasAdded(recoveredMessages);
-
-                                recyclerView.smoothScrollToPosition(chat.getMessageCount() - 1);
-                            }
-                        }
-                        */
+                        eventListener.onChatChanged(chat);
+                        Log.v(TAG, "Chat changed event thrown");
+                    } else {
+                        Log.e(TAG, "Null document snapshot data");
                     }
+                } else {
+                    Log.e(TAG, "Null document snapshot");
                 }
             }
         });

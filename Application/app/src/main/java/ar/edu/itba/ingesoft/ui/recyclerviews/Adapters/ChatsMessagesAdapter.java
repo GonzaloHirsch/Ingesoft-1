@@ -73,10 +73,31 @@ public class ChatsMessagesAdapter extends RecyclerView.Adapter<ChatsMessagesAdap
         }
     }
 
+    /**
+     * Method to notify the adapter that a new message was added.
+     * Should be called when logged user sends new message
+     * @param message
+     */
     public void addMessage(Message message){
+        // Add the message to the list
         messages.add(message);
+        // Notify the item was added
         this.notifyItemInserted(messages.size() - 1);
-        this.notifyDataSetChanged();
+    }
+
+    /**
+     * Method to notify the adapter that there are new messages from the database
+     * @param newMessages
+     */
+    public void messagesChanged(List<Message> newMessages){
+        // Store the previous length for the listener
+        int prevLength = this.messages.size();
+        // Get a sub list of the new messages list
+        List<Message> newMessagesList = newMessages.subList(prevLength, newMessages.size());
+        // Add all the messages to the list
+        messages.addAll(newMessagesList);
+        // Notify which items have changed
+        this.notifyItemRangeInserted(prevLength, newMessages.size());
     }
 
     @Override

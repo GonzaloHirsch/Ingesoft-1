@@ -54,11 +54,11 @@ public class Chat implements DatabaseObject {
         this.userB = userB;
     }
 
-    public List<Message> getMensajes() {
+    public List<Message> getMessages() {
         return messages;
     }
 
-    public void addMensaje(Message message) {
+    public void addMessage(Message message) {
         this.messages.add(message);
     }
 

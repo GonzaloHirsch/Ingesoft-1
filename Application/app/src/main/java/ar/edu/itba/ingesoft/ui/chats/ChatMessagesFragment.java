@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,10 +24,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import ar.edu.itba.ingesoft.Authentication.Authenticator;
 import ar.edu.itba.ingesoft.Classes.Chat;
 import ar.edu.itba.ingesoft.Classes.Message;
+import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnChatEventListener;
 import ar.edu.itba.ingesoft.R;
 import ar.edu.itba.ingesoft.ui.recyclerviews.Adapters.ChatsMessagesAdapter;
 
 public class ChatMessagesFragment extends Fragment {
+
+    public static final String TAG = "chat_message_fragment";
 
     private ChatMessagesViewModel mViewModel;
 
@@ -103,6 +107,25 @@ public class ChatMessagesFragment extends Fragment {
         this.messagesRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 1, GridLayoutManager.VERTICAL, false));
         ChatsMessagesAdapter adapter = new ChatsMessagesAdapter(this.mViewModel.retrieveMessages(), new Authenticator().getSignedInUser().getEmail());
         this.messagesRecyclerView.setAdapter(adapter);
+
+        this.mViewModel.setUpChatChangeListener(this.chatID, new OnChatEventListener(){
+
+            @Override
+            public void onChatRetrieved(Chat chat) {
+                throw new RuntimeException("Not Implemented");
+            }
+
+            @Override
+            public void onChatChanged(Chat chat) {
+                ChatsMessagesAdapter adapter = (ChatsMessagesAdapter)messagesRecyclerView.getAdapter();
+
+                if (adapter != null){
+                    adapter.messagesChanged(chat.getMessages());
+                } else {
+                    Log.e(TAG, "Null adapter");
+                }
+            }
+        });
 
         // Scroll the rv to the last message
         this.messagesRecyclerView.smoothScrollToPosition(this.mViewModel.getChatMessageCount() - 1);
