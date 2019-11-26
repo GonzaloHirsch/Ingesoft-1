@@ -6,8 +6,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -17,24 +15,20 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import ar.edu.itba.ingesoft.CachedData.UserCache;
 import ar.edu.itba.ingesoft.Classes.Chat;
-import ar.edu.itba.ingesoft.Classes.Contact;
 import ar.edu.itba.ingesoft.Classes.Course;
-import ar.edu.itba.ingesoft.Classes.Message;
 import ar.edu.itba.ingesoft.Classes.Universidad;
 import ar.edu.itba.ingesoft.Classes.User;
 import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnChatEventListener;
-import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnContactEventListener;
 import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnCourseEventListener;
 import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnUniversityEventListener;
 import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnUserEventListener;
-import ar.edu.itba.ingesoft.MainActivity;
 
 public class DatabaseConnection {
 
@@ -122,6 +116,7 @@ public class DatabaseConnection {
 
                                     // Stores all the info in the class
                                     User user = new User(data);
+                                    UserCache.SetUser(user);
                                     eventListener.onUserRetrieved(user);
                                 } else {
                                     Log.d(TAG, "No data in document");
@@ -139,10 +134,11 @@ public class DatabaseConnection {
     /**
      * Getter for all the users in the database.
      * @param eventListener with callback to this function.
+     * @return
      */
-    public void GetUsers(final OnUserEventListener eventListener){
+    public Task<QuerySnapshot> GetUsers(final OnUserEventListener eventListener){
         // Add the new document for the user using the email as the ID of the document
-        db.collection("Users")
+        return db.collection("Users")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -269,12 +265,7 @@ public class DatabaseConnection {
 
     /*--------------------------------------CONTACTS----------------------------------------*/
 
-    /**
-     * Inserts the given contact under the collection of the given user.
-     * When called, it should be done twice, so that both users have each other as a contact.
-     * @param userEmail of the user who has the new contact.
-     * @param contact of the user given before.
-     */
+    /*
     public void InsertContact(String userEmail, Contact contact){
         // Add the new document for the user using the email as the ID of the document
         db.collection("Contacts")
@@ -294,13 +285,9 @@ public class DatabaseConnection {
                         Log.w(TAG, "Error adding document", e);
                     }
                 });
-    }
+    }*/
 
-    /**
-     * Getter for the contacts of a given user.
-     * @param userEmail of the user who has the contacts.
-     * @param eventListener that has the callback to this function.
-     */
+    /*
     public void GetContacts(String userEmail, final OnContactEventListener eventListener){
         db.collection("Contacts")
                 .document(userEmail)
@@ -331,6 +318,7 @@ public class DatabaseConnection {
                     }
                 });
     }
+    */
 
     /*--------------------------------------CHATS----------------------------------------*/
 
@@ -340,7 +328,7 @@ public class DatabaseConnection {
      */
     public void InsertChat(Chat chat){
         db.collection("Chats")
-                .document(chat.getChatID().toString())
+                .document(chat.getChatID())
                 .set(chat)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -361,9 +349,9 @@ public class DatabaseConnection {
      * @param chatID of the given chat.
      * @param eventListener that has the callback to this function.
      */
-    public void GetChat(Long chatID, final OnChatEventListener eventListener){
+    public void GetChat(String chatID, final OnChatEventListener eventListener){
         db.collection("Chats")
-                .document(chatID.toString())
+                .document(chatID)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
@@ -399,7 +387,7 @@ public class DatabaseConnection {
      */
     public void UpdateChat(final Chat chat){
         db.collection("Chats")
-                .document(chat.getChatID().toString())
+                .document(chat.getChatID())
                 .update(chat.generateDataToUpdate())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -415,8 +403,8 @@ public class DatabaseConnection {
                 });
     }
 
-    public void SetUpChatListener(Long chatID){
-        DocumentReference ref = db.collection("Chats").document(chatID.toString());
+    public void SetUpChatListener(String chatID, OnChatEventListener eventListener){
+        DocumentReference ref = db.collection("Chats").document(chatID);
 
         ref.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
@@ -433,60 +421,13 @@ public class DatabaseConnection {
                         //Recover the chat in the database
                         Chat chat = new Chat(data);
 
-                        /*
-                        //Verify there is a cache chat
-                        if (((DataCache) context.getApplicationContext()).getChats() != null){
-
-                            //Recover the cache chats
-                            Chat cacheChat = ((DataCache) context.getApplicationContext()).GetChat(chatID);
-                            if (cacheChat != null && cacheChat.getMessageCount() < chat.getMessageCount()) {
-
-                                //Instantiate a new list of messages
-                                List<ChatMessage> newMessages = new ArrayList<>();
-
-                                //Recover the list of messages from the database
-                                List<ChatMessage> recoveredMessages = chat.getMessages();
-
-                                //Insert the new messages
-                                for (int i = cacheChat.getMessageCount(); i < chat.getMessageCount(); i++){
-                                    //Store the instance temporarily
-                                    ChatMessage message = recoveredMessages.get(i);
-
-                                    //Inserting in the new list
-                                    newMessages.add(message);
-
-                                    //Inserting in the cache
-                                    ((DataCache) context.getApplicationContext()).AddMessageToChat(chatID, message);
-                                }
-
-                                //Notify the recycler that there are new messages
-                                if (newMessages.size() != 0) {
-                                    //Call the method to reload the recycler view
-                                    ((MessageRecyclerViewAdapter) recyclerView.getAdapter()).MessageWasAdded(newMessages);
-
-                                    recyclerView.smoothScrollToPosition(chat.getMessageCount() - 1);
-                                }
-                            }
-                        } else {
-                            //Recover the list of messages from the database
-                            List<ChatMessage> recoveredMessages = chat.getMessages();
-
-                            if (((DataCache) context.getApplicationContext()).getChats() == null){
-                                ((DataCache) context.getApplicationContext()).setChats(new HashMap<>());
-                            }
-
-                            ((DataCache) context.getApplicationContext()).AddChat(chat);
-
-                            //Notify the recycler that there are new messages
-                            if (recoveredMessages.size() != 0) {
-                                //Call the method to reload the recycler view
-                                ((MessageRecyclerViewAdapter) recyclerView.getAdapter()).MessageWasAdded(recoveredMessages);
-
-                                recyclerView.smoothScrollToPosition(chat.getMessageCount() - 1);
-                            }
-                        }
-                        */
+                        eventListener.onChatChanged(chat);
+                        Log.v(TAG, "Chat changed event thrown");
+                    } else {
+                        Log.e(TAG, "Null document snapshot data");
                     }
+                } else {
+                    Log.e(TAG, "Null document snapshot");
                 }
             }
         });
@@ -497,9 +438,10 @@ public class DatabaseConnection {
     /**
      * Getter for all the courses, by object.
      * @param listener for the event to use the data.
+     * @return
      */
-    public void GetAllCourses(final OnCourseEventListener listener){
-        db.collection("Courses").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+    public Task<QuerySnapshot> GetAllCourses(OnCourseEventListener listener){
+        return db.collection("Courses").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
@@ -575,7 +517,7 @@ public class DatabaseConnection {
                         }
 
 
-                        /*
+
                         List<Task<DocumentSnapshot>> tasks = new ArrayList<>();
 
                         for (DocumentReference dr : refToUsers.keySet()){
@@ -609,7 +551,8 @@ public class DatabaseConnection {
                             });
                         }
 
-                        listener.onTeachersPerCourseRetrieved(coursesToUsers);*/
+                        listener.onTeachersPerCourseRetrieved(coursesToUsers);
+
                     } else {
                         Log.d(TAG, "Query GetAllCoursesReferences returned null");
                     }
@@ -619,7 +562,9 @@ public class DatabaseConnection {
             }
         });
     }
-*/
+
+    */
+
     /**
      * Getter for all the courses, by reference to the document.
      * @param listener for the event to use the data.

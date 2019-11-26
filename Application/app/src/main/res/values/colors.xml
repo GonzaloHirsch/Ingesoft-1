@@ -3,6 +3,7 @@
     <color name="colorPrimary">#1e88e5</color>
     <color name="colorPrimaryDark">#005cb2</color>
     <color name="colorAccent">#1976d2</color>
+    <color name="textColor">#000000</color>
     <!--> Some colors for Views <-->
 
     <!--> EditText <-->
@@ -12,4 +13,7 @@
     <color name="colorButtonBlue">#1976d2</color>
 
     <color name="colorError">#F50057</color>
+
+    <color name="messageSent">#4ee877</color>
+    <color name="messageReceived">#4ea8e8</color>
 </resources>

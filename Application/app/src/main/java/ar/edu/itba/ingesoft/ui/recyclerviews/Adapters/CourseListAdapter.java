@@ -3,6 +3,8 @@ package ar.edu.itba.ingesoft.ui.recyclerviews.Adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,12 +21,64 @@ import ar.edu.itba.ingesoft.Interfaces.Adapters.OnSelectionModeListener;
 import ar.edu.itba.ingesoft.R;
 import ar.edu.itba.ingesoft.ui.recyclerviews.diffutil_callbacks.CourseListDiffUtil;
 
-public abstract class CourseListAdapter extends RecyclerView.Adapter<CourseListAdapter.CoursesTaughtViewHolder>{
+public abstract class CourseListAdapter extends RecyclerView.Adapter<CourseListAdapter.CoursesTaughtViewHolder> implements Filterable {
 
     protected List<Course> courses = new ArrayList<>();
     protected boolean selectionMode;
     protected List<Course> selectedCourses = new ArrayList<>();
     protected OnCoursesTaughtEventListener listener;
+
+    private List<Course> courseListFiltered;
+    private List<Course> currentList;
+
+    public CourseListAdapter(){
+        this.currentList = new ArrayList<>();
+        courseListFiltered = new ArrayList<>();
+    }
+
+    public void updateFilter(List<Course> newList){
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new CourseListDiffUtil(this.currentList, newList));
+        if(newList!=null){
+            currentList.clear();
+            currentList.addAll(newList);
+        }
+        diffResult.dispatchUpdatesTo(this);
+    }
+
+    @Override
+    public Filter getFilter() {
+        return new Filter(){
+
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+
+                String query = constraint.toString().toLowerCase();
+                courseListFiltered.clear();
+                if(query == null){
+                    courseListFiltered = courses;
+                }
+                else{
+                    List<Course> filteredList = new ArrayList<Course>();
+                    for(Course c : courses){
+                        if(c.getName().toLowerCase().contains(query))
+                            filteredList.add(c);
+                    }
+                    courseListFiltered = filteredList;
+                }
+
+                FilterResults filterResults = new FilterResults();
+                filterResults.values = courseListFiltered;
+
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+                courseListFiltered = (List<Course>) results.values;
+                updateFilter(courseListFiltered);
+            }
+        };
+    }
 
     public void update(List<Course> newList){
         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new CourseListDiffUtil(this.courses, newList));
@@ -33,8 +87,10 @@ public abstract class CourseListAdapter extends RecyclerView.Adapter<CourseListA
 
         diffResult.dispatchUpdatesTo(this);
         if(newList!=null) {
+            this.currentList.clear();
             this.courses.clear();
             this.courses.addAll(newList);
+            this.currentList.addAll(newList);
         }
     }
 
@@ -55,8 +111,8 @@ public abstract class CourseListAdapter extends RecyclerView.Adapter<CourseListA
     @Override
     public void onBindViewHolder(@NonNull CoursesTaughtViewHolder holder, int position) {
 
-        Course c = courses.get(position);
-        String s = courses.get(position).getCode() + "-" + courses.get(position).getName();
+        Course c = currentList.get(position);
+        String s = currentList.get(position).getCode() + "-" + currentList.get(position).getName();
         holder.courseTextView.setText(s);
 
         //set background case when (not) selected
@@ -111,7 +167,7 @@ public abstract class CourseListAdapter extends RecyclerView.Adapter<CourseListA
 
     @Override
     public int getItemCount() {
-        return courses.size();
+        return currentList.size();
     }
 
     class CoursesTaughtViewHolder extends RecyclerView.ViewHolder{

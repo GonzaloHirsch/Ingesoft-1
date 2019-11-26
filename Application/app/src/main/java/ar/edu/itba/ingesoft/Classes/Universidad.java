@@ -12,7 +12,7 @@ import ar.edu.itba.ingesoft.Interfaces.DatabaseObject;
 public class Universidad implements DatabaseObject {
 
     private String name;
-    private List<DocumentReference> courses;
+    private List<Course> courses;
 
     @SuppressWarnings("unchecked")
     public Universidad(Map<String, Object> data){
@@ -39,15 +39,15 @@ public class Universidad implements DatabaseObject {
         this.name = name;
     }
 
-    public List<DocumentReference> getCourses() {
+    public List<Course> getCourses() {
         return courses;
     }
 
-    public void addCourses(List<DocumentReference> courses) {
+    public void addCourses(List<Course> courses) {
         this.courses.addAll(courses);
     }
 
-    public void addCourse(DocumentReference course) {
+    public void addCourse(Course course) {
         this.courses.add(course);
     }
 
