@@ -101,4 +101,14 @@ public class ChatMessagesViewModel extends ViewModel {
 
         return count;
     }
+
+    public String createChat(String userTo, String userFrom){
+        this.chatObj = new Chat(userFrom, userTo);
+        this.chatID = this.chatObj.getChatID();
+
+        new DatabaseConnection().InsertChat(this.chatObj);
+        Log.v(TAG, "Created chat");
+
+        return this.chatID;
+    }
 }

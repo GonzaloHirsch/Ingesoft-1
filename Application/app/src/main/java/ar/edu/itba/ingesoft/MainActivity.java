@@ -29,6 +29,7 @@ import ar.edu.itba.ingesoft.ui.profile.ProfileViewModel;
 public class MainActivity extends AppCompatActivity {
 
     public static final String CHAT_ID_EXTRA = "chat_id_extra";
+    public static final String CHAT_RECIPIENT_EXTRA = "chat_recipient_extra";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

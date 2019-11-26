@@ -39,6 +39,9 @@ public class ChatMessagesFragment extends Fragment {
     private FloatingActionButton sendFloatingActionButton;
 
     private String chatID;
+    private String recipient;
+
+    private boolean isNewChat = false;
 
     public static ChatMessagesFragment newInstance() {
         return new ChatMessagesFragment();
@@ -58,7 +61,8 @@ public class ChatMessagesFragment extends Fragment {
         this.messageInputEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                messagesRecyclerView.smoothScrollToPosition(mViewModel.getChatMessageCount() - 1);
+                if (!isNewChat)
+                    messagesRecyclerView.smoothScrollToPosition(mViewModel.getChatMessageCount() - 1);
             }
         });
 
@@ -71,6 +75,29 @@ public class ChatMessagesFragment extends Fragment {
                     if (message.length() > 0){
                         // Getting the logged user
                         FirebaseUser fu = new Authenticator().getSignedInUser();
+
+                        if (isNewChat){
+                            chatID = mViewModel.createChat(fu.getEmail(), recipient);
+                            isNewChat = false;
+                            mViewModel.setUpChatChangeListener(chatID, new OnChatEventListener(){
+
+                                @Override
+                                public void onChatRetrieved(Chat chat) {
+                                    throw new RuntimeException("Not Implemented");
+                                }
+
+                                @Override
+                                public void onChatChanged(Chat chat) {
+                                    ChatsMessagesAdapter adapter = (ChatsMessagesAdapter)messagesRecyclerView.getAdapter();
+
+                                    if (adapter != null){
+                                        adapter.messagesChanged(chat.getMessages());
+                                    } else {
+                                        Log.e(TAG, "Null adapter");
+                                    }
+                                }
+                            });
+                        }
 
                         // Generating the new message instance
                         Message newMessage = new Message(fu.getEmail(), message, new Date());
@@ -108,27 +135,28 @@ public class ChatMessagesFragment extends Fragment {
         ChatsMessagesAdapter adapter = new ChatsMessagesAdapter(this.mViewModel.retrieveMessages(), new Authenticator().getSignedInUser().getEmail());
         this.messagesRecyclerView.setAdapter(adapter);
 
-        this.mViewModel.setUpChatChangeListener(this.chatID, new OnChatEventListener(){
+        if (!isNewChat){
+            this.mViewModel.setUpChatChangeListener(this.chatID, new OnChatEventListener(){
 
-            @Override
-            public void onChatRetrieved(Chat chat) {
-                throw new RuntimeException("Not Implemented");
-            }
-
-            @Override
-            public void onChatChanged(Chat chat) {
-                ChatsMessagesAdapter adapter = (ChatsMessagesAdapter)messagesRecyclerView.getAdapter();
-
-                if (adapter != null){
-                    adapter.messagesChanged(chat.getMessages());
-                } else {
-                    Log.e(TAG, "Null adapter");
+                @Override
+                public void onChatRetrieved(Chat chat) {
+                    throw new RuntimeException("Not Implemented");
                 }
-            }
-        });
 
-        // Scroll the rv to the last message
-        this.messagesRecyclerView.smoothScrollToPosition(this.mViewModel.getChatMessageCount() - 1);
+                @Override
+                public void onChatChanged(Chat chat) {
+                    ChatsMessagesAdapter adapter = (ChatsMessagesAdapter)messagesRecyclerView.getAdapter();
+
+                    if (adapter != null){
+                        adapter.messagesChanged(chat.getMessages());
+                    } else {
+                        Log.e(TAG, "Null adapter");
+                    }
+                }
+            });
+            // Scroll the rv to the last message
+            this.messagesRecyclerView.smoothScrollToPosition(this.mViewModel.getChatMessageCount() - 1);
+        }
     }
 
     /**
@@ -136,9 +164,20 @@ public class ChatMessagesFragment extends Fragment {
      * @param chatID of the chat
      */
     public void setChatID(String chatID){
-        this.chatID = chatID;
-        if (this.mViewModel != null)
-            this.mViewModel.setChatID(chatID);
+        if (chatID != null){
+            this.chatID = chatID;
+            if (this.mViewModel != null)
+                this.mViewModel.setChatID(chatID);
+        }
+        this.isNewChat = chatID == null;
+    }
+
+    /**
+     * Method to set the recipient of the message
+     * @param recipient of the message
+     */
+    public void setRecipient(String recipient){
+        this.recipient = recipient;
     }
 
 }
