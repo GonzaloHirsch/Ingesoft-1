@@ -1,5 +1,7 @@
 package ar.edu.itba.ingesoft.ui.recyclerviews.Adapters;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +19,9 @@ import java.util.List;
 
 import ar.edu.itba.ingesoft.Classes.Chat;
 import ar.edu.itba.ingesoft.Classes.Message;
+import ar.edu.itba.ingesoft.MainActivity;
 import ar.edu.itba.ingesoft.R;
+import ar.edu.itba.ingesoft.ui.chats.ChatMessagesActivity;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHolder> {
@@ -62,6 +66,17 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
         }
 
         holder.titleTextView.setText(chat.getTo());
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Context ctx = holder.itemView.getContext();
+                Intent intent = new Intent(ctx, ChatMessagesActivity.class);
+                intent.putExtra(MainActivity.CHAT_ID_EXTRA, chats.get(holder.getAdapterPosition()).getChatID());
+                intent.putExtra(MainActivity.CHAT_RECIPIENT_EXTRA, chats.get(holder.getAdapterPosition()).getFrom().equals(user) ? chats.get(holder.getAdapterPosition()).getTo() : chats.get(holder.getAdapterPosition()).getFrom());
+                ctx.startActivity(intent);
+            }
+        });
     }
 
     @Override
