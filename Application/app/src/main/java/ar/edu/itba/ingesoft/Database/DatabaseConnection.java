@@ -6,8 +6,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -17,24 +15,20 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import ar.edu.itba.ingesoft.Classes.Cache.UserCache;
+import ar.edu.itba.ingesoft.CachedData.UserCache;
 import ar.edu.itba.ingesoft.Classes.Chat;
 import ar.edu.itba.ingesoft.Classes.Course;
-import ar.edu.itba.ingesoft.Classes.Message;
 import ar.edu.itba.ingesoft.Classes.Universidad;
 import ar.edu.itba.ingesoft.Classes.User;
 import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnChatEventListener;
-import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnContactEventListener;
 import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnCourseEventListener;
 import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnUniversityEventListener;
 import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnUserEventListener;
-import ar.edu.itba.ingesoft.MainActivity;
 
 public class DatabaseConnection {
 
@@ -140,10 +134,11 @@ public class DatabaseConnection {
     /**
      * Getter for all the users in the database.
      * @param eventListener with callback to this function.
+     * @return
      */
-    public void GetUsers(final OnUserEventListener eventListener){
+    public Task<QuerySnapshot> GetUsers(final OnUserEventListener eventListener){
         // Add the new document for the user using the email as the ID of the document
-        db.collection("Users")
+        return db.collection("Users")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -443,9 +438,10 @@ public class DatabaseConnection {
     /**
      * Getter for all the courses, by object.
      * @param listener for the event to use the data.
+     * @return
      */
-    public void GetAllCourses(final OnCourseEventListener listener){
-        db.collection("Courses").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+    public Task<QuerySnapshot> GetAllCourses(OnCourseEventListener listener){
+        return db.collection("Courses").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {

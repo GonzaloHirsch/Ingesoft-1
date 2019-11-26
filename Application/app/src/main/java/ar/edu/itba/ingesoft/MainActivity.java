@@ -19,6 +19,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import ar.edu.itba.ingesoft.CachedData.CoursesTeachersCache;
 import ar.edu.itba.ingesoft.Authentication.Authenticator;
 import ar.edu.itba.ingesoft.Classes.User;
 import ar.edu.itba.ingesoft.Database.DatabaseConnection;
@@ -60,6 +61,8 @@ public class MainActivity extends AppCompatActivity {
                 //
             }
         });
+        CoursesTeachersCache.refreshCourseTeachers();
+
     }
 
     @Override

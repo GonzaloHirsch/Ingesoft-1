@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.lifecycle.ViewModel;
-import ar.edu.itba.ingesoft.Classes.Cache.UserCache;
+import ar.edu.itba.ingesoft.CachedData.UserCache;
 import ar.edu.itba.ingesoft.Classes.Chat;
 import ar.edu.itba.ingesoft.Classes.User;
 import ar.edu.itba.ingesoft.Database.DatabaseConnection;

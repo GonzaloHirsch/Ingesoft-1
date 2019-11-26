@@ -1,4 +1,4 @@
-package ar.edu.itba.ingesoft.Classes.Cache;
+package ar.edu.itba.ingesoft.CachedData;
 
 import ar.edu.itba.ingesoft.Classes.User;
 
