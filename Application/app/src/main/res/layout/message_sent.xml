@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -7,7 +8,7 @@
     app:cardElevation="0dp"
     app:cardPreventCornerOverlap="true">
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:background="@android:color/white"
         android:layout_width="match_parent"
         android:padding="8dp"
@@ -17,22 +18,20 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             android:id="@+id/text_message_body"
-            android:text="@string/placeholder_message"
             android:background="@drawable/message_item_sent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:maxWidth="240dp"
             android:padding="8dp"
-            android:textColor="#ffffff" />
+            android:textColor="@color/textColor" />
 
         <TextView
             android:id="@+id/text_message_time"
-            android:text="@string/placeholder_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="12sp"
             app:layout_constraintRight_toLeftOf="@+id/text_message_body"
             app:layout_constraintBottom_toBottomOf="@+id/text_message_body" />
 
-    </android.support.constraint.ConstraintLayout>
-</android.support.design.card.MaterialCardView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

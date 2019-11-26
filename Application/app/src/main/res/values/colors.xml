@@ -13,4 +13,7 @@
     <color name="colorButtonBlue">#1976d2</color>
 
     <color name="colorError">#F50057</color>
+
+    <color name="messageSent">#4ee877</color>
+    <color name="messageReceived">#4ea8e8</color>
 </resources>
