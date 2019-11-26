@@ -22,7 +22,7 @@ public class User implements DatabaseObject, Parcelable {
     private String surname;
     private boolean isProfessor;
     private List<String> courses;
-    //private Map<Long, Appointment> appointments;
+    private List<Contact> contacts;
     private Universidad universidad;
     //private Map<Long, Chat> chats;
 
@@ -38,7 +38,13 @@ public class User implements DatabaseObject, Parcelable {
             this.isProfessor = false;
         this.courses = (List<String>) data.get("courses");
         //this.appointments = (Map<Long, Appointment>) data.get("appointments");
-        //this.chats = (Map<Long, Chat>) data.get("chats");
+        this.contacts = new ArrayList<>();
+        if (data.get("contacts") != null){
+            for(Map<String, Object> map : (List<Map<String, Object>>) data.get("contacts")){
+                this.contacts.add(new Contact(map));
+            }
+        }
+
         this.universidad = new Universidad((Map<String, Object>) data.get("Universidad"));
 
     }

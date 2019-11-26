@@ -6,24 +6,24 @@ import ar.edu.itba.ingesoft.Interfaces.DatabaseObject;
 
 public class Contact implements DatabaseObject {
 
-    private Long chatID;
+    private String chatID;
     private String user;
 
     public Contact(Map<String, Object> data){
-        this.chatID = (Long) data.get("chatID");
+        this.chatID = (String) data.get("chatID");
         this.user = (String) data.get("user");
     }
 
-    public Contact(Long chatID, String user){
+    public Contact(String chatID, String user){
         this.chatID = chatID;
         this.user = user;
     }
 
-    public Long getChatID() {
+    public String getChatID() {
         return chatID;
     }
 
-    public void setChatID(Long chatID) {
+    public void setChatID(String chatID) {
         this.chatID = chatID;
     }
 
