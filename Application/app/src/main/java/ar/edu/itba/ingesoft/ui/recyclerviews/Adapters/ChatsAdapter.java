@@ -2,6 +2,7 @@ package ar.edu.itba.ingesoft.ui.recyclerviews.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -32,6 +34,15 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
     public ChatsAdapter(List<Chat> chats, String user) {
         this.chats = chats;
         this.user = user;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            this.chats.sort(new Comparator<Chat>() {
+                @Override
+                public int compare(Chat o1, Chat o2) {
+                    return o1.getMessages().get(o1.getMessages().size() - 1).getTimestamp().compareTo(o2.getMessages().get(o2.getMessages().size() - 1).getTimestamp());
+                }
+            });
+        }
     }
 
     public void addToDataSet(List<Chat> chats){
