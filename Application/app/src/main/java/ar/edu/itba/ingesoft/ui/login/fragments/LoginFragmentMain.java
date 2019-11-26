@@ -36,6 +36,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
 import ar.edu.itba.ingesoft.Authentication.Authenticator;
+import ar.edu.itba.ingesoft.Classes.Universidad;
+import ar.edu.itba.ingesoft.Classes.User;
 import ar.edu.itba.ingesoft.Database.DatabaseConnection;
 import ar.edu.itba.ingesoft.MainActivity;
 import ar.edu.itba.ingesoft.R;
@@ -142,7 +144,6 @@ public class LoginFragmentMain extends Fragment {
                 Authenticator authenticator = new Authenticator();
                 Intent intent = client.getSignInIntent();
                 startActivityForResult(intent, RC_SIGN_IN_GOOGLE);
-
             }
         });
 
@@ -197,6 +198,8 @@ public class LoginFragmentMain extends Fragment {
                 if(task.isSuccessful()){
                     Log.d(TAG,"sign_in_with_google:success");
                     FirebaseUser user = new Authenticator().getSignedInUser();
+                    User newUser = new User(user.getDisplayName(), user.getEmail(), new Universidad("itba"));
+                    new DatabaseConnection().InsertUser(newUser);
 
                     Intent intent = new Intent(getContext(), MainActivity.class);
                     startActivity(intent);

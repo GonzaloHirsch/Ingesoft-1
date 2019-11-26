@@ -23,8 +23,8 @@ import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import ar.edu.itba.ingesoft.Classes.Cache.UserCache;
 import ar.edu.itba.ingesoft.Classes.Chat;
-import ar.edu.itba.ingesoft.Classes.Contact;
 import ar.edu.itba.ingesoft.Classes.Course;
 import ar.edu.itba.ingesoft.Classes.Message;
 import ar.edu.itba.ingesoft.Classes.Universidad;
@@ -122,6 +122,7 @@ public class DatabaseConnection {
 
                                     // Stores all the info in the class
                                     User user = new User(data);
+                                    UserCache.SetUser(user);
                                     eventListener.onUserRetrieved(user);
                                 } else {
                                     Log.d(TAG, "No data in document");
@@ -269,12 +270,7 @@ public class DatabaseConnection {
 
     /*--------------------------------------CONTACTS----------------------------------------*/
 
-    /**
-     * Inserts the given contact under the collection of the given user.
-     * When called, it should be done twice, so that both users have each other as a contact.
-     * @param userEmail of the user who has the new contact.
-     * @param contact of the user given before.
-     */
+    /*
     public void InsertContact(String userEmail, Contact contact){
         // Add the new document for the user using the email as the ID of the document
         db.collection("Contacts")
@@ -294,13 +290,9 @@ public class DatabaseConnection {
                         Log.w(TAG, "Error adding document", e);
                     }
                 });
-    }
+    }*/
 
-    /**
-     * Getter for the contacts of a given user.
-     * @param userEmail of the user who has the contacts.
-     * @param eventListener that has the callback to this function.
-     */
+    /*
     public void GetContacts(String userEmail, final OnContactEventListener eventListener){
         db.collection("Contacts")
                 .document(userEmail)
@@ -331,6 +323,7 @@ public class DatabaseConnection {
                     }
                 });
     }
+    */
 
     /*--------------------------------------CHATS----------------------------------------*/
 
