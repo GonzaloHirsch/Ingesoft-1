@@ -8,24 +8,31 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import ar.edu.itba.ingesoft.Classes.Chat;
+import ar.edu.itba.ingesoft.Classes.Message;
 import ar.edu.itba.ingesoft.R;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHolder> {
 
     private List<Chat> chats = new ArrayList<>();
+    private String user;
 
-    private ChatsAdapter() {
-
+    public ChatsAdapter(List<Chat> chats, String user) {
+        this.chats = chats;
+        this.user = user;
     }
 
-    public void update(List<Chat> newList){
-
-
+    public void addToDataSet(List<Chat> chats){
+        this.chats.addAll(chats);
+        this.notifyItemRangeInserted(0, chats.size());
     }
 
     @NonNull
@@ -37,10 +44,24 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
 
     @Override
     public void onBindViewHolder(@NonNull ChatsViewHolder holder, int position) {
-
         Chat chat = chats.get(position);
-        holder.titleTextView.setText(chat.getTo());
+        List<Message> messages = chat.getMessages();
+        Message lastMessage;
+        if (messages.size() > 0){
+            lastMessage = messages.get(messages.size() - 1);
+            Date date = new Date();
+            date.setTime(lastMessage.getTimestamp());
+            DateFormat dateFormat = new SimpleDateFormat("mm-dd hh:mm");
+            String strDate = dateFormat.format(date);
 
+            holder.subtitleTextView.setText(lastMessage.getMessage());
+            holder.timestampTextView.setText(strDate);
+        } else {
+            holder.subtitleTextView.setText("");
+            holder.timestampTextView.setText("");
+        }
+
+        holder.titleTextView.setText(chat.getTo());
     }
 
     @Override

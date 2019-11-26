@@ -26,7 +26,7 @@ public class Authenticator {
 
     /** Creates an user and inserts it in the database */
     public Task<AuthResult> registerUser(String email, String password, String name, String surname, String university){
-        User user = new User(name, surname, email, new Universidad(university));
+        User user = new User(name + " " + surname, email, new Universidad(university));
         return auth.createUserWithEmailAndPassword(email, password);
     }
 

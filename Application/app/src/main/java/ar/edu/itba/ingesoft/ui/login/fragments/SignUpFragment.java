@@ -222,8 +222,7 @@ public class SignUpFragment extends Fragment {
     private User controlsToEntity(){
         User user = new User();
         user.setMail(emailTV.getText().toString());
-        user.setName(nameTV.getText().toString());
-        user.setSurname(surnameTV.getText().toString());
+        user.setName(nameTV.getText().toString() + " " + surnameTV.getText().toString());
         user.setProfessor(false);
         user.setUniversidad(new Universidad("ITBA"));
 

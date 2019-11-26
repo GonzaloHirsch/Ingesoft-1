@@ -16,7 +16,30 @@
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"></style>
 
-
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="Widget.Tutory.TextInputLayout" parent="Base.Widget.MaterialComponents.TextInputLayout">
+        <item name="hintTextAppearance">@style/TextAppearance.Tutory.TextInputLayout.HintText</item>
+        <item name="android:paddingBottom">8dp</item>
+    </style>
+
+    <style name="Widget.Tutory.Message.TextInputLayout" parent="Base.Widget.MaterialComponents.TextInputLayout">
+        <item name="hintTextAppearance">@style/TextAppearance.Tutory.TextInputLayout.HintText</item>
+        <item name="boxCornerRadiusBottomEnd">30dp</item>
+        <item name="boxCornerRadiusBottomStart">30dp</item>
+        <item name="boxCornerRadiusTopEnd">30dp</item>
+        <item name="boxCornerRadiusTopStart">30dp</item>
+    </style>
+
+    <style name="Widget.Tutory.Message.TextInputEditText" parent="Base.Widget.MaterialComponents.TextInputEditText">
+        <item name="android:padding">7dp</item>
+    </style>
+
+    <style name="TextAppearance.Tutory.TextInputLayout.HintText" parent="TextAppearance.MaterialComponents.Subtitle2">
+        <item name="android:textColor">@color/colorAccent</item>
+    </style>
+    <style name="TextAppearance.Tutory.TextInputLayout.NormalText" parent="TextAppearance.MaterialComponents.Subtitle2">
+        <item name="android:textColor">@color/textColor</item>
+    </style>
 
 </resources>
