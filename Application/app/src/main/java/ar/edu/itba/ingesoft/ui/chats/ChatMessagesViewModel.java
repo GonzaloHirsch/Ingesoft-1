@@ -15,7 +15,7 @@ public class ChatMessagesViewModel extends ViewModel {
 
     public static final String TAG = "CHAT MESSAGE VIEW MODEL";
     private Chat chatObj = null;
-    private Long chatID = null;
+    private String chatID = null;
 
     public ChatMessagesViewModel(){
     }
@@ -24,7 +24,7 @@ public class ChatMessagesViewModel extends ViewModel {
      * Metodo para settear el id del chat que se esta guardando en el viewmodel.
      * @param chatID of chat
      */
-    public void setChatID(Long chatID){
+    public void setChatID(String chatID){
         this.chatID = chatID;
         new DatabaseConnection().GetChat(chatID, new OnChatEventListener() {
             @Override
@@ -58,7 +58,7 @@ public class ChatMessagesViewModel extends ViewModel {
      * @param chatID of the chat
      * @param eventListener for the event of a chat change
      */
-    public void setUpChatChangeListener(Long chatID, OnChatEventListener eventListener){
+    public void setUpChatChangeListener(String chatID, OnChatEventListener eventListener){
         new DatabaseConnection().SetUpChatListener(chatID, new OnChatEventListener() {
             @Override
             public void onChatRetrieved(Chat chat) {

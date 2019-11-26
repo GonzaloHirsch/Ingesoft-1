@@ -340,7 +340,7 @@ public class DatabaseConnection {
      */
     public void InsertChat(Chat chat){
         db.collection("Chats")
-                .document(chat.getChatID().toString())
+                .document(chat.getChatID())
                 .set(chat)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -361,9 +361,9 @@ public class DatabaseConnection {
      * @param chatID of the given chat.
      * @param eventListener that has the callback to this function.
      */
-    public void GetChat(Long chatID, final OnChatEventListener eventListener){
+    public void GetChat(String chatID, final OnChatEventListener eventListener){
         db.collection("Chats")
-                .document(chatID.toString())
+                .document(chatID)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
@@ -399,7 +399,7 @@ public class DatabaseConnection {
      */
     public void UpdateChat(final Chat chat){
         db.collection("Chats")
-                .document(chat.getChatID().toString())
+                .document(chat.getChatID())
                 .update(chat.generateDataToUpdate())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -415,8 +415,8 @@ public class DatabaseConnection {
                 });
     }
 
-    public void SetUpChatListener(Long chatID, OnChatEventListener eventListener){
-        DocumentReference ref = db.collection("Chats").document(chatID.toString());
+    public void SetUpChatListener(String chatID, OnChatEventListener eventListener){
+        DocumentReference ref = db.collection("Chats").document(chatID);
 
         ref.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override

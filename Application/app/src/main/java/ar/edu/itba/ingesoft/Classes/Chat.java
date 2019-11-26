@@ -5,12 +5,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 
 import ar.edu.itba.ingesoft.Interfaces.DatabaseObject;
 
 public class Chat implements DatabaseObject {
 
-    private Long chatID;
+    private String chatID;
     private String userA;
     private String userB;
     private List<Message> messages;
@@ -19,22 +20,22 @@ public class Chat implements DatabaseObject {
     public Chat(Map<String, Object> data){
         this.userA = (String) data.get("userA");
         this.userB = (String) data.get("userB");
-        this.chatID = (Long) data.get("chatID");
+        this.chatID = (String) data.get("chatID");
         this.messages = (List<Message>) data.get("messages");
     }
 
-    public Chat(Long chatID, String userA, String userB){
-        this.chatID = chatID;
+    public Chat(String userA, String userB){
+        this.chatID = UUID.randomUUID().toString();;
         this.userB = userB;
         this.userA = userA;
         this.messages = new ArrayList<>();
     }
 
-    public Long getChatID() {
+    public String getChatID() {
         return chatID;
     }
 
-    public void setChatID(Long chatID) {
+    public void setChatID(String chatID) {
         this.chatID = chatID;
     }
 

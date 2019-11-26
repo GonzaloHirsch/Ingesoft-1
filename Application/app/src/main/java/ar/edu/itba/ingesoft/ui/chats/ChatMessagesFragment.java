@@ -38,7 +38,7 @@ public class ChatMessagesFragment extends Fragment {
     private TextInputEditText messageInputEditText;
     private FloatingActionButton sendFloatingActionButton;
 
-    private Long chatID;
+    private String chatID;
 
     public static ChatMessagesFragment newInstance() {
         return new ChatMessagesFragment();
@@ -135,7 +135,7 @@ public class ChatMessagesFragment extends Fragment {
      * Method to set the chat ID in the fragment
      * @param chatID of the chat
      */
-    public void setChatID(Long chatID){
+    public void setChatID(String chatID){
         this.chatID = chatID;
         if (this.mViewModel != null)
             this.mViewModel.setChatID(chatID);

@@ -26,7 +26,7 @@ public class ChatMessagesActivity extends AppCompatActivity {
         Intent intent = getIntent();
 
         // Parse the chat id from the intent
-        Long chatID = Long.parseLong(intent.getStringExtra(MainActivity.CHAT_ID_EXTRA));
+        String chatID = intent.getStringExtra(MainActivity.CHAT_ID_EXTRA);
 
         // Generate the instance of the fragment
         ChatMessagesFragment cmf = ChatMessagesFragment.newInstance();
