@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.firebase.components.Component;
+
 import java.util.List;
 
 import androidx.annotation.Nullable;
@@ -30,7 +32,6 @@ public class ChatsFragment extends Fragment {
 
     private ChatsViewModel chatsViewModel;
     private RecyclerView chatsRecyclerView;
-
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {

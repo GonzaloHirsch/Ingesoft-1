@@ -8,8 +8,10 @@ import java.util.List;
 import androidx.lifecycle.ViewModel;
 import ar.edu.itba.ingesoft.Classes.Chat;
 import ar.edu.itba.ingesoft.Classes.Message;
+import ar.edu.itba.ingesoft.Classes.User;
 import ar.edu.itba.ingesoft.Database.DatabaseConnection;
 import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnChatEventListener;
+import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnUserEventListener;
 
 public class ChatMessagesViewModel extends ViewModel {
 
@@ -100,5 +102,53 @@ public class ChatMessagesViewModel extends ViewModel {
         }
 
         return count;
+    }
+
+    public String createChat(String userFrom, String userTo, String userFromName, String userToName){
+        this.chatObj = new Chat(userFrom, userTo, userFromName, userToName);
+        this.chatID = this.chatObj.getChatID();
+
+        new DatabaseConnection().InsertChat(this.chatObj);
+        Log.v(TAG, "Created chat");
+
+        new DatabaseConnection().GetUser(userTo, new OnUserEventListener() {
+            @Override
+            public void onUserRetrieved(User user) {
+                user.addChat(chatID);
+                new DatabaseConnection().UpdateUser(user);
+            }
+
+            @Override
+            public void onUsersRetrieved(List<User> users) {
+                throw new RuntimeException("Not Implemented");
+            }
+
+            @Override
+            public void onTeachersRetrieved(List<User> teachers) {
+                throw new RuntimeException("Not Implemented");
+            }
+        });
+        Log.v(TAG, "Added chat to " + userTo);
+
+        new DatabaseConnection().GetUser(userFrom, new OnUserEventListener() {
+            @Override
+            public void onUserRetrieved(User user) {
+                user.addChat(chatID);
+                new DatabaseConnection().UpdateUser(user);
+            }
+
+            @Override
+            public void onUsersRetrieved(List<User> users) {
+                throw new RuntimeException("Not Implemented");
+            }
+
+            @Override
+            public void onTeachersRetrieved(List<User> teachers) {
+                throw new RuntimeException("Not Implemented");
+            }
+        });
+        Log.v(TAG, "Added chat to " + userFrom);
+
+        return this.chatID;
     }
 }

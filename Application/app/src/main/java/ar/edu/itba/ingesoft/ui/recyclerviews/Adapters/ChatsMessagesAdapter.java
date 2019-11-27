@@ -92,12 +92,15 @@ public class ChatsMessagesAdapter extends RecyclerView.Adapter<ChatsMessagesAdap
     public void messagesChanged(List<Message> newMessages){
         // Store the previous length for the listener
         int prevLength = this.messages.size();
-        // Get a sub list of the new messages list
-        List<Message> newMessagesList = newMessages.subList(prevLength, newMessages.size());
-        // Add all the messages to the list
-        messages.addAll(newMessagesList);
-        // Notify which items have changed
-        this.notifyItemRangeInserted(prevLength, newMessages.size());
+
+        if (prevLength < newMessages.size()){
+            // Get a sub list of the new messages list
+            List<Message> newMessagesList = newMessages.subList(prevLength, newMessages.size());
+            // Add all the messages to the list
+            messages.addAll(newMessagesList);
+            // Notify which items have changed
+            this.notifyItemRangeInserted(prevLength, newMessages.size());
+        }
     }
 
     @Override

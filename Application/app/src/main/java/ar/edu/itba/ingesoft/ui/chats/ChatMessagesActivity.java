@@ -16,23 +16,27 @@ public class ChatMessagesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.chat_messages_activity);
 
-        // Setting the support for the up button
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        ActionBar ab = getSupportActionBar();
-        if (ab != null)
-            ab.setDisplayHomeAsUpEnabled(true);
-
         Intent intent = getIntent();
 
         // Parse the chat id from the intent
         String chatID = intent.getStringExtra(MainActivity.CHAT_ID_EXTRA);
+        String chatRecipient = intent.getStringExtra(MainActivity.CHAT_RECIPIENT_EXTRA);
+        String chatRecipientName = intent.getStringExtra(MainActivity.CHAT_RECIPIENT_NAME_EXTRA);
+
+        // Setting the support for the up button
+        ActionBar ab = getSupportActionBar();
+        if (ab != null){
+            ab.setDisplayHomeAsUpEnabled(true);
+            ab.setTitle(chatRecipientName);
+        }
 
         // Generate the instance of the fragment
         ChatMessagesFragment cmf = ChatMessagesFragment.newInstance();
 
         // Set the chat id in the fragment
         cmf.setChatID(chatID);
+        // Set the recipient in the fragment
+        cmf.setRecipient(chatRecipient, chatRecipientName);
 
         // Load the fragment
         if (savedInstanceState == null) {
