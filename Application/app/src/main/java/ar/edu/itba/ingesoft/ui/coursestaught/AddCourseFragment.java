@@ -183,6 +183,7 @@ public class AddCourseFragment extends Fragment implements OnListContentUpdatedL
         viewModel.getUser().getValue().getCourses().addAll(newList);
         (new DatabaseConnection()).UpdateCourses(FirebaseAuth.getInstance().getCurrentUser().getEmail(), viewModel.getUser().getValue().getCourses());
         Navigation.findNavController(getActivity(), R.id.coursesTaughtNavHost).popBackStack();
+        CoursesTeachersCache.refreshCourseTeachers();
     }
 
 

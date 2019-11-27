@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
                 //
             }
         });
-        CoursesTeachersCache.refreshCourseTeachers();
+        //CoursesTeachersCache.refreshCourseTeachers();
 
     }
 

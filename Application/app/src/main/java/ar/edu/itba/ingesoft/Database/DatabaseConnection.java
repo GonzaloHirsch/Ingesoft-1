@@ -20,6 +20,8 @@ import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import ar.edu.itba.ingesoft.CachedData.CoursesTeachersCache;
 import ar.edu.itba.ingesoft.CachedData.UserCache;
 import ar.edu.itba.ingesoft.Classes.Chat;
 import ar.edu.itba.ingesoft.Classes.Course;
@@ -154,6 +156,8 @@ public class DatabaseConnection {
                                         users.add(new User(ds.getData()));
                                     }
                                 }
+                                if(CoursesTeachersCache.getUsersList() == null)
+                                    CoursesTeachersCache.setUsersList(users);
                                 eventListener.onUsersRetrieved(users);
                             } else {
                                 Log.d(TAG, "Query GetUsers returned null");
@@ -455,6 +459,7 @@ public class DatabaseConnection {
                                 courses.add(new Course(ds.getData()));
                             }
                         }
+                        CoursesTeachersCache.setCoursesList(courses);
                         listener.onCoursesRetrieved(courses);
                     } else {
                         Log.d(TAG, "Query GetAllCourses returned null");

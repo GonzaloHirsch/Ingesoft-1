@@ -1,7 +1,12 @@
 package ar.edu.itba.ingesoft.CachedData;
 
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,77 +19,114 @@ import ar.edu.itba.ingesoft.Database.DatabaseConnection;
 import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnCourseEventListener;
 import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnUserEventListener;
 
-public class CoursesTeachersCache {
+public class CoursesTeachersCache{
 
-    static Map<String, List<User>> courseTeachers=new HashMap<>();
+    static final Map<String, List<User>> courseTeachers=new HashMap<>();
     static List<Course> coursesList = new ArrayList<>();
     static List<User> usersList = new ArrayList<>();
 
-    public static Map<String, List<User>> getCourseTeachers(){
-        return courseTeachers;
+
+    public static List<Course> getCoursesList() {
+        return coursesList;
+    }
+
+    public static synchronized List<User> getUsersList() {
+        return usersList;
+    }
+    public static synchronized void setCoursesList(List<Course> coursesList) {
+        CoursesTeachersCache.coursesList = coursesList;
+    }
+    public static synchronized void setUsersList(List<User> usersList) {
+        CoursesTeachersCache.usersList = usersList;
+    }
+    public static synchronized Map<String, List<User>> getCourseTeachers(){
+        synchronized (courseTeachers) {
+            return courseTeachers;
+        }
     }
 
     public static void setCourseTeachers(Map<String, List<User>> courseTeachers1){
-
         //todo chequear si esto funciona
-        courseTeachers = courseTeachers1;
+        courseTeachers.clear();
+        for(Map.Entry<String, List<User>> e : courseTeachers1.entrySet()){
+            courseTeachers.put(e.getKey(), e.getValue());
+        };
     }
 
     //updatear el hash
-    public static synchronized void refreshCourseTeachers(){
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DatabaseConnection database = new DatabaseConnection();
+    public static void refreshCourseTeachers(){
+        synchronized(courseTeachers) {
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            DatabaseConnection databaseConnection = new DatabaseConnection();
 
-        if(usersList == null || coursesList == null || usersList.size() == 0 || coursesList.size() == 0) {
-        /*    database.GetUsers(new OnUserEventListener() {
-                @Override
-                public void onUserRetrieved(User user) {
+            // todo esto duele a la vista, pero encadenar los tasks implicaba repetir el código
+            // de DatabaseConnection...
+            if (true /*usersList == null || usersList.size() == 0*/) {
+                databaseConnection.GetUsers(new OnUserEventListener() {
+                    @Override
+                    public void onUserRetrieved(User user) {
+                    }
 
-                }
+                    @Override
+                    public void onUsersRetrieved(List<User> users) {
+                        usersList = users;
+                        if (coursesList == null || coursesList.size() == 0) {
+                            databaseConnection.GetAllCourses(new OnCourseEventListener() {
+                                @Override
+                                public void onCourseRetrieved(Course course) {
+                                }
 
-                @Override
-                public void onUsersRetrieved(List<User> users) {
-                    usersList.clear();
-                    usersList.addAll(users);
-                    database.GetAllCourses(new OnCourseEventListener() {
-                        @Override
-                        public void onCourseRetrieved(Course course) {
+                                @Override
+                                public void onCoursesRetrieved(List<Course> courses) {
+                                    coursesList = courses;
+                                    generateCourseTeachersHash();
+                                }
 
+                                @Override
+                                public void onCoursesReferencesRetrieved(List<DocumentReference> courses) {
+                                }
+
+                                @Override
+                                public void onTeachersPerCourseRetrieved(Map<Course, List<User>> drToUser) {
+                                }
+                            });
+                        } else {
+                            generateCourseTeachersHash();
                         }
+                    }
 
-                        @Override
-                        public void onCoursesRetrieved(List<Course> courses) {
-                            coursesList.clear();
-                            coursesList.addAll(courses);
+                    @Override
+                    public void onTeachersRetrieved(List<User> teachers) {
+                    }
+                });
+            } else if (coursesList == null || coursesList.size() == 0) {
+                databaseConnection.GetAllCourses(new OnCourseEventListener() {
+                    @Override
+                    public void onCourseRetrieved(Course course) {
+                    }
 
-                        }
+                    @Override
+                    public void onCoursesRetrieved(List<Course> courses) {
+                        coursesList = courses;
+                        generateCourseTeachersHash();
+                    }
 
-                        @Override
-                        public void onCoursesReferencesRetrieved(List<DocumentReference> courses) {
+                    @Override
+                    public void onCoursesReferencesRetrieved(List<DocumentReference> courses) {
+                    }
 
-                        }
-
-                        @Override
-                        public void onTeachersPerCourseRetrieved(Map<Course, List<User>> drToUser) {
-
-                        }
-                    });
-                }
-
-                @Override
-                public void onTeachersRetrieved(List<User> teachers) {
-
-                }
-            });
-            */
+                    @Override
+                    public void onTeachersPerCourseRetrieved(Map<Course, List<User>> drToUser) {
+                    }
+                });
+            } else {
+                generateCourseTeachersHash();
+            }
         }
-        else{
-            generateCourseTeachersHash();
-        }
-
     }
 
     public static void generateCourseTeachersHash(){
+        synchronized(courseTeachers){
         courseTeachers.clear();
         for (Course c : coursesList) {
             ArrayList<User> aux = new ArrayList<>();
@@ -94,5 +136,7 @@ public class CoursesTeachersCache {
             }
             courseTeachers.put(c.getCode(), aux);
         }
+        }
     }
+
 }

@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
+import ar.edu.itba.ingesoft.CachedData.CoursesTeachersCache;
 import ar.edu.itba.ingesoft.Classes.Course;
 import ar.edu.itba.ingesoft.R;
 import ar.edu.itba.ingesoft.ui.recyclerviews.Adapters.SearchCoursesAdapter;
@@ -94,6 +95,7 @@ public class SearchFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
     }
 
 
@@ -104,6 +106,7 @@ public class SearchFragment extends Fragment {
                 ViewModelProviders.of(getActivity()).get(SearchViewModel.class);
         View root = inflater.inflate(R.layout.fragment_search, container, false);
 
+
         searchRecyclerView = root.findViewById(R.id.searchRecyclerView);
         layoutManager = new LinearLayoutManager(getContext());
 
@@ -111,7 +114,7 @@ public class SearchFragment extends Fragment {
         searchCoursesAdapter = new SearchCoursesAdapter(new ArrayList<>());
         searchRecyclerView.setAdapter(searchCoursesAdapter);
 
-
+        CoursesTeachersCache.refreshCourseTeachers();
         progressBar = root.findViewById(R.id.searchProgressBar);
         loadingTextView = root.findViewById(R.id.searchLoadingTextView);
         searchViewModel.getLoading().observe(this, new Observer<Boolean>() {
