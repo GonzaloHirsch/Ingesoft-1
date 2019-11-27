@@ -2,6 +2,7 @@ package ar.edu.itba.ingesoft.ui.login.fragments;
 
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -14,7 +15,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckedTextView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -46,7 +51,7 @@ public class SignUpFragment extends Fragment {
 
     private TextView nameTV;
     private TextView surnameTV;
-    private TextView universityTV;
+    private Spinner universitySpinner;
     private TextView emailTV;
     private TextView passwordTV;
     private TextView repeatPasswordTV;
@@ -54,12 +59,12 @@ public class SignUpFragment extends Fragment {
 
     private TextInputLayout nameLayout;
     private TextInputLayout surnameLayout;
-    private TextInputLayout universityLayout;
     private TextInputLayout emailLayout;
     private TextInputLayout passwordLayout;
     private TextInputLayout repeatPasswordLayout;
 
     private NavController navController;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -70,7 +75,7 @@ public class SignUpFragment extends Fragment {
 
         this.nameTV = view.findViewById(R.id.signUpNameEditText);
         this.surnameTV = view.findViewById(R.id.signUpSurnameEditText);
-        this.universityTV = view.findViewById(R.id.signUpUniversityEditText);
+        this.universitySpinner = view.findViewById(R.id.signUpUniversitySpinner);
         this.emailTV = view.findViewById(R.id.signUpMailEditText);
         this.passwordTV = view.findViewById(R.id.signUpPassEditText);
         this.repeatPasswordTV = view.findViewById(R.id.signUpRepeatPassEditText);
@@ -78,10 +83,61 @@ public class SignUpFragment extends Fragment {
 
         this.nameLayout = view.findViewById(R.id.signUpNameTextInputLayout);
         this.surnameLayout = view.findViewById(R.id.signUpSurnameTextInputLayout);
-        this.universityLayout = view.findViewById(R.id.signUpUniversityTextInputLayout);
         this.emailLayout = view.findViewById(R.id.signUpMailTextInputLayout);
         this.passwordLayout = view.findViewById(R.id.signUpPassTextInputLayout);
         this.repeatPasswordLayout = view.findViewById(R.id.signUpRepeatPassTextInputLayout);
+
+        String[] universities = getResources().getStringArray(
+                R.array.universities);
+
+        ArrayAdapter<CharSequence> spinnerArrayAdapter = new ArrayAdapter<CharSequence>(
+                getContext(), android.R.layout.simple_spinner_dropdown_item, universities){
+            @Override
+            public boolean isEnabled(int position){
+                if(position == 0)
+                {
+                    // Disable the first item from Spinner
+                    // First item will be use for hint
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+            @Override
+            public View getDropDownView(int position, View convertView,
+                                        ViewGroup parent) {
+                View view = super.getDropDownView(position, convertView, parent);
+                TextView tv = (TextView) view;
+                if(position == 0){
+                    // Set the hint text color gray
+                    tv.setTextColor(Color.GRAY);
+                }
+                else {
+                    tv.setTextColor(Color.BLACK);
+                }
+                return view;
+            }
+
+        };
+        AdapterView.OnItemSelectedListener spinnerListener = new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(position == 0)
+                    ((TextView) parent.getChildAt(0)).setTextColor(Color.GRAY);
+                else
+                    ((TextView) parent.getChildAt(0)).setTextColor(Color.BLACK);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        };
+        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        universitySpinner.setAdapter(spinnerArrayAdapter);
+        universitySpinner.setOnItemSelectedListener(spinnerListener);
 
         view.findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -178,10 +234,14 @@ public class SignUpFragment extends Fragment {
         }
 
         if (!passwordTV.getText().toString().isEmpty() && !repeatPasswordTV.getText().toString().isEmpty()){
-            if (!passwordTV.getText().toString().equals(repeatPasswordTV.getText().toString())){
+            if (!passwordTV.getText().toString().equals(repeatPasswordTV.getText().toString())) {
                 status = false;
                 this.passwordLayout.setError(getString(R.string.error_password_match));
                 this.repeatPasswordLayout.setError(getString(R.string.error_password_match));
+            } else if(passwordTV.getText().toString().length() > 15 || passwordTV.getText().toString().length() < 8 ){
+                status = false;
+                this.passwordLayout.setError(getString(R.string.error_password_length));
+                this.repeatPasswordLayout.setError(getString(R.string.error_password_length));
             } else if (!Validations.ValidatePassword(passwordTV.getText().toString())){
                 status = false;
                 this.passwordLayout.setError(getString(R.string.error_password_invalid));

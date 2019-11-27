@@ -32,15 +32,24 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/continueWithoutSigningInSelectUniversity">
 
-        <EditText
-            android:id="@+id/signUpUniversityEditText"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/colorEditTextBlue"
-            android:ems="10"
-            android:hint="@string/university_name"
-            android:inputType="textPersonName"
-            android:textColorHint="@color/colorEditTextTextBlue" />
+            android:layout_height="wrap_content">
+            <Spinner
+                android:id="@+id/signUpUniversitySpinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/university_spinner_border"/>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center"
+                android:padding="4dp"
+                android:src="@drawable/ic_arrow_drop_down_black_24dp" />
+        </RelativeLayout>
+
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button

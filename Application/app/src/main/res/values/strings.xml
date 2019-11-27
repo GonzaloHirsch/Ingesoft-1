@@ -17,7 +17,7 @@
 
     <string name="error_complete_field">Please complete this field</string>
     <string name="error_password_match">Passwords don´t match</string>
-    <string name="error_password_invalid">Invalid password</string>
+    <string name="error_password_invalid">The password must have an uppercase letter, a lowercase letter, a number and a special character</string>
     <string name="error_email_invalid">Invalid email</string>
     <string name="error_password_weak">Weak password</string>
     <string name="error_email_used">Email already used</string>
@@ -54,4 +54,6 @@
     <string name="search_hint">search</string>
     <string name="user_parcel">USER_PARCEL</string>
     <string name="add_course">Add Course</string>
+    <string name="error_password_length">The password must have between 8 and 15 letters</string>
+    <string name="repeat_password">Repeat Password</string>
 </resources>

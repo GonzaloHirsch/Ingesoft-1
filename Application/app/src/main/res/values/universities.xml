@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="universities">
+<!--        First item is the hint-->
+        <item>University</item>
+        <item>ITBA</item>
+        <item>UdeSA</item>
+        <item>UADE</item>
+    </string-array>
+</resources>
