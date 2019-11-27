@@ -13,6 +13,7 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.Transaction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -385,8 +386,31 @@ public class DatabaseConnection {
      * Updates the given chat.
      * @param chat to be updated.
      */
-    public void UpdateChat(final Chat chat){
-        db.collection("Chats")
+    public void UpdateChat(final Chat chat, OnChatEventListener eventListener){
+        DocumentReference ref = db.collection("Chats").document(chat.getChatID());
+        db.runTransaction(new Transaction.Function<Chat>() {
+            @Nullable
+            @Override
+            public Chat apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
+
+                if (transaction.get(ref).getData() != null){
+                    Chat transactionVersion = new Chat(transaction.get(ref).getData());
+
+                    Chat newVersion = Chat.Merge(transactionVersion, chat);
+
+                    transaction.set(ref, newVersion);
+
+                    eventListener.onChatChanged(newVersion);
+
+                    Log.v(TAG, "Chat " + chat.getChatID() + " updated");
+                } else {
+                    Log.e(TAG, "Error updating " + chat.getChatID() + " user");
+                }
+
+                return null;
+            }
+        });
+        /*db.collection("Chats")
                 .document(chat.getChatID())
                 .update(chat.generateDataToUpdate())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -401,6 +425,8 @@ public class DatabaseConnection {
                         Log.w(TAG, "Error updating " + chat.getChatID() + " user", e);
                     }
                 });
+
+         */
     }
 
     public void SetUpChatListener(String chatID, OnChatEventListener eventListener){

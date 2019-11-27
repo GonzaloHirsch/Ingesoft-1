@@ -43,6 +43,32 @@ public class Chat implements DatabaseObject {
         this.messages = new ArrayList<>();
     }
 
+    public static Chat Merge(Chat originalChat, Chat newChat){
+        Chat result = new Chat(originalChat.from, originalChat.to, originalChat.fromName, originalChat.toName);
+
+        result.setChatID(originalChat.getChatID());
+
+        int originalIndex = 0;
+        int newIndex = 0;
+        List<Message> originalMsg = originalChat.getMessages();
+        List<Message> newMsg = newChat.getMessages();
+        while(originalIndex < originalMsg.size() || newIndex < newMsg.size()){
+            if (originalIndex < originalMsg.size() && newIndex < newMsg.size()){
+                if (newMsg.get(newIndex).getTimestamp() < originalMsg.get(originalIndex).getTimestamp()){
+                    result.addMessage(newMsg.get(newIndex++));
+                } else {
+                    result.addMessage(originalMsg.get(originalIndex++));
+                }
+            } else if (originalIndex < originalMsg.size()){
+                result.addMessage(originalMsg.get(originalIndex++));
+            } else {
+                result.addMessage(newMsg.get(newIndex++));
+            }
+        }
+
+        return result;
+    }
+
     public String getChatID() {
         return chatID;
     }

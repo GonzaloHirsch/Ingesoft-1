@@ -85,6 +85,11 @@ public class ChatsMessagesAdapter extends RecyclerView.Adapter<ChatsMessagesAdap
         this.notifyItemInserted(messages.size() - 1);
     }
 
+    public void setData(List<Message> messages){
+        this.messages = messages;
+        notifyDataSetChanged();
+    }
+
     /**
      * Method to notify the adapter that there are new messages from the database
      * @param newMessages

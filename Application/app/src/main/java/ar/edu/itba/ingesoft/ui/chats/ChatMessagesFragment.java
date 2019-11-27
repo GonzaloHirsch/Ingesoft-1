@@ -103,13 +103,24 @@ public class ChatMessagesFragment extends Fragment {
                         // Generating the new message instance
                         Message newMessage = new Message(fu.getEmail(), message, new Date());
 
-                        // Notify the view model of the new message
-                        mViewModel.addMessage(newMessage);
-
                         // Notify the adapter of the new message
                         ChatsMessagesAdapter adapter = ((ChatsMessagesAdapter)messagesRecyclerView.getAdapter());
                         if (adapter != null)
                             adapter.addMessage(newMessage);
+
+                        // Notify the view model of the new message
+                        mViewModel.addMessage(newMessage, new OnChatEventListener() {
+                            @Override
+                            public void onChatRetrieved(Chat chat) {
+                                throw new RuntimeException("Not Implemented");
+                            }
+
+                            @Override
+                            public void onChatChanged(Chat chat) {
+                                if (adapter != null)
+                                    adapter.messagesChanged(chat.getMessages());
+                            }
+                        });
 
                         // Clearing the message text
                         messageInputEditText.setText("");
