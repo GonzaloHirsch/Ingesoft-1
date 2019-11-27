@@ -21,7 +21,8 @@ public class AddCourseAdapter extends CourseListAdapter {
     public void addSelectedCourses(){
         List<String> courseIds = new ArrayList<>();
         for(Course c : selectedCourses){
-            courseIds.add(c.getCode());
+            if (!courseIds.contains(selectedCourses))
+                courseIds.add(c.getCode());
         }
         selectedCourses.clear();
         //Este for es necesario para obtener los courseIds

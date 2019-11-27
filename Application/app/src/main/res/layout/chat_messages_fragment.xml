@@ -16,6 +16,7 @@
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/list_of_messages"
+            android:background="@color/backgroundColor"
             android:paddingTop="1dp"
             android:paddingBottom="1dp"
             android:layout_width="match_parent"
@@ -27,6 +28,7 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/messages_recycler_view"
+                android:background="@color/backgroundColor"
                 android:layout_weight="1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />

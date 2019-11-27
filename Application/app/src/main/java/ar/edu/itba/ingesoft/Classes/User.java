@@ -19,43 +19,36 @@ public class User implements DatabaseObject, Parcelable {
 
     private String mail;
     private String name;
-    private String surname;
     private boolean isProfessor;
     private List<String> courses;
-    //private Map<Long, Appointment> appointments;
+    private List<String> chats;
     private Universidad universidad;
-    //private Map<Long, Chat> chats;
 
     @SuppressWarnings("unchecked")
     public User(Map<String, Object> data){
         this.name = (String) data.get("name");
-        this.surname = (String) data.get("surname");
         this.mail = (String) data.get("mail");
-        //todo wtf
         if(data.get("isProfessor") != null)
             this.isProfessor = (Boolean) data.get("isProfessor");
         else
             this.isProfessor = false;
         this.courses = (List<String>) data.get("courses");
-        //this.appointments = (Map<Long, Appointment>) data.get("appointments");
-        //this.chats = (Map<Long, Chat>) data.get("chats");
+        this.chats = (List<String>) data.get("chats");
         this.universidad = new Universidad((Map<String, Object>) data.get("Universidad"));
 
     }
 
     public User(){
         this.courses = new ArrayList<>();
-        //this.appointments = new HashMap<>();
+        this.chats = new ArrayList<>();
     }
 
-    public User(String name, String surname, String mail, Universidad universidad){
+    public User(String name, String mail, Universidad universidad){
         this.name = name;
-        this.surname = surname;
         this.mail = mail;
         this.isProfessor = false;
         this.courses = new ArrayList<>();
-        //this.appointments = new HashMap<>();
-        //this.chats = new HashMap<>();
+        this.chats = new ArrayList<>();
         this.universidad = universidad;
     }
 
@@ -63,12 +56,11 @@ public class User implements DatabaseObject, Parcelable {
         Map<String, Object> data = new HashMap<>();
 
         data.put("name", this.name);
-        data.put("surname", this.surname);
+        data.put("mail", this.mail);
         data.put("professor", this.isProfessor);
         data.put("courses", this.courses);
-        //data.put("appointments", this.appointments);
         data.put("universidad", this.universidad);
-        //data.put("chats", this.chats);
+        data.put("chats", this.chats);
 
         return data;
     }
@@ -87,14 +79,6 @@ public class User implements DatabaseObject, Parcelable {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getSurname() {
-        return surname;
-    }
-
-    public void setSurname(String surname) {
-        this.surname = surname;
     }
 
     public boolean isProfessor() {
@@ -124,6 +108,10 @@ public class User implements DatabaseObject, Parcelable {
     public void setCourses(List<String> courses){
         this.courses = courses;
     }
+
+    public List<String> getChats(){ return this.chats; }
+
+    public void addChat(String chatID){ this.chats.add(chatID); }
     /*
     public Map<Long, Appointment> getAppointments() {
         return appointments;
@@ -182,19 +170,15 @@ public class User implements DatabaseObject, Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.name);
-        dest.writeString(this.surname);
         dest.writeString(this.mail);
         dest.writeStringList(this.courses);
     }
 
     protected User(Parcel in){
         this.name = in.readString();
-        this.surname = in.readString();
         this.mail = in.readString();
         this.courses = in.createStringArrayList();
     }
-
-
 
     public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>(){
         public User createFromParcel(Parcel source){
