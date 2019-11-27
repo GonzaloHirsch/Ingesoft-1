@@ -31,11 +31,12 @@ public class CoursesTeachersCache {
     }
 
     //updatear el hash
-    public static void refreshCourseTeachers(){
+    public static synchronized void refreshCourseTeachers(){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DatabaseConnection database = new DatabaseConnection();
+
         if(usersList == null || coursesList == null || usersList.size() == 0 || coursesList.size() == 0) {
-            database.GetUsers(new OnUserEventListener() {
+        /*    database.GetUsers(new OnUserEventListener() {
                 @Override
                 public void onUserRetrieved(User user) {
 
@@ -55,15 +56,7 @@ public class CoursesTeachersCache {
                         public void onCoursesRetrieved(List<Course> courses) {
                             coursesList.clear();
                             coursesList.addAll(courses);
-                            courseTeachers.clear();
-                            for (Course c : coursesList) {
-                                ArrayList<User> aux = new ArrayList<>();
-                                for (User u : usersList) {
-                                    if (u.getCourses().contains(c.getCode()))
-                                        aux.add(u);
-                                }
-                                courseTeachers.put(c.getCode(), aux);
-                            }
+
                         }
 
                         @Override
@@ -83,7 +76,23 @@ public class CoursesTeachersCache {
 
                 }
             });
+            */
+        }
+        else{
+            generateCourseTeachersHash();
+        }
 
+    }
+
+    public static void generateCourseTeachersHash(){
+        courseTeachers.clear();
+        for (Course c : coursesList) {
+            ArrayList<User> aux = new ArrayList<>();
+            for (User u : usersList) {
+                if (u.getCourses().contains(c.getCode()))
+                    aux.add(u);
+            }
+            courseTeachers.put(c.getCode(), aux);
         }
     }
 }
