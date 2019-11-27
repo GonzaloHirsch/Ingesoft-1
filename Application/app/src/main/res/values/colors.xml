@@ -14,7 +14,7 @@
     <color name="colorEditTextTextBlue">#801976d2</color>
 
     <color name="colorButtonBlue">#1976d2</color>
-
+    <color name="colorBackButton">#585858</color>
     <color name="colorError">#F50057</color>
 
     <color name="messageSent">#4ee877</color>

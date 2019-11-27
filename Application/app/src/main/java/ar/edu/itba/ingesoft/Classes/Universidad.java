@@ -16,14 +16,8 @@ public class Universidad implements DatabaseObject {
 
     @SuppressWarnings("unchecked")
     public Universidad(Map<String, Object> data){
-        if(this.name!=null)
             this.name = (String) data.get("name");
-        else //todo change this
-            this.name = (String) data.get("name");
-        if(this.courses !=null)
             this.courses = (List<Course>) data.get("courses");
-        else //todo change this
-            this.courses = new ArrayList<>();
     }
 
     public Universidad(String name){

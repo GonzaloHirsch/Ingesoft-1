@@ -44,26 +44,26 @@
         android:id="@+id/goBackButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:backgroundTint="@color/colorBackButton"
         android:text="@string/back"
-        android:backgroundTint="@color/material_on_background_disabled"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/continueWithoutSigningInButton"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/continueWithoutSigningInTextInputLayout"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/continueWithoutSigningInButton" />
+        app:layout_constraintTop_toBottomOf="@id/continueWithoutSigningInTextInputLayout" />
 
     <Button
         android:id="@+id/continueWithoutSigningInButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/continue_text"
-        app:layout_constraintHorizontal_bias="0.5"
         android:shadowDx="2"
         android:shadowDy="10"
-        app:layout_constraintTop_toBottomOf="@id/continueWithoutSigningInTextInputLayout"
+        android:text="@string/continue_text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/goBackButton" />
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/goBackButton"
+        app:layout_constraintTop_toBottomOf="@id/continueWithoutSigningInTextInputLayout" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
