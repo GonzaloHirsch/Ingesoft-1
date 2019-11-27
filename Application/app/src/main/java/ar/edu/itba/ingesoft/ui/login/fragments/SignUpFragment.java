@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckedTextView;
 import android.widget.Spinner;
@@ -51,7 +52,7 @@ public class SignUpFragment extends Fragment {
 
     private TextView nameTV;
     private TextView surnameTV;
-    private Spinner universitySpinner;
+    private AutoCompleteTextView universityDropdown;
     private TextView emailTV;
     private TextView passwordTV;
     private TextView repeatPasswordTV;
@@ -60,6 +61,7 @@ public class SignUpFragment extends Fragment {
     private TextInputLayout nameLayout;
     private TextInputLayout surnameLayout;
     private TextInputLayout emailLayout;
+    private TextInputLayout universityLayout;
     private TextInputLayout passwordLayout;
     private TextInputLayout repeatPasswordLayout;
 
@@ -75,7 +77,7 @@ public class SignUpFragment extends Fragment {
 
         this.nameTV = view.findViewById(R.id.signUpNameEditText);
         this.surnameTV = view.findViewById(R.id.signUpSurnameEditText);
-        this.universitySpinner = view.findViewById(R.id.signUpUniversitySpinner);
+        this.universityDropdown = view.findViewById(R.id.outlined_exposed_dropdown);
         this.emailTV = view.findViewById(R.id.signUpMailEditText);
         this.passwordTV = view.findViewById(R.id.signUpPassEditText);
         this.repeatPasswordTV = view.findViewById(R.id.signUpRepeatPassEditText);
@@ -84,60 +86,13 @@ public class SignUpFragment extends Fragment {
         this.nameLayout = view.findViewById(R.id.signUpNameTextInputLayout);
         this.surnameLayout = view.findViewById(R.id.signUpSurnameTextInputLayout);
         this.emailLayout = view.findViewById(R.id.signUpMailTextInputLayout);
+        this.universityLayout = view.findViewById(R.id.signUpUniversityTextInputLayout);
         this.passwordLayout = view.findViewById(R.id.signUpPassTextInputLayout);
         this.repeatPasswordLayout = view.findViewById(R.id.signUpRepeatPassTextInputLayout);
 
-        String[] universities = getResources().getStringArray(
-                R.array.universities);
-
-        ArrayAdapter<CharSequence> spinnerArrayAdapter = new ArrayAdapter<CharSequence>(
-                getContext(), android.R.layout.simple_spinner_dropdown_item, universities){
-            @Override
-            public boolean isEnabled(int position){
-                if(position == 0)
-                {
-                    // Disable the first item from Spinner
-                    // First item will be use for hint
-                    return false;
-                }
-                else
-                {
-                    return true;
-                }
-            }
-            @Override
-            public View getDropDownView(int position, View convertView,
-                                        ViewGroup parent) {
-                View view = super.getDropDownView(position, convertView, parent);
-                TextView tv = (TextView) view;
-                if(position == 0){
-                    // Set the hint text color gray
-                    tv.setTextColor(Color.GRAY);
-                }
-                else {
-                    tv.setTextColor(Color.BLACK);
-                }
-                return view;
-            }
-
-        };
-        AdapterView.OnItemSelectedListener spinnerListener = new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(position == 0)
-                    ((TextView) parent.getChildAt(0)).setTextColor(Color.GRAY);
-                else
-                    ((TextView) parent.getChildAt(0)).setTextColor(Color.BLACK);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        };
-        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        universitySpinner.setAdapter(spinnerArrayAdapter);
-        universitySpinner.setOnItemSelectedListener(spinnerListener);
+        String[] universities = getResources().getStringArray(R.array.universities);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), R.layout.dropdown_menu_popup_item, universities);
+        universityDropdown.setAdapter(adapter);
 
         view.findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -276,6 +231,15 @@ public class SignUpFragment extends Fragment {
             this.emailLayout.setErrorEnabled(false);
         }
 
+        if (universityDropdown.getText().toString().isEmpty()){
+            status = false;
+            this.universityLayout.setError(getString(R.string.error_complete_field));
+        } else {
+            this.universityLayout.setErrorEnabled(false);
+        }
+
+
+
         return status;
     }
 
@@ -284,7 +248,7 @@ public class SignUpFragment extends Fragment {
         user.setMail(emailTV.getText().toString());
         user.setName(nameTV.getText().toString() + " " + surnameTV.getText().toString());
         user.setProfessor(false);
-        user.setUniversidad(new Universidad("ITBA"));
+        user.setUniversidad(new Universidad(universityDropdown.getText().toString()));
 
         return user;
     }

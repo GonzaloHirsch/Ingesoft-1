@@ -34,7 +34,7 @@ public class User implements DatabaseObject, Parcelable {
             this.isProfessor = false;
         this.courses = (List<String>) data.get("courses");
         this.chats = (List<String>) data.get("chats");
-        this.universidad = new Universidad((Map<String, Object>) data.get("Universidad"));
+        this.universidad = new Universidad((Map<String, Object>) data.get("universidad"));
 
     }
 

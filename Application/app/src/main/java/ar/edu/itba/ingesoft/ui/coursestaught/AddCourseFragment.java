@@ -143,7 +143,7 @@ public class AddCourseFragment extends Fragment implements OnListContentUpdatedL
         linearLayoutManager = new LinearLayoutManager(getActivity());
         rV.setLayoutManager(linearLayoutManager);
 
-        viewModel.getCourses().observe(this, new Observer<List<Course>>() {
+        viewModel.getCourses().observe(getViewLifecycleOwner(), new Observer<List<Course>>() {
             @Override
             public void onChanged(List<Course> courses) {
                 addCourseAdapter.update(courses);

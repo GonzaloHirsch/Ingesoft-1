@@ -19,11 +19,11 @@ public class Universidad implements DatabaseObject {
         if(this.name!=null)
             this.name = (String) data.get("name");
         else //todo change this
-            this.name = "NoUniversityName";
+            this.name = (String) data.get("name");
         if(this.courses !=null)
             this.courses = (List<Course>) data.get("courses");
         else //todo change this
-            this.courses = new ArrayList<Course>();
+            this.courses = new ArrayList<>();
     }
 
     public Universidad(String name){

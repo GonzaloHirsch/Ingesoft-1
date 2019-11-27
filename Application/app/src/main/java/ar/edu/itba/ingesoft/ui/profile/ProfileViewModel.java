@@ -33,7 +33,7 @@ public class ProfileViewModel extends ViewModel {
 
     private MutableLiveData<User> currentUserLiveData = new MutableLiveData<>();
     private MutableLiveData<String> coursesTaughtLiveData = new MutableLiveData<>();
-    private MutableLiveData<Boolean> loading = new MutableLiveData<Boolean>(true);
+    private MutableLiveData<Boolean> loading = new MutableLiveData<>(true);
 
 
     public ProfileViewModel() {
