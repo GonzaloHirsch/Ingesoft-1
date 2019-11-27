@@ -54,7 +54,11 @@ public class Chat implements DatabaseObject {
         List<Message> newMsg = newChat.getMessages();
         while(originalIndex < originalMsg.size() || newIndex < newMsg.size()){
             if (originalIndex < originalMsg.size() && newIndex < newMsg.size()){
-                if (newMsg.get(newIndex).getTimestamp() < originalMsg.get(originalIndex).getTimestamp()){
+                if (newMsg.get(newIndex).equals(originalMsg.get(originalIndex))){
+                    result.addMessage(newMsg.get(newIndex));
+                    newIndex++;
+                    originalIndex++;
+                } else if (newMsg.get(newIndex).getTimestamp() < originalMsg.get(originalIndex).getTimestamp()){
                     result.addMessage(newMsg.get(newIndex++));
                 } else {
                     result.addMessage(originalMsg.get(originalIndex++));
