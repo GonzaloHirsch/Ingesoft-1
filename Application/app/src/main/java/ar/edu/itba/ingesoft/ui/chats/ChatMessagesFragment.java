@@ -40,6 +40,7 @@ public class ChatMessagesFragment extends Fragment {
 
     private String chatID;
     private String recipient;
+    private String recipientName;
 
     private boolean isNewChat = false;
 
@@ -77,7 +78,7 @@ public class ChatMessagesFragment extends Fragment {
                         FirebaseUser fu = new Authenticator().getSignedInUser();
 
                         if (isNewChat){
-                            chatID = mViewModel.createChat(fu.getEmail(), recipient);
+                            chatID = mViewModel.createChat(fu.getEmail(), recipient, fu.getDisplayName(), recipientName);
                             isNewChat = false;
                             mViewModel.setUpChatChangeListener(chatID, new OnChatEventListener(){
 
@@ -127,7 +128,12 @@ public class ChatMessagesFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
         this.mViewModel = ViewModelProviders.of(this).get(ChatMessagesViewModel.class);
+
+        if (this.chatID != null && !this.isNewChat){
+            this.mViewModel.setChatID(chatID);
+        }
 
         // Set up of the recycler view
         this.messagesRecyclerView.setHasFixedSize(true);
@@ -155,7 +161,7 @@ public class ChatMessagesFragment extends Fragment {
                 }
             });
             // Scroll the rv to the last message
-            this.messagesRecyclerView.smoothScrollToPosition(this.mViewModel.getChatMessageCount() - 1);
+            //this.messagesRecyclerView.smoothScrollToPosition(this.mViewModel.getChatMessageCount() - 1);
         }
     }
 
@@ -166,8 +172,6 @@ public class ChatMessagesFragment extends Fragment {
     public void setChatID(String chatID){
         if (chatID != null){
             this.chatID = chatID;
-            if (this.mViewModel != null)
-                this.mViewModel.setChatID(chatID);
         }
         this.isNewChat = chatID == null;
     }
@@ -176,8 +180,9 @@ public class ChatMessagesFragment extends Fragment {
      * Method to set the recipient of the message
      * @param recipient of the message
      */
-    public void setRecipient(String recipient){
+    public void setRecipient(String recipient, String recipientName){
         this.recipient = recipient;
+        this.recipientName = recipientName;
     }
 
 }

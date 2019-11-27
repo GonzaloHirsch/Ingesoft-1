@@ -53,7 +53,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
     @NonNull
     @Override
     public ChatsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_chats, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_chat, parent, false);
         return new ChatsViewHolder(view);
     }
 
@@ -76,7 +76,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
             holder.timestampTextView.setText("");
         }
 
-        holder.titleTextView.setText(chat.getTo());
+        holder.titleTextView.setText(chat.getToName());
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,6 +84,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
                 Context ctx = holder.itemView.getContext();
                 Intent intent = new Intent(ctx, ChatMessagesActivity.class);
                 intent.putExtra(MainActivity.CHAT_ID_EXTRA, chats.get(holder.getAdapterPosition()).getChatID());
+                intent.putExtra(MainActivity.CHAT_RECIPIENT_NAME_EXTRA, chats.get(holder.getAdapterPosition()).getToName());
                 intent.putExtra(MainActivity.CHAT_RECIPIENT_EXTRA, chats.get(holder.getAdapterPosition()).getFrom().equals(user) ? chats.get(holder.getAdapterPosition()).getTo() : chats.get(holder.getAdapterPosition()).getFrom());
                 ctx.startActivity(intent);
             }
@@ -104,6 +105,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
 
         public ChatsViewHolder(@NonNull View itemView) {
             super(itemView);
+
             titleTextView = itemView.findViewById(R.id.itemChatTitleTextView);
             subtitleTextView = itemView.findViewById(R.id.itemChatSubtitleTextView);
             timestampTextView = itemView.findViewById(R.id.itemChatTimestapmTextView);

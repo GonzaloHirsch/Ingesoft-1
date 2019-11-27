@@ -2,6 +2,7 @@ package ar.edu.itba.ingesoft.ui.chats;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import androidx.lifecycle.ViewModel;
 import ar.edu.itba.ingesoft.CachedData.UserCache;
@@ -15,6 +16,8 @@ public class ChatsViewModel extends ViewModel {
 
     private String userEmail;
     private List<Chat> chats;
+
+    private AtomicInteger recoveredChats;
 
     public ChatsViewModel() {
         this.chats = new ArrayList<>();
@@ -31,6 +34,9 @@ public class ChatsViewModel extends ViewModel {
                 @Override
                 public void onChatRetrieved(Chat chat) {
                     chats.add(chat);
+                    // Verify the amount of chats recovered is correct
+                    if (chats.size() == user.getChats().size())
+                        eventListener.onObjectRetrieved(chats);
                 }
 
                 @Override
@@ -39,9 +45,5 @@ public class ChatsViewModel extends ViewModel {
                 }
             });
         }
-
-        // Verify the amount of chats recovered is correct
-        if (this.chats.size() == user.getChats().size())
-            eventListener.onObjectRetrieved(this.chats);
     }
 }

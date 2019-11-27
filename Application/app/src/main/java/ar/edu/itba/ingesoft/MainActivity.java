@@ -1,6 +1,7 @@
 package ar.edu.itba.ingesoft;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,12 +25,14 @@ import ar.edu.itba.ingesoft.Authentication.Authenticator;
 import ar.edu.itba.ingesoft.Classes.User;
 import ar.edu.itba.ingesoft.Database.DatabaseConnection;
 import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnUserEventListener;
+import ar.edu.itba.ingesoft.ui.chats.ChatMessagesActivity;
 import ar.edu.itba.ingesoft.ui.profile.ProfileViewModel;
 
 public class MainActivity extends AppCompatActivity {
 
     public static final String CHAT_ID_EXTRA = "chat_id_extra";
     public static final String CHAT_RECIPIENT_EXTRA = "chat_recipient_extra";
+    public static final String CHAT_RECIPIENT_NAME_EXTRA = "chat_recipient_name_extra";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +67,11 @@ public class MainActivity extends AppCompatActivity {
         });
         CoursesTeachersCache.refreshCourseTeachers();
 
+        Intent intent = new Intent(this, ChatMessagesActivity.class);
+        intent.putExtra(MainActivity.CHAT_ID_EXTRA, (String)null);
+        intent.putExtra(MainActivity.CHAT_RECIPIENT_EXTRA, "iribas@itba.edu.ar");
+        intent.putExtra(MainActivity.CHAT_RECIPIENT_NAME_EXTRA, "Ignacio Ribas");
+        startActivity(intent);
     }
 
     @Override
