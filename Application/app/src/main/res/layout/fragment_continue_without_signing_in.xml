@@ -37,7 +37,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/colorEditTextBlue"
-            android:hint="@string/university_name"
             android:editable="false"/>
     </com.google.android.material.textfield.TextInputLayout>
 

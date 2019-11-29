@@ -8,6 +8,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,9 +27,10 @@ import ar.edu.itba.ingesoft.R;
  */
 public class ContinueWithoutSigningInFragment extends Fragment {
 
+
     private NavController navController;
     private String[] universities;
-
+    private Button continue_button;
     private AutoCompleteTextView univ_select;
 
     public ContinueWithoutSigningInFragment() {
@@ -62,15 +64,33 @@ public class ContinueWithoutSigningInFragment extends Fragment {
 
 
 
+
         univ_select = view.findViewById(R.id.univ_cont_with_sign_up);
         universities = getResources().getStringArray(R.array.universities);
         ArrayAdapter<String> univ_adapter = new ArrayAdapter<>(getContext(), R.layout.dropdown_menu_popup_item, universities);
         univ_select.setAdapter(univ_adapter);
 
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences(MainActivity.SP, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
 
-        editor.putString(MainActivity.UNIV_SP, univ_select.getText().toString());
+
+        continue_button = view.findViewById(R.id.continueWithoutSigningInButton);
+        continue_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SharedPreferences sharedPreferences = getContext().getSharedPreferences(MainActivity.SP, Context.MODE_PRIVATE);
+
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+
+                System.out.println(univ_select.getText().toString());
+                editor.putString(MainActivity.UNIV_SP, univ_select.getText().toString());
+                editor.apply();
+
+
+
+
+            }
+        });
+
+
 
 
 

@@ -1,7 +1,9 @@
 package ar.edu.itba.ingesoft.ui.login.fragments;
 
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -84,6 +86,8 @@ public class LoginFragmentMain extends Fragment {
 
         this.emailLayout = view.findViewById(R.id.signInUsernameTextInputLayout);
         this.passwordLayout = view.findViewById(R.id.signInPasswordTextInputLayout);
+
+
 
         //Regular Login with email and password
         view.findViewById(R.id.regular_signin_button).setOnClickListener(new View.OnClickListener() {
