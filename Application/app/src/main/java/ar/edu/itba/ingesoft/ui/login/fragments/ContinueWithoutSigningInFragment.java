@@ -25,6 +25,7 @@ import ar.edu.itba.ingesoft.R;
 public class ContinueWithoutSigningInFragment extends Fragment {
 
     private NavController navController;
+    private String[] universities;
 
     private AutoCompleteTextView univ_select;
 
@@ -60,6 +61,10 @@ public class ContinueWithoutSigningInFragment extends Fragment {
 
 
         univ_select = view.findViewById(R.id.univ_cont_with_sign_up);
+        universities = getResources().getStringArray(R.array.universities);
+        ArrayAdapter<String> univ_adapter = new ArrayAdapter<>(getContext(), R.layout.dropdown_menu_popup_item, universities);
+        univ_select.setAdapter(univ_adapter);
+
 
 
 

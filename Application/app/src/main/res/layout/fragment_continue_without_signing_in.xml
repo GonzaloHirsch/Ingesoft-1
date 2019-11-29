@@ -22,8 +22,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/continueWithoutSigningInTextInputLayout"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="match_parent"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
         app:layout_constraintBottom_toTopOf="@+id/continueWithoutSigningInButton"
@@ -37,10 +36,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/colorEditTextBlue"
-            android:ems="10"
             android:hint="@string/university_name"
-            android:inputType="textPersonName"
-            android:textColorHint="@color/colorEditTextTextBlue" />
+            android:editable="false"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
