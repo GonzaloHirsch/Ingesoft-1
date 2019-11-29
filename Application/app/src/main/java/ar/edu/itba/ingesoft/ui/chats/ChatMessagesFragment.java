@@ -55,15 +55,18 @@ public class ChatMessagesFragment extends Fragment {
         View root = inflater.inflate(R.layout.chat_messages_fragment, container, false);
 
         this.messagesRecyclerView = (RecyclerView) root.findViewById(R.id.messages_recycler_view);
-        this.messageInputEditText = (TextInputEditText) root.findViewById(R.id.chat_message_input);
+        this.messageInputEditText = (TextInputEditText) root.findViewById(R.id.chat_message_input_edit_text);
         this.sendFloatingActionButton = (FloatingActionButton) root.findViewById(R.id.chat_message_send_button);
 
         // When the message input is clicked, the rv is scrolled to the last message
-        this.messageInputEditText.setOnClickListener(new View.OnClickListener() {
+        root.findViewById(R.id.chat_message_input_layout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!isNewChat)
-                    messagesRecyclerView.smoothScrollToPosition(mViewModel.getChatMessageCount() - 1);
+                if (!isNewChat && mViewModel.retrieveMessages() != null && mViewModel.retrieveMessages().size() > 0){
+                    messagesRecyclerView.scrollToPosition(mViewModel.retrieveMessages().size() - 1);
+                    //messagesRecyclerView.smoothScrollToPosition(0);
+                    Log.d(TAG, "smooth scrolling on message input edit text");
+                }
             }
         });
 
@@ -103,13 +106,31 @@ public class ChatMessagesFragment extends Fragment {
                         // Generating the new message instance
                         Message newMessage = new Message(fu.getEmail(), message, new Date());
 
-                        // Notify the view model of the new message
-                        mViewModel.addMessage(newMessage);
-
                         // Notify the adapter of the new message
                         ChatsMessagesAdapter adapter = ((ChatsMessagesAdapter)messagesRecyclerView.getAdapter());
-                        if (adapter != null)
-                            adapter.addMessage(newMessage);
+                        //if (adapter != null)
+                            //adapter.addMessage(newMessage);
+
+                        // Notify the view model of the new message
+                        mViewModel.addMessage(newMessage, new OnChatEventListener() {
+                            @Override
+                            public void onChatRetrieved(Chat chat) {
+                                throw new RuntimeException("Not Implemented");
+                            }
+
+                            @Override
+                            public void onChatChanged(Chat chat) {
+                                getActivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if (adapter != null){
+                                            adapter.setData(chat.getMessages());
+                                            messagesRecyclerView.scrollToPosition(chat.getMessages().size() - 1);
+                                        }
+                                    }
+                                });
+                            }
+                        });
 
                         // Clearing the message text
                         messageInputEditText.setText("");

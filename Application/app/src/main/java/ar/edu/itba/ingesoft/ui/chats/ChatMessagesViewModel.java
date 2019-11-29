@@ -46,12 +46,23 @@ public class ChatMessagesViewModel extends ViewModel {
      * Method to notify the view model about the new message the logged user sent
      * @param message
      */
-    public void addMessage(Message message){
+    public void addMessage(Message message, OnChatEventListener eventListener){
         // Store the new message in the object
         this.chatObj.addMessage(message);
 
         // Update the database with the new message
-        new DatabaseConnection().UpdateChat(this.chatObj);
+        new DatabaseConnection().UpdateChat(this.chatObj, new OnChatEventListener() {
+            @Override
+            public void onChatRetrieved(Chat chat) {
+                throw new RuntimeException("Not Implemented");
+            }
+
+            @Override
+            public void onChatChanged(Chat chat) {
+                chatObj = chat;
+                eventListener.onChatChanged(chat);
+            }
+        });
     }
 
     /**

@@ -39,7 +39,10 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
             this.chats.sort(new Comparator<Chat>() {
                 @Override
                 public int compare(Chat o1, Chat o2) {
-                    return o1.getMessages().get(o1.getMessages().size() - 1).getTimestamp().compareTo(o2.getMessages().get(o2.getMessages().size() - 1).getTimestamp());
+                    if (o1.getMessages().size() > 0 && o2.getMessages().size() > 0)
+                        return o2.getMessages().get(o2.getMessages().size() - 1).getTimestamp().compareTo(o1.getMessages().get(o1.getMessages().size() - 1).getTimestamp());
+                    else
+                        return o2.getChatID().compareTo(o1.getChatID());
                 }
             });
         }
@@ -76,16 +79,20 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
             holder.timestampTextView.setText("");
         }
 
-        holder.titleTextView.setText(chat.getToName());
+        if (this.user.equals(chat.getToName()))
+            holder.titleTextView.setText(chat.getFromName());
+        else
+            holder.titleTextView.setText(chat.getToName());
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Context ctx = holder.itemView.getContext();
+                Chat chat = chats.get(holder.getAdapterPosition());
                 Intent intent = new Intent(ctx, ChatMessagesActivity.class);
-                intent.putExtra(MainActivity.CHAT_ID_EXTRA, chats.get(holder.getAdapterPosition()).getChatID());
-                intent.putExtra(MainActivity.CHAT_RECIPIENT_NAME_EXTRA, chats.get(holder.getAdapterPosition()).getToName());
-                intent.putExtra(MainActivity.CHAT_RECIPIENT_EXTRA, chats.get(holder.getAdapterPosition()).getFrom().equals(user) ? chats.get(holder.getAdapterPosition()).getTo() : chats.get(holder.getAdapterPosition()).getFrom());
+                intent.putExtra(MainActivity.CHAT_ID_EXTRA, chat.getChatID());
+                intent.putExtra(MainActivity.CHAT_RECIPIENT_NAME_EXTRA, chat.getFrom().equals(user) ? chat.getToName() : chat.getFromName());
+                intent.putExtra(MainActivity.CHAT_RECIPIENT_EXTRA, chat.getFrom().equals(user) ? chat.getTo() : chat.getFrom());
                 ctx.startActivity(intent);
             }
         });
