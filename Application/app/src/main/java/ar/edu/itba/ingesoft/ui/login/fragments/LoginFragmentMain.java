@@ -132,17 +132,11 @@ public class LoginFragmentMain extends Fragment {
             }
         });
 
-        //Login with Google Account
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
-        GoogleSignInClient client = GoogleSignIn.getClient(getActivity(), gso);
         view.findViewById(R.id.google_signin_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Authenticator authenticator = new Authenticator();
-                Intent intent = client.getSignInIntent();
+                Intent intent = authenticator.generateGoogleClient(getActivity()).getSignInIntent();
                 startActivityForResult(intent, RC_SIGN_IN_GOOGLE);
             }
         });
