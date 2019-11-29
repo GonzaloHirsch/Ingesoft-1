@@ -22,6 +22,9 @@ import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnUserEventListene
 
 public class MainActivity extends AppCompatActivity {
 
+    public static final String SP = "sharedPrefs";
+    public static final String UNIV_SP = "univSharedPrefs";
+
     public static final String CHAT_ID_EXTRA = "chat_id_extra";
     public static final String CHAT_RECIPIENT_EXTRA = "chat_recipient_extra";
     public static final String CHAT_RECIPIENT_NAME_EXTRA = "chat_recipient_name_extra";
