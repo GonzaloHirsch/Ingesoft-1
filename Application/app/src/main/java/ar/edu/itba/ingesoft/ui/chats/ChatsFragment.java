@@ -5,10 +5,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.firebase.components.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.Nullable;
@@ -31,7 +33,12 @@ public class ChatsFragment extends Fragment {
     public static final String TAG = "chats_fragment";
 
     private ChatsViewModel chatsViewModel;
+
     private RecyclerView chatsRecyclerView;
+    private ChatsAdapter adapter;
+
+    private ProgressBar progressBar;
+    private TextView loadingTextView;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -41,17 +48,35 @@ public class ChatsFragment extends Fragment {
         // Recovering the user email
         String userEmail = new Authenticator().getSignedInUser().getEmail();
 
+        progressBar = root.findViewById(R.id.searchProgressBar);
+        loadingTextView = root.findViewById(R.id.searchLoadingTextView);
         this.chatsRecyclerView = root.findViewById(R.id.chatsRecyclerView);
         RecyclerView.LayoutManager manager = new LinearLayoutManager(getContext());
         this.chatsRecyclerView.setLayoutManager(manager);
+        this.adapter = new ChatsAdapter(new ArrayList<>(), userEmail);
+        chatsRecyclerView.setAdapter(this.adapter);
+
+        chatsViewModel.getLoading().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if(aBoolean){
+                    chatsRecyclerView.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.VISIBLE);
+                    loadingTextView.setVisibility(View.VISIBLE);
+                }else{
+                    chatsRecyclerView.setVisibility(View.VISIBLE);
+                    progressBar.setVisibility(View.GONE);
+                    loadingTextView.setVisibility(View.GONE);
+                }
+            }
+        });
 
         // Setting the email and the data for the adapter
         this.chatsViewModel.setUserEmail(userEmail);
-        this.chatsViewModel.recoverData(new OnObjectEventListener<Chat>() {
+        this.chatsViewModel.recoverData().observe(getViewLifecycleOwner(), new Observer<List<Chat>>() {
             @Override
-            public void onObjectRetrieved(List<Chat> obj) {
-                ChatsAdapter adapter = new ChatsAdapter(obj, userEmail);
-                chatsRecyclerView.setAdapter(adapter);
+            public void onChanged(List<Chat> chats) {
+                adapter.updateData(chats);
             }
         });
 

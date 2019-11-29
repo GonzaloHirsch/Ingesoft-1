@@ -9,6 +9,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
@@ -17,11 +18,15 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.SignInMethodQueryResult;
 
+import androidx.annotation.NonNull;
 import ar.edu.itba.ingesoft.Classes.Universidad;
 import ar.edu.itba.ingesoft.Classes.User;
 import ar.edu.itba.ingesoft.Database.DatabaseConnection;
+import ar.edu.itba.ingesoft.R;
 
 public class Authenticator {
+    public static final String TAG = "Authenticator";
+
     private FirebaseAuth auth = FirebaseAuth.getInstance();
 
     /** Creates an user and inserts it in the database */
@@ -54,6 +59,15 @@ public class Authenticator {
         return googleSignInClient.getSignInIntent();
     }
 
+    public GoogleSignInClient generateGoogleClient(Activity activity){
+        //Login with Google Account
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(activity.getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+        return GoogleSignIn.getClient(activity, gso);
+    }
+
     /** Returns the task associated with the intent */
     public Task<AuthResult> getTask(Intent intent){
         Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(intent);
@@ -77,7 +91,17 @@ public class Authenticator {
         return auth.signInWithCredential(credential);
     }
 
-    public void signOut(){
+    public void signOut(Activity activity){
+        // Normal sign out
         auth.signOut();
+
+        // Google sign out
+        generateGoogleClient(activity).signOut().addOnCompleteListener(activity,
+                new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Log.v(TAG, "Signed user out of google");
+                    }
+                });
     }
 }
