@@ -55,4 +55,5 @@
     <string name="user_parcel">USER_PARCEL</string>
     <string name="add_course">Add Course</string>
     <string name="title_activity_course_view">CourseViewActivity</string>
+    <string name="title_activity_user_view">UserViewActivity</string>
 </resources>

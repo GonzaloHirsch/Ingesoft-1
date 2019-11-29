@@ -22,10 +22,12 @@ import ar.edu.itba.ingesoft.ui.recyclerviews.diffutil_callbacks.UserDiffutil;
 public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UsersViewHolder> {
 
     private List<User> users = new ArrayList<>();
+    private UsersAdapter.OnItemClickListener listener;
 
-    public UsersAdapter(String courseId){
+    public UsersAdapter(String courseId, UsersAdapter.OnItemClickListener listener){
         //todo ver la fucking race condition
         users = CoursesTeachersCache.getCourseTeachers().get(courseId);
+        this.listener = listener;
     }
 
     public void update(List<User> newList){
@@ -52,7 +54,8 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UsersViewHol
 
         User u = users.get(position);
         holder.title.setText(u.getName());
-        holder.subtitle.setText(u.getUniversidad().getName());
+        //holder.subtitle.setText(u.getUniversidad().getName());
+        holder.bind(u, listener);
         //todo holder.btn.setOnClickListener();
     }
 
@@ -73,5 +76,18 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UsersViewHol
             subtitle = itemView.findViewById(R.id.itemUserSubtitle);
             btn = itemView.findViewById(R.id.itemUserButton);
         }
+
+        public void bind(User u, OnItemClickListener listener){
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onItemClicked(u);
+                }
+            });
+        }
+    }
+
+    public interface OnItemClickListener{
+        void onItemClicked(User u);
     }
 }

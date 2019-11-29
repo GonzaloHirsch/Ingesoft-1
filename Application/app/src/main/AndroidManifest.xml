@@ -10,9 +10,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".ui.userview.UserViewActivity"
+            android:label="@string/title_activity_user_view"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
             android:name=".ui.courseview.CourseViewActivity"
             android:label="@string/title_activity_course_view"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.chats.ChatMessagesActivity"
             android:parentActivityName=".MainActivity">

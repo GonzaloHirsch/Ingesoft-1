@@ -1,6 +1,5 @@
-package ar.edu.itba.ingesoft.ui.courseview;
+package ar.edu.itba.ingesoft.ui.userview;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -8,7 +7,6 @@ import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,41 +18,29 @@ import ar.edu.itba.ingesoft.Classes.User;
 import ar.edu.itba.ingesoft.R;
 import ar.edu.itba.ingesoft.ui.recyclerviews.Adapters.UserCoursesAdapter;
 import ar.edu.itba.ingesoft.ui.recyclerviews.Adapters.UsersAdapter;
-import ar.edu.itba.ingesoft.ui.userview.UserViewActivity;
 
-public class CourseViewActivity extends AppCompatActivity {
+public class UserViewActivity extends AppCompatActivity {
 
     private RecyclerView courseViewTeachersRecyclerView;
     private LinearLayoutManager llm = new LinearLayoutManager(this);
-    private UsersAdapter adapter;
+    private UserCoursesAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_course_view);
+        setContentView(R.layout.activity_user_view);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        Course c = getIntent().getParcelableExtra("SelectedCourse");
+        User u = getIntent().getParcelableExtra("SelectedUser");
 
-        //ViewModelProviders.of(this).get(CourseViewViewModel.class);
-
-
-        courseViewTeachersRecyclerView = findViewById(R.id.courseViewTeachersRecyclerView);
+        courseViewTeachersRecyclerView = findViewById(R.id.userViewRecyclerView);
         courseViewTeachersRecyclerView.setLayoutManager(llm);
-        adapter = new UsersAdapter(c.getCode(), new UsersAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClicked(User u) {
-                Intent intent = new Intent(getApplicationContext(), UserViewActivity.class);
-                intent.putExtra("SelectedUser", u);
-                startActivity(intent);
-            }
-        });
+        adapter = new UserCoursesAdapter(u.getCourses());
         courseViewTeachersRecyclerView.setAdapter(adapter);
 
-        ((TextView) findViewById(R.id.courseViewNameTextView)).setText(c.getName());
-        ((TextView) findViewById(R.id.courseViewExtraTextView1)).setText(c.getCode());
-
+        ((TextView) findViewById(R.id.userViewNameTextView)).setText(u.getName());
+        //((TextView) findViewById(R.id.userViewExtraTextView1)).setText(u.getUniversidad().getName());
     }
 
 }
