@@ -32,14 +32,16 @@ public class CourseViewActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course_view);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+//        Toolbar toolbar = findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Course c = getIntent().getParcelableExtra("SelectedCourse");
 
         //ViewModelProviders.of(this).get(CourseViewViewModel.class);
 
-
+        getSupportActionBar().setTitle(c.getCode() + " - " + c.getName());
         courseViewTeachersRecyclerView = findViewById(R.id.courseViewTeachersRecyclerView);
         courseViewTeachersRecyclerView.setLayoutManager(llm);
         adapter = new UsersAdapter(c.getCode(), new UsersAdapter.OnItemClickListener() {
@@ -52,9 +54,12 @@ public class CourseViewActivity extends AppCompatActivity {
         });
         courseViewTeachersRecyclerView.setAdapter(adapter);
 
-        ((TextView) findViewById(R.id.courseViewNameTextView)).setText(c.getName());
-        ((TextView) findViewById(R.id.courseViewExtraTextView1)).setText(c.getCode());
+    }
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
 }

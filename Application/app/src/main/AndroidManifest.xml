@@ -16,7 +16,7 @@
         <activity
             android:name=".ui.courseview.CourseViewActivity"
             android:label="@string/title_activity_course_view"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme"></activity>
         <activity
             android:name=".ui.chats.ChatMessagesActivity"
             android:parentActivityName=".MainActivity">
@@ -28,7 +28,7 @@
             android:name=".ui.coursestaught.CoursesTaughtActivity"
             android:label="@string/title_activity_courses_taught"
             android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ar.edu.itba.ingesoft.MainActivity" />
