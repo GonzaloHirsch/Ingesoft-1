@@ -11,12 +11,11 @@
         android:id="@+id/continueWithoutSigningInSelectUniversity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
         android:text="@string/select_university"
         android:textSize="50sp"
         app:layout_constraintBottom_toTopOf="@+id/continueWithoutSigningInTextInputLayout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.545"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -28,7 +27,6 @@
         android:layout_marginHorizontal="20dp"
         app:layout_constraintBottom_toTopOf="@+id/continueWithoutSigningInButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/continueWithoutSigningInSelectUniversity">
 
@@ -37,7 +35,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/colorEditTextBlue"
-            android:editable="false"/>
+            android:editable="false"
+             />
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
