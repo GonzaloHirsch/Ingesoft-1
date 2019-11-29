@@ -65,7 +65,7 @@ public class CourseViewActivity extends AppCompatActivity {
 
                 //todo checkear una manera mejor de hacerlo (ver si el chat ya existe)
                 for(Chat c : UserCache.GetChats()){
-                    if(c.getFrom().equals(UserCache.GetUser().getMail()) && c.getTo().equals(u.getMail()) || c.getTo().equals(UserCache.GetUser().getMail()) && c.getFrom().equals(u.getMail())){
+                    if( ( c.getFrom().equals(currentUser.getMail()) && c.getTo().equals(u.getMail()) ) || (c.getFrom().equals(u.getMail()) && c.getTo().equals(currentUser.getMail())) ){
                         id = c.getChatID();
                     }
                 }
