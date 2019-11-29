@@ -9,6 +9,8 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -23,6 +25,8 @@ import ar.edu.itba.ingesoft.R;
 public class ContinueWithoutSigningInFragment extends Fragment {
 
     private NavController navController;
+
+    private AutoCompleteTextView univ_select;
 
     public ContinueWithoutSigningInFragment() {
         // Required empty public constructor
@@ -52,6 +56,10 @@ public class ContinueWithoutSigningInFragment extends Fragment {
                 getActivity().onBackPressed();
             }
         });
+
+
+
+        univ_select = view.findViewById(R.id.univ_cont_with_sign_up);
 
 
 

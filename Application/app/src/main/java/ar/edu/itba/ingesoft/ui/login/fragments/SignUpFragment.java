@@ -14,25 +14,20 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
-import com.google.firebase.auth.FirebaseUser;
 
 import ar.edu.itba.ingesoft.Authentication.Authenticator;
 import ar.edu.itba.ingesoft.Classes.Universidad;
 import ar.edu.itba.ingesoft.Classes.User;
 import ar.edu.itba.ingesoft.Database.DatabaseConnection;
-import ar.edu.itba.ingesoft.MainActivity;
 import ar.edu.itba.ingesoft.R;
 import ar.edu.itba.ingesoft.ui.login.LoginActivity;
 import ar.edu.itba.ingesoft.utils.Validations;
@@ -70,7 +65,7 @@ public class SignUpFragment extends Fragment {
 
         this.nameTV = view.findViewById(R.id.signUpNameEditText);
         this.surnameTV = view.findViewById(R.id.signUpSurnameEditText);
-        this.universityTV = view.findViewById(R.id.signUpUniversityEditText);
+        this.universityTV = view.findViewById(R.id.univ_cont_with_sign_up);
         this.emailTV = view.findViewById(R.id.signUpMailEditText);
         this.passwordTV = view.findViewById(R.id.signUpPassEditText);
         this.repeatPasswordTV = view.findViewById(R.id.signUpRepeatPassEditText);

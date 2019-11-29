@@ -32,8 +32,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/continueWithoutSigningInSelectUniversity">
 
-        <EditText
-            android:id="@+id/signUpUniversityEditText"
+        <AutoCompleteTextView
+            android:id="@+id/univ_cont_with_sign_up"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/colorEditTextBlue"
