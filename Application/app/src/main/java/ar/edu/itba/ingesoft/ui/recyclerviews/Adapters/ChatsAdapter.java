@@ -15,9 +15,11 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import ar.edu.itba.ingesoft.Classes.Chat;
 import ar.edu.itba.ingesoft.Classes.Message;
@@ -67,13 +69,14 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
         Message lastMessage;
         if (messages.size() > 0){
             lastMessage = messages.get(messages.size() - 1);
-            Date date = new Date();
-            date.setTime(lastMessage.getTimestamp());
-            DateFormat dateFormat = new SimpleDateFormat("mm-dd hh:mm");
-            String strDate = dateFormat.format(date);
 
+            DateFormat df = new SimpleDateFormat("dd/MM HH:mm", Locale.FRANCE);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(lastMessage.getTimestamp());
+            String date = df.format(calendar.getTime());
+            
             holder.subtitleTextView.setText(lastMessage.getMessage());
-            holder.timestampTextView.setText(strDate);
+            holder.timestampTextView.setText(date);
         } else {
             holder.subtitleTextView.setText("");
             holder.timestampTextView.setText("");
