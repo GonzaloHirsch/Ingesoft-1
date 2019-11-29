@@ -1,12 +1,7 @@
 package ar.edu.itba.ingesoft.CachedData;
 
-import androidx.annotation.NonNull;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -79,7 +74,7 @@ public class CoursesTeachersCache{
                                 @Override
                                 public void onCoursesRetrieved(List<Course> courses) {
                                     coursesList = courses;
-                                    generateCourseTeachersHash();
+                                    generateCourseTeachersHashMap();
                                 }
 
                                 @Override
@@ -91,7 +86,7 @@ public class CoursesTeachersCache{
                                 }
                             });
                         } else {
-                            generateCourseTeachersHash();
+                            generateCourseTeachersHashMap();
                         }
                     }
 
@@ -108,7 +103,7 @@ public class CoursesTeachersCache{
                     @Override
                     public void onCoursesRetrieved(List<Course> courses) {
                         coursesList = courses;
-                        generateCourseTeachersHash();
+                        generateCourseTeachersHashMap();
                     }
 
                     @Override
@@ -120,12 +115,12 @@ public class CoursesTeachersCache{
                     }
                 });
             } else {
-                generateCourseTeachersHash();
+                generateCourseTeachersHashMap();
             }
         }
     }
 
-    public static void generateCourseTeachersHash(){
+    public static void generateCourseTeachersHashMap(){
         synchronized(courseTeachers){
         courseTeachers.clear();
         for (Course c : coursesList) {

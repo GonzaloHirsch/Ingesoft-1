@@ -18,10 +18,11 @@ public class AddCourseAdapter extends CourseListAdapter {
         this.listener = listener;
     }
 
+    public void setListener(OnCoursesTaughtEventListener listener){this.listener = listener;}
+
     public void addSelectedCourses(){
         List<String> courseIds = new ArrayList<>();
         for(Course c : selectedCourses){
-            if (!courseIds.contains(selectedCourses))
                 courseIds.add(c.getCode());
         }
         selectedCourses.clear();

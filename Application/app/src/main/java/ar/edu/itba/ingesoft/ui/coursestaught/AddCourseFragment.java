@@ -180,7 +180,10 @@ public class AddCourseFragment extends Fragment implements OnListContentUpdatedL
 
     @Override
     public void onContentUpdated(List<String> newList) {
-        viewModel.getUser().getValue().getCourses().addAll(newList);
+        for(String c : newList) {
+            if(!viewModel.getUser().getValue().getCourses().contains(c))
+                viewModel.getUser().getValue().getCourses().add(c);
+        }
         (new DatabaseConnection()).UpdateCourses(FirebaseAuth.getInstance().getCurrentUser().getEmail(), viewModel.getUser().getValue().getCourses());
         Navigation.findNavController(getActivity(), R.id.coursesTaughtNavHost).popBackStack();
         CoursesTeachersCache.refreshCourseTeachers();

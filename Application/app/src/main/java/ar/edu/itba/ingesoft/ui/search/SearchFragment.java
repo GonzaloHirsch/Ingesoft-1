@@ -98,7 +98,7 @@ public class SearchFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        CoursesTeachersCache.refreshCourseTeachers();
+        //CoursesTeachersCache.refreshCourseTeachers();
     }
 
 
