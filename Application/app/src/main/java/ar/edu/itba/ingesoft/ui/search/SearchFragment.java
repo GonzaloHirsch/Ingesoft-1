@@ -98,13 +98,14 @@ public class SearchFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-
+        CoursesTeachersCache.refreshCourseTeachers();
     }
 
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+
         searchViewModel =
                 ViewModelProviders.of(getActivity()).get(SearchViewModel.class);
         View root = inflater.inflate(R.layout.fragment_search, container, false);
@@ -125,7 +126,7 @@ public class SearchFragment extends Fragment {
         });
         searchRecyclerView.setAdapter(searchCoursesAdapter);
 
-        CoursesTeachersCache.refreshCourseTeachers();
+
         progressBar = root.findViewById(R.id.searchProgressBar);
         loadingTextView = root.findViewById(R.id.searchLoadingTextView);
         searchViewModel.getLoading().observe(this, new Observer<Boolean>() {

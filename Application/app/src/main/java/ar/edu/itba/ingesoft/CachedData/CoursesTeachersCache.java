@@ -139,4 +139,15 @@ public class CoursesTeachersCache{
         }
     }
 
+    public static List<Course> getCoursesWithTutors(List<Course> courses){
+        synchronized (courseTeachers){
+            List<Course> finalList = new ArrayList<>();
+            for(Course c : courses){
+                if(courseTeachers.get(c.getCode()) != null && courseTeachers.get(c.getCode()).size()>0)
+                    finalList.add(c);
+            }
+            return finalList;
+        }
+    }
+
 }

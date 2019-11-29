@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import ar.edu.itba.ingesoft.CachedData.CoursesTeachersCache;
 import ar.edu.itba.ingesoft.Classes.Course;
 import ar.edu.itba.ingesoft.Classes.Universidad;
 import ar.edu.itba.ingesoft.Classes.User;
@@ -42,7 +43,9 @@ public class SearchViewModel extends ViewModel {
 
                 @Override
                 public void onCoursesRetrieved(List<Course> courses) {
-                    displayedData.postValue(courses);
+                    List<Course> finalList = CoursesTeachersCache.getCoursesWithTutors(courses);
+
+                    displayedData.postValue(finalList);
                     loading.postValue(false);
                 }
                 @Override

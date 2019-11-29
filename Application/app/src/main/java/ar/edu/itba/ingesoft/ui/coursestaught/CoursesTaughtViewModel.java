@@ -72,7 +72,7 @@ public class CoursesTaughtViewModel extends ViewModel {
         return coursesTaughtAdapterLiveData;
     }
     public MutableLiveData<AddCourseAdapter> getAddCourseAdapterLiveData(OnSelectionModeListener listener) {
-        if(addCourseAdapterMutableLiveData.getValue()==null)
+        //if(addCourseAdapterMutableLiveData.getValue()==null)
             addCourseAdapterMutableLiveData.setValue(new AddCourseAdapter(listener));
         return addCourseAdapterMutableLiveData;
     }
