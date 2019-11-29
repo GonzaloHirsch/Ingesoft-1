@@ -91,7 +91,7 @@ public class ChatsMessagesAdapter extends RecyclerView.Adapter<ChatsMessagesAdap
         this.notifyItemInserted(messages.size() - 1);
     }
 
-    public void setData(List<Message> messages){
+    public void updateData(List<Message> messages){
         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new ChatMessagesDiffUtil(this.messages, messages));
         Log.v(TAG, "set data");
 

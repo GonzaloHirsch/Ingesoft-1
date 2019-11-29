@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onUserRetrieved(User user) {
                 if (user != null){
+                    UserCache.SetUser(user);
                     List<Chat> chats = new ArrayList<>();
                     for (String id : user.getChats()){
                         new DatabaseConnection().GetChat(id, new OnChatEventListener() {

@@ -3,12 +3,14 @@ package ar.edu.itba.ingesoft.ui.recyclerviews.Adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.DateFormat;
@@ -26,9 +28,13 @@ import ar.edu.itba.ingesoft.Classes.Message;
 import ar.edu.itba.ingesoft.MainActivity;
 import ar.edu.itba.ingesoft.R;
 import ar.edu.itba.ingesoft.ui.chats.ChatMessagesActivity;
+import ar.edu.itba.ingesoft.ui.recyclerviews.diffutil_callbacks.ChatDiffUtil;
+import ar.edu.itba.ingesoft.ui.recyclerviews.diffutil_callbacks.ChatMessagesDiffUtil;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHolder> {
+
+    public static final String TAG = "ChatsAdapter";
 
     private List<Chat> chats = new ArrayList<>();
     private String user;
@@ -55,6 +61,17 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
         this.notifyItemRangeInserted(0, chats.size());
     }
 
+    public void updateData(List<Chat> chats){
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new ChatDiffUtil(this.chats, chats));
+        Log.v(TAG, "set data");
+
+        if(chats != null) {
+            this.chats.clear();
+            this.chats.addAll(chats);
+        }
+        diffResult.dispatchUpdatesTo(this);
+    }
+
     @NonNull
     @Override
     public ChatsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -74,7 +91,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(lastMessage.getTimestamp());
             String date = df.format(calendar.getTime());
-            
+
             holder.subtitleTextView.setText(lastMessage.getMessage());
             holder.timestampTextView.setText(date);
         } else {

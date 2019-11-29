@@ -124,7 +124,7 @@ public class ChatMessagesFragment extends Fragment {
                                     @Override
                                     public void run() {
                                         if (adapter != null){
-                                            adapter.setData(chat.getMessages());
+                                            adapter.updateData(chat.getMessages());
                                             messagesRecyclerView.scrollToPosition(chat.getMessages().size() - 1);
                                         }
                                     }
