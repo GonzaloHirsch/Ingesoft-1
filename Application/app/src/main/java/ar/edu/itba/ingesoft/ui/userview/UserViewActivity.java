@@ -10,10 +10,12 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import ar.edu.itba.ingesoft.Classes.Course;
+import ar.edu.itba.ingesoft.Classes.Universidad;
 import ar.edu.itba.ingesoft.Classes.User;
 import ar.edu.itba.ingesoft.R;
 import ar.edu.itba.ingesoft.ui.recyclerviews.Adapters.UserCoursesAdapter;
@@ -29,8 +31,6 @@ public class UserViewActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_view);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
         User u = getIntent().getParcelableExtra("SelectedUser");
 
@@ -39,8 +39,16 @@ public class UserViewActivity extends AppCompatActivity {
         adapter = new UserCoursesAdapter(u.getCourses());
         courseViewTeachersRecyclerView.setAdapter(adapter);
 
+        getSupportActionBar().setTitle("Tutor");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         ((TextView) findViewById(R.id.userViewNameTextView)).setText(u.getName());
-        //((TextView) findViewById(R.id.userViewExtraTextView1)).setText(u.getUniversidad().getName());
+        ((TextView) findViewById(R.id.userViewExtraTextView1)).setText(u.getUniversidad().getName());
     }
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
 }

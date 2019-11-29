@@ -34,7 +34,7 @@ public class User implements DatabaseObject, Parcelable {
             this.isProfessor = false;
         this.courses = (List<String>) data.get("courses");
         this.chats = (List<String>) data.get("chats");
-        this.universidad = new Universidad((Map<String, Object>) data.get("Universidad"));
+        this.universidad = new Universidad((Map<String, Object>) data.get("universidad"));
 
     }
 
@@ -171,12 +171,14 @@ public class User implements DatabaseObject, Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.name);
         dest.writeString(this.mail);
+        dest.writeParcelable(this.universidad, 0);
         dest.writeStringList(this.courses);
     }
 
     protected User(Parcel in){
         this.name = in.readString();
         this.mail = in.readString();
+        this.universidad = in.readParcelable(Universidad.class.getClassLoader());
         this.courses = in.createStringArrayList();
     }
 
