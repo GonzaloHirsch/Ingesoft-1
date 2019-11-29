@@ -1,9 +1,11 @@
 package ar.edu.itba.ingesoft.ui.recyclerviews.Adapters;
 
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
@@ -29,11 +31,17 @@ public class SearchCoursesAdapter extends RecyclerView.Adapter<SearchCoursesAdap
     private List<Course> courseList;
     private List<Course> courseListFiltered;
     private List<Course> currentList;
+    private SearchCoursesAdapter.OnItemClickListener listener;
 
-    public SearchCoursesAdapter(List<Course> courseList){
+    public SearchCoursesAdapter(List<Course> courseList, SearchCoursesAdapter.OnItemClickListener listener){
         this.courseList = courseList;
         this.currentList = new ArrayList<>(courseList);
         courseListFiltered = new ArrayList<>();
+        this.listener = listener;
+    }
+
+    public interface OnItemClickListener{
+        void onItemClicked(Course c);
     }
 
     //displaying updates to list contents
@@ -73,6 +81,8 @@ public class SearchCoursesAdapter extends RecyclerView.Adapter<SearchCoursesAdap
     {
             Log.v("SearchCAdapter", "onBindViewHolder" + currentList.get(position).getName());
             Course aux = currentList.get(position);
+
+            holder.bind(aux, listener);
             holder.courseNameTextView.setText(aux.getName());
             holder.universityTextView.setText(aux.getCode());
             List<User> usrList = CoursesTeachersCache.getCourseTeachers().get(aux.getCode());
@@ -148,10 +158,13 @@ public class SearchCoursesAdapter extends RecyclerView.Adapter<SearchCoursesAdap
             teachersTextView = itemView.findViewById(R.id.courseTeachersTextView);
             specialTextView = itemView.findViewById(R.id.courseSpecialTextView);
             clickable = itemView.findViewById(R.id.itemSearchCourseClickable);
+        }
+
+        public void bind(Course c, SearchCoursesAdapter.OnItemClickListener listener){
             clickable.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Snackbar.make(v, courseNameTextView.getText(), Snackbar.LENGTH_SHORT).show();
+                    listener.onItemClicked(c);
                 }
             });
         }

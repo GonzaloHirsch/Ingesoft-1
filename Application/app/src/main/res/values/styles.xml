@@ -38,6 +38,7 @@
     <style name="TextAppearance.Tutory.TextInputLayout.HintText" parent="TextAppearance.MaterialComponents.Subtitle2">
         <item name="android:textColor">@color/colorAccent</item>
     </style>
+
     <style name="TextAppearance.Tutory.TextInputLayout.NormalText" parent="TextAppearance.MaterialComponents.Subtitle2">
         <item name="android:textColor">@color/textColor</item>
     </style>
