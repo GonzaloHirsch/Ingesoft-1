@@ -36,6 +36,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import ar.edu.itba.ingesoft.CachedData.CoursesTeachersCache;
+import ar.edu.itba.ingesoft.CachedData.UserCache;
 import ar.edu.itba.ingesoft.Classes.Course;
 import ar.edu.itba.ingesoft.Classes.User;
 import ar.edu.itba.ingesoft.Database.DatabaseConnection;
@@ -184,9 +185,11 @@ public class AddCourseFragment extends Fragment implements OnListContentUpdatedL
             if(!viewModel.getUser().getValue().getCourses().contains(c))
                 viewModel.getUser().getValue().getCourses().add(c);
         }
+//        UserCache.GetUser().getChats().clear();
+//        UserCache.GetUser().getChats().addAll(newList);
         (new DatabaseConnection()).UpdateCourses(FirebaseAuth.getInstance().getCurrentUser().getEmail(), viewModel.getUser().getValue().getCourses());
         Navigation.findNavController(getActivity(), R.id.coursesTaughtNavHost).popBackStack();
-        CoursesTeachersCache.refreshCourseTeachers();
+
     }
 
 

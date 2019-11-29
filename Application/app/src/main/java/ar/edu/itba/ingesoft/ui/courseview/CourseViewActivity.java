@@ -65,13 +65,14 @@ public class CourseViewActivity extends AppCompatActivity {
 
                 //todo checkear una manera mejor de hacerlo (ver si el chat ya existe)
                 for(Chat c : UserCache.GetChats()){
-                    if(c.getFrom().equals(u.getMail()) && c.getTo().equals(u.getMail())){
+                    if(c.getFrom().equals(UserCache.GetUser().getMail()) && c.getTo().equals(u.getMail()) || c.getTo().equals(UserCache.GetUser().getMail()) && c.getFrom().equals(u.getMail())){
                         id = c.getChatID();
                     }
                 }
                 intent.putExtra(MainActivity.CHAT_ID_EXTRA, id);
-                intent.putExtra(MainActivity.CHAT_RECIPIENT_EXTRA, u.getName());
-                intent.putExtra(MainActivity.CHAT_RECIPIENT_NAME_EXTRA, currentUser.getMail());
+                intent.putExtra(MainActivity.CHAT_RECIPIENT_EXTRA, u.getMail());
+                intent.putExtra(MainActivity.CHAT_RECIPIENT_NAME_EXTRA,u.getName());
+                startActivity(intent);
             }
         });
         courseViewTeachersRecyclerView.setAdapter(adapter);
