@@ -43,9 +43,9 @@ public class SearchViewModel extends ViewModel {
 
                 @Override
                 public void onCoursesRetrieved(List<Course> courses) {
-                    List<Course> finalList = CoursesTeachersCache.getCoursesWithTutors(courses);
+                   // List<Course> finalList = CoursesTeachersCache.getCoursesWithTutors(courses);
 
-                    displayedData.postValue(finalList);
+                    displayedData.postValue(courses);
                     loading.postValue(false);
                 }
                 @Override
