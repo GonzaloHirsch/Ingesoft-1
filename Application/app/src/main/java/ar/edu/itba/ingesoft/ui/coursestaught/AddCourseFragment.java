@@ -51,10 +51,10 @@ import ar.edu.itba.ingesoft.ui.recyclerviews.Adapters.CoursesTaughtAdapter;
 public class AddCourseFragment extends Fragment implements OnListContentUpdatedListener<String>, OnSelectionModeListener {
 
 
-    CoursesTaughtViewModel viewModel;
-    AddCourseAdapter addCourseAdapter;
-    LinearLayoutManager linearLayoutManager;
-    Button addCourseButton;
+    private CoursesTaughtViewModel viewModel;
+    private AddCourseAdapter addCourseAdapter;
+    private LinearLayoutManager linearLayoutManager;
+    private Button addCourseButton;
 
     private SearchView searchView=null;
     private SearchView.OnQueryTextListener queryTextListener;
