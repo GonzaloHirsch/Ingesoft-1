@@ -15,9 +15,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
+import ar.edu.itba.ingesoft.CachedData.UserCache;
+import ar.edu.itba.ingesoft.Classes.Chat;
 import ar.edu.itba.ingesoft.Classes.Course;
 import ar.edu.itba.ingesoft.Classes.User;
+import ar.edu.itba.ingesoft.MainActivity;
 import ar.edu.itba.ingesoft.R;
+import ar.edu.itba.ingesoft.ui.chats.ChatMessagesActivity;
 import ar.edu.itba.ingesoft.ui.recyclerviews.Adapters.UserCoursesAdapter;
 import ar.edu.itba.ingesoft.ui.recyclerviews.Adapters.UsersAdapter;
 import ar.edu.itba.ingesoft.ui.userview.UserViewActivity;
@@ -50,6 +54,24 @@ public class CourseViewActivity extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), UserViewActivity.class);
                 intent.putExtra("SelectedUser", u);
                 startActivity(intent);
+            }
+
+            @Override
+            public void onChatButtonClicked(User u) {
+                Intent intent = new Intent(getApplicationContext(), ChatMessagesActivity.class);
+
+                User currentUser = UserCache.GetUser();
+                String id = null;
+
+                //todo checkear una manera mejor de hacerlo (ver si el chat ya existe)
+                for(Chat c : UserCache.GetChats()){
+                    if(c.getFrom().equals(u.getMail()) && c.getTo().equals(u.getMail())){
+                        id = c.getChatID();
+                    }
+                }
+                intent.putExtra(MainActivity.CHAT_ID_EXTRA, id);
+                intent.putExtra(MainActivity.CHAT_RECIPIENT_EXTRA, u.getName());
+                intent.putExtra(MainActivity.CHAT_RECIPIENT_NAME_EXTRA, currentUser.getMail());
             }
         });
         courseViewTeachersRecyclerView.setAdapter(adapter);

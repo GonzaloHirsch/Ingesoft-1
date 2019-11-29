@@ -85,10 +85,17 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UsersViewHol
                     listener.onItemClicked(u);
                 }
             });
+            btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onChatButtonClicked(u);
+                }
+            });
         }
     }
 
     public interface OnItemClickListener{
         void onItemClicked(User u);
+        void onChatButtonClicked(User u);
     }
 }
