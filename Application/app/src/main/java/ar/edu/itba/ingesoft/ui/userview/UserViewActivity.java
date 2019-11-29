@@ -41,7 +41,7 @@ public class UserViewActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         ((TextView) findViewById(R.id.userViewNameTextView)).setText(u.getName());
-        //((TextView) findViewById(R.id.userViewExtraTextView1)).setText(u.getUniversidad().getName());
+        ((TextView) findViewById(R.id.userViewExtraTextView1)).setText(u.getUniversidad().getName());
     }
 
     @Override

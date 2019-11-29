@@ -1,5 +1,8 @@
 package ar.edu.itba.ingesoft.Classes;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.firebase.firestore.DocumentReference;
 
 import java.util.ArrayList;
@@ -9,27 +12,38 @@ import java.util.Objects;
 
 import ar.edu.itba.ingesoft.Interfaces.DatabaseObject;
 
-public class Universidad implements DatabaseObject {
+public class Universidad implements DatabaseObject, Parcelable {
 
     private String name;
     private List<Course> courses;
 
     @SuppressWarnings("unchecked")
     public Universidad(Map<String, Object> data){
-        if(this.name!=null)
-            this.name = (String) data.get("name");
-        else //todo change this
-            this.name = "NoUniversityName";
-        if(this.courses !=null)
-            this.courses = (List<Course>) data.get("courses");
-        else //todo change this
-            this.courses = new ArrayList<Course>();
+        this.name = (String) data.get("name");
+        this.courses = (List<Course>) data.get("courses");
     }
 
     public Universidad(String name){
         this.name = name;
         this.courses = new ArrayList<>();
     }
+
+    protected Universidad(Parcel in) {
+        name = in.readString();
+        courses = in.createTypedArrayList(Course.CREATOR);
+    }
+
+    public static final Parcelable.Creator<Universidad> CREATOR = new Parcelable.Creator<Universidad>() {
+        @Override
+        public Universidad createFromParcel(Parcel in) {
+            return new Universidad(in);
+        }
+
+        @Override
+        public Universidad[] newArray(int size) {
+            return new Universidad[size];
+        }
+    };
 
     public String getName() {
         return name;
@@ -71,5 +85,16 @@ public class Universidad implements DatabaseObject {
     @Override
     public Map<String, Object> generateDataToUpdate() {
         return null;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.name);
+        dest.writeList(this.courses);
     }
 }
