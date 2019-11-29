@@ -1,6 +1,7 @@
 package ar.edu.itba.ingesoft.ui.recyclerviews.Adapters;
 
 import android.os.Build;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,11 +15,16 @@ import java.util.List;
 import java.util.Locale;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import ar.edu.itba.ingesoft.Classes.Message;
 import ar.edu.itba.ingesoft.R;
+import ar.edu.itba.ingesoft.ui.recyclerviews.diffutil_callbacks.ChatMessagesDiffUtil;
+import ar.edu.itba.ingesoft.ui.recyclerviews.diffutil_callbacks.CourseListDiffUtil;
 
 public class ChatsMessagesAdapter extends RecyclerView.Adapter<ChatsMessagesAdapter.MessageViewHolder> {
+    public static final String TAG = "chat_message_adapter";
+
     private List<Message> messages;
     private String userEmail;
 
@@ -86,8 +92,14 @@ public class ChatsMessagesAdapter extends RecyclerView.Adapter<ChatsMessagesAdap
     }
 
     public void setData(List<Message> messages){
-        this.messages = messages;
-        notifyDataSetChanged();
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new ChatMessagesDiffUtil(this.messages, messages));
+        Log.v(TAG, "set data");
+
+        if(messages!=null) {
+            this.messages.clear();
+            this.messages.addAll(messages);
+        }
+        diffResult.dispatchUpdatesTo(this);
     }
 
     /**

@@ -1,5 +1,6 @@
 package ar.edu.itba.ingesoft.Database;
 
+import android.graphics.LinearGradient;
 import android.util.Log;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -398,7 +399,7 @@ public class DatabaseConnection {
 
                     Chat newVersion = Chat.Merge(transactionVersion, chat);
 
-                    transaction.set(ref, newVersion);
+                    transaction.update(ref, newVersion.generateDataToUpdate());
 
                     eventListener.onChatChanged(newVersion);
 
@@ -409,7 +410,18 @@ public class DatabaseConnection {
 
                 return null;
             }
-        });
+
+        }).addOnSuccessListener(new OnSuccessListener<Chat>() {
+            @Override
+            public void onSuccess(Chat chat) {
+                Log.v(TAG, "Chat update transaction success");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Transaction failure.", e);
+                    }
+                });
         /*db.collection("Chats")
                 .document(chat.getChatID())
                 .update(chat.generateDataToUpdate())

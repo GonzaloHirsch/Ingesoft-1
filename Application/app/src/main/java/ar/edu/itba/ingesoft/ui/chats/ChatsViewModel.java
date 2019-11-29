@@ -29,21 +29,23 @@ public class ChatsViewModel extends ViewModel {
 
     public void recoverData(OnObjectEventListener<Chat> eventListener){
         User user = UserCache.GetUser();
-        for (String id : user.getChats()){
-            new DatabaseConnection().GetChat(id, new OnChatEventListener() {
-                @Override
-                public void onChatRetrieved(Chat chat) {
-                    chats.add(chat);
-                    // Verify the amount of chats recovered is correct
-                    if (chats.size() == user.getChats().size())
-                        eventListener.onObjectRetrieved(chats);
-                }
+        if (user != null && user.getChats() != null){
+            for (String id : user.getChats()){
+                new DatabaseConnection().GetChat(id, new OnChatEventListener() {
+                    @Override
+                    public void onChatRetrieved(Chat chat) {
+                        chats.add(chat);
+                        // Verify the amount of chats recovered is correct
+                        if (chats.size() == user.getChats().size())
+                            eventListener.onObjectRetrieved(chats);
+                    }
 
-                @Override
-                public void onChatChanged(Chat chat) {
-                    throw new RuntimeException("Not Implemented");
-                }
-            });
+                    @Override
+                    public void onChatChanged(Chat chat) {
+                        throw new RuntimeException("Not Implemented");
+                    }
+                });
+            }
         }
     }
 }
