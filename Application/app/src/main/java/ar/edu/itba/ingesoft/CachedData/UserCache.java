@@ -41,6 +41,11 @@ public class UserCache {
 //        });
     }
 
+    public static void SetChats(List<Chat> chats){
+        chats.clear();
+        chats.addAll(chats);
+    }
+
     public static List<Chat> GetChats(){
         return chats;
     }
