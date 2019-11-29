@@ -67,14 +67,15 @@ public class MainActivity extends AppCompatActivity {
         });
         //CoursesTeachersCache.refreshCourseTeachers();
 
+
         /*
         Intent intent = new Intent(this, ChatMessagesActivity.class);
         intent.putExtra(MainActivity.CHAT_ID_EXTRA, (String)null);
-        intent.putExtra(MainActivity.CHAT_RECIPIENT_EXTRA, "iribas@itba.edu.ar");
-        intent.putExtra(MainActivity.CHAT_RECIPIENT_NAME_EXTRA, "Ignacio Ribas");
+        intent.putExtra(MainActivity.CHAT_RECIPIENT_EXTRA, "hirschroberto71@gmail.com");
+        intent.putExtra(MainActivity.CHAT_RECIPIENT_NAME_EXTRA, "Roberto Hirsch");
         startActivity(intent);
+*/
 
-         */
     }
 
     @Override
