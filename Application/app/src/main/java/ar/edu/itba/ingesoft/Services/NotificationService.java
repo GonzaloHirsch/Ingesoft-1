@@ -69,7 +69,7 @@ public class NotificationService extends FirebaseMessagingService {
                 PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "MSG")
-                        .setSmallIcon(R.mipmap.ic_launcher_round)
+                        .setSmallIcon(R.drawable.ic_message_black_24dp)
                         .setContentTitle(data.get("name"))
                         .setContentText(data.get("message"))
                         .setStyle(new NotificationCompat.BigTextStyle()

@@ -16,7 +16,7 @@
     messages.See README(https://github.com/firebase/quickstart-android/tree/master/messaging#custom-default-icon) for more. -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@drawable/ic_launcher_foreground" />
+            android:resource="@drawable/ic_message_black_24dp" />
 
         <!-- Set color used with incoming notification messages.
         This is used when no color is set for the incoming notification message. See README
