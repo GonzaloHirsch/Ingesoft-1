@@ -1,15 +1,22 @@
 package ar.edu.itba.ingesoft.Services;
 
+import android.app.PendingIntent;
+import android.content.Intent;
 import android.util.Log;
 
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
 import java.util.Map;
+import java.util.Set;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import ar.edu.itba.ingesoft.Firebase.Authenticator;
+import ar.edu.itba.ingesoft.MainActivity;
 import ar.edu.itba.ingesoft.R;
+import ar.edu.itba.ingesoft.ui.chats.ChatMessagesActivity;
 
 public class NotificationService extends FirebaseMessagingService {
     public static final String TAG = "NOTIFICATION SERVICE";
@@ -40,32 +47,35 @@ public class NotificationService extends FirebaseMessagingService {
         // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
         Log.d(TAG, "From: " + remoteMessage.getFrom());
 
+        FirebaseUser fu = new Authenticator().getSignedInUser();
+
         // Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {
             Log.d(TAG, "Message data payload: " + remoteMessage.getData());
             Map<String, String> data = remoteMessage.getData();
+            Set<String> a = data.keySet();
 
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "test")
-                    .setSmallIcon(R.drawable.ic_send_black_24dp)
-                    .setContentTitle(data.get("sender"))
-                    .setContentText(data.get("message"))
-                    .setStyle(new NotificationCompat.BigTextStyle()
-                            .bigText("Much longer text that cannot fit one line..."))
-                    .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+            if (!data.get("email").equals(fu.getEmail())){
 
-            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+                Intent intent = new Intent(getApplicationContext(), ChatMessagesActivity.class);
+                intent.putExtra(MainActivity.CHAT_ID_EXTRA, data.get("id"));
+                intent.putExtra(MainActivity.CHAT_RECIPIENT_NAME_EXTRA, data.get("receiver_name"));
+                intent.putExtra(MainActivity.CHAT_RECIPIENT_EXTRA, data.get("receiver_email"));
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-// notificationId is a unique int for each notification that you must define
-            notificationManager.notify(2, builder.build());
+                NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "MSG")
+                        .setSmallIcon(R.drawable.ic_send_black_24dp)
+                        .setContentTitle(data.get("name"))
+                        .setContentText(data.get("message"))
+                        .setStyle(new NotificationCompat.BigTextStyle()
+                                .bigText(data.get("message")))
+                        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                        .setContentIntent(pendingIntent);
 
-            if (/* Check if data needs to be processed by long running job */ true) {
-                // For long-running tasks (10 seconds or more) use Firebase Job Dispatcher.
-                //scheduleJob();
-            } else {
-                // Handle message within 10 seconds
-                //handleNow();
+                NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+
+                notificationManager.notify(1, builder.build());
             }
-
         }
 
         // Check if message contains a notification payload.
