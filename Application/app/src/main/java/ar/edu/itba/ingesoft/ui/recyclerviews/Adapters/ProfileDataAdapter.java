@@ -22,7 +22,7 @@ public class ProfileDataAdapter extends RecyclerView.Adapter<ProfileDataAdapter.
     public void setNewUserData(User user){
         if(dataSet.isEmpty()) {
             dataSet.add(new Pair<>("Email", user.getMail()));
-            dataSet.add(new Pair<>("University", user.getUniversidad().getName()));
+            dataSet.add(new Pair<>("University", user.getUniversidad()));
             dataSet.add(new Pair<>("Courses Taught", ""));
         }
         else

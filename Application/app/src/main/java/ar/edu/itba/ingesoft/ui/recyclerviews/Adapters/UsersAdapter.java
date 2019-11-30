@@ -55,7 +55,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UsersViewHol
 
         User u = users.get(position);
         holder.title.setText(u.getName());
-        //holder.subtitle.setText(u.getUniversidad().getName());
+        holder.subtitle.setText(u.getUniversidad());
         holder.bind(u, listener);
         //todo holder.btn.setOnClickListener();
     }

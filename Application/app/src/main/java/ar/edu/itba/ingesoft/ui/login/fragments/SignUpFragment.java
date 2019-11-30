@@ -2,6 +2,7 @@ package ar.edu.itba.ingesoft.ui.login.fragments;
 
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -24,13 +25,17 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 
+import ar.edu.itba.ingesoft.Firebase.AnalyticsConnection;
 import ar.edu.itba.ingesoft.Firebase.Authenticator;
 import ar.edu.itba.ingesoft.Classes.Universidad;
 import ar.edu.itba.ingesoft.Classes.User;
 import ar.edu.itba.ingesoft.Firebase.DatabaseConnection;
+import ar.edu.itba.ingesoft.MainActivity;
 import ar.edu.itba.ingesoft.R;
 import ar.edu.itba.ingesoft.ui.login.LoginActivity;
 import ar.edu.itba.ingesoft.utils.Validations;
+
+import static android.content.Context.MODE_PRIVATE;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -41,7 +46,6 @@ public class SignUpFragment extends Fragment {
 
     private TextView nameTV;
     private TextView surnameTV;
-    private TextView universityTV;
     private TextView emailTV;
     private TextView passwordTV;
     private TextView repeatPasswordTV;
@@ -49,7 +53,6 @@ public class SignUpFragment extends Fragment {
 
     private TextInputLayout nameLayout;
     private TextInputLayout surnameLayout;
-    private TextInputLayout universityLayout;
     private TextInputLayout emailLayout;
     private TextInputLayout passwordLayout;
     private TextInputLayout repeatPasswordLayout;
@@ -65,7 +68,6 @@ public class SignUpFragment extends Fragment {
 
         this.nameTV = view.findViewById(R.id.signUpNameEditText);
         this.surnameTV = view.findViewById(R.id.signUpSurnameEditText);
-        this.universityTV = view.findViewById(R.id.signUpUniversityEditText);
         this.emailTV = view.findViewById(R.id.signUpMailEditText);
         this.passwordTV = view.findViewById(R.id.signUpPassEditText);
         this.repeatPasswordTV = view.findViewById(R.id.signUpRepeatPassEditText);
@@ -73,7 +75,6 @@ public class SignUpFragment extends Fragment {
 
         this.nameLayout = view.findViewById(R.id.signUpNameTextInputLayout);
         this.surnameLayout = view.findViewById(R.id.signUpSurnameTextInputLayout);
-        this.universityLayout = view.findViewById(R.id.signUpUniversityTextInputLayout);
         this.emailLayout = view.findViewById(R.id.signUpMailTextInputLayout);
         this.passwordLayout = view.findViewById(R.id.signUpPassTextInputLayout);
         this.repeatPasswordLayout = view.findViewById(R.id.signUpRepeatPassTextInputLayout);
@@ -98,6 +99,7 @@ public class SignUpFragment extends Fragment {
                                     errorTV.setVisibility(View.INVISIBLE);
 
                                     new DatabaseConnection().InsertUser(user);
+                                    AnalyticsConnection.LogEvent_SignUp(AnalyticsConnection.SIGNUP_CREATE);
 
                                     Intent intent = new Intent(getContext(), LoginActivity.class);
                                     startActivity(intent);
@@ -219,7 +221,14 @@ public class SignUpFragment extends Fragment {
         user.setMail(emailTV.getText().toString());
         user.setName(nameTV.getText().toString() + " " + surnameTV.getText().toString());
         user.setProfessor(false);
-        user.setUniversidad(new Universidad("ITBA"));
+
+        if (getContext() != null){
+            SharedPreferences sharedPreferences = getContext().getSharedPreferences(MainActivity.SP, MODE_PRIVATE);
+            String univ = sharedPreferences.getString(MainActivity.UNIV_SP, "");
+            user.setUniversidad(univ);
+        } else {
+            user.setUniversidad("N/a");
+        }
 
         return user;
     }

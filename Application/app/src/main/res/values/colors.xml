@@ -7,6 +7,9 @@
     <color name="backgroundColor">#f5f5f5</color>
     <!--> Some colors for Views <-->
 
+    <color name="colorSecondary">#1e88e5</color>
+    <color name="colorBackButton">#585858</color>
+
     <!--> EditText <-->
     <color name="colorEditTextBlue">#1976d2</color>
     <color name="colorEditTextTextBlue">#801976d2</color>

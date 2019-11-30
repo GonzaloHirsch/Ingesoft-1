@@ -254,7 +254,7 @@ public class DatabaseConnection {
                                 if (data != null){
                                     // Stores all the info in the class
                                     Universidad uni = new Universidad(data);
-                                    eventListener.onUnievrsityRetrieved(uni);
+                                    eventListener.onUniversityRetrieved(uni);
                                 } else {
                                     Log.d(TAG, "No data in document");
                                 }

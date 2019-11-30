@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseUser;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -14,11 +15,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import ar.edu.itba.ingesoft.CachedData.UserCache;
 import ar.edu.itba.ingesoft.Classes.Chat;
 import ar.edu.itba.ingesoft.Classes.Course;
 import ar.edu.itba.ingesoft.Classes.User;
+import ar.edu.itba.ingesoft.Firebase.Authenticator;
 import ar.edu.itba.ingesoft.MainActivity;
 import ar.edu.itba.ingesoft.R;
 import ar.edu.itba.ingesoft.ui.chats.ChatMessagesActivity;
@@ -58,21 +61,26 @@ public class CourseViewActivity extends AppCompatActivity {
 
             @Override
             public void onChatButtonClicked(User u) {
-                Intent intent = new Intent(getApplicationContext(), ChatMessagesActivity.class);
+                FirebaseUser firebaseUser = new Authenticator().getSignedInUser();
 
-                User currentUser = UserCache.GetUser();
-                String id = null;
+                if (firebaseUser.isAnonymous()){
+                    Toast.makeText(getApplicationContext(), "An account is needed", Toast.LENGTH_SHORT).show();
+                } else {
+                    Intent intent = new Intent(getApplicationContext(), ChatMessagesActivity.class);
 
-                //todo checkear una manera mejor de hacerlo (ver si el chat ya existe)
-                for(Chat c : UserCache.GetChats()){
-                    if(c.getFrom().equals(UserCache.GetUser().getMail()) && c.getTo().equals(u.getMail()) || c.getTo().equals(UserCache.GetUser().getMail()) && c.getFrom().equals(u.getMail())){
-                        id = c.getChatID();
+                    User currentUser = UserCache.GetUser();
+                    String id = null;
+
+                    //todo checkear una manera mejor de hacerlo (ver si el chat ya existe)
+                    for(Chat c : UserCache.GetChats()){
+                        if(c.getFrom().equals(u.getMail()) && c.getTo().equals(u.getMail())){
+                            id = c.getChatID();
+                        }
                     }
+                    intent.putExtra(MainActivity.CHAT_ID_EXTRA, id);
+                    intent.putExtra(MainActivity.CHAT_RECIPIENT_EXTRA, u.getName());
+                    intent.putExtra(MainActivity.CHAT_RECIPIENT_NAME_EXTRA, currentUser.getMail());
                 }
-                intent.putExtra(MainActivity.CHAT_ID_EXTRA, id);
-                intent.putExtra(MainActivity.CHAT_RECIPIENT_EXTRA, u.getMail());
-                intent.putExtra(MainActivity.CHAT_RECIPIENT_NAME_EXTRA,u.getName());
-                startActivity(intent);
             }
         });
         courseViewTeachersRecyclerView.setAdapter(adapter);

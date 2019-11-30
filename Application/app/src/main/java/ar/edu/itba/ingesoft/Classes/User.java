@@ -22,7 +22,16 @@ public class User implements DatabaseObject, Parcelable {
     private boolean isProfessor;
     private List<String> courses;
     private List<String> chats;
-    private Universidad universidad;
+    private String universidad;
+
+    public static User GenerateAnonymousUser(String universidad){
+        User user = new User();
+        user.mail = "N/a";
+        user.name = "Anonymous User";
+        user.isProfessor = false;
+        user.universidad = universidad;
+        return user;
+    }
 
     @SuppressWarnings("unchecked")
     public User(Map<String, Object> data){
@@ -34,7 +43,7 @@ public class User implements DatabaseObject, Parcelable {
             this.isProfessor = false;
         this.courses = (List<String>) data.get("courses");
         this.chats = (List<String>) data.get("chats");
-        this.universidad = new Universidad((Map<String, Object>) data.get("Universidad"));
+        this.universidad = (String) data.get("universidad");
 
     }
 
@@ -43,7 +52,7 @@ public class User implements DatabaseObject, Parcelable {
         this.chats = new ArrayList<>();
     }
 
-    public User(String name, String mail, Universidad universidad){
+    public User(String name, String mail, String universidad){
         this.name = name;
         this.mail = mail;
         this.isProfessor = false;
@@ -141,11 +150,11 @@ public class User implements DatabaseObject, Parcelable {
 
      */
 
-    public Universidad getUniversidad() {
+    public String getUniversidad() {
         return universidad;
     }
 
-    public void setUniversidad(Universidad universidad) {
+    public void setUniversidad(String universidad) {
         this.universidad = universidad;
     }
 
@@ -172,12 +181,14 @@ public class User implements DatabaseObject, Parcelable {
         dest.writeString(this.name);
         dest.writeString(this.mail);
         dest.writeStringList(this.courses);
+        dest.writeString(this.universidad);
     }
 
     protected User(Parcel in){
         this.name = in.readString();
         this.mail = in.readString();
         this.courses = in.createStringArrayList();
+        this.universidad = in.readString();
     }
 
     public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>(){

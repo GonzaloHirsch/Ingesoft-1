@@ -1,5 +1,6 @@
 package ar.edu.itba.ingesoft.ui.profile;
 
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
@@ -18,13 +19,16 @@ import java.util.List;
 import ar.edu.itba.ingesoft.Classes.User;
 import ar.edu.itba.ingesoft.Firebase.DatabaseConnection;
 import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnUserEventListener;
+import ar.edu.itba.ingesoft.MainActivity;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class ProfileViewModel extends ViewModel {
 
     private MutableLiveData<User> currentUserLiveData = new MutableLiveData<>();
     private MutableLiveData<String> coursesTaughtLiveData = new MutableLiveData<>();
     private MutableLiveData<Boolean> loading = new MutableLiveData<Boolean>(true);
-
+    private String university = "";
 
     public ProfileViewModel() {
 
@@ -38,15 +42,17 @@ public class ProfileViewModel extends ViewModel {
         if(currentUserLiveData.getValue() == null){
 
             FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-            FirebaseFirestore.getInstance().collection("Users").document(currentUser.getEmail()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                @Override
-                public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                    loading.setValue(true);
-                    new DatabaseConnection().GetUser(currentUser.getEmail(), new OnUserEventListener() {
-                        @Override
-                        public void onUserRetrieved(User user) {
-                            currentUserLiveData.postValue(user);
-                            Log.v("ProfileViewModel", "");
+
+            if (currentUser != null && !currentUser.isAnonymous()){
+                FirebaseFirestore.getInstance().collection("Users").document(currentUser.getEmail()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                        loading.setValue(true);
+                        new DatabaseConnection().GetUser(currentUser.getEmail(), new OnUserEventListener() {
+                            @Override
+                            public void onUserRetrieved(User user) {
+                                currentUserLiveData.postValue(user);
+                                Log.v("ProfileViewModel", "");
                     /*
                     List<Task<DocumentSnapshot>> tasks = new ArrayList<>();
                     for(DocumentReference documentReference : user.getCourses()){
@@ -59,17 +65,20 @@ public class ProfileViewModel extends ViewModel {
                             //todo get courses
                     }});
                      */
-                            loading.setValue(false);
-                        }
-                        @Override
-                        public void onUsersRetrieved(List<User> users) {}
+                                loading.setValue(false);
+                            }
+                            @Override
+                            public void onUsersRetrieved(List<User> users) {}
 
-                        @Override
-                        public void onTeachersRetrieved(List<User> teachers) {}
-                    });
-                }
-            });
-
+                            @Override
+                            public void onTeachersRetrieved(List<User> teachers) {}
+                        });
+                    }
+                });
+            } else {
+                currentUserLiveData.postValue(User.GenerateAnonymousUser(this.university));
+                loading.setValue(false);
+            }
         }
         return currentUserLiveData;
     }
@@ -80,6 +89,8 @@ public class ProfileViewModel extends ViewModel {
        }
        return coursesTaughtLiveData;
     }
+
+    public void setUniversity(String university){ this.university = university; }
 
     public MutableLiveData<Boolean> getLoading(){
         return loading;
