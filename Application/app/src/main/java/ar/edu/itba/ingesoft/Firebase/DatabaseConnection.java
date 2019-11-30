@@ -1,4 +1,4 @@
-package ar.edu.itba.ingesoft.Database;
+package ar.edu.itba.ingesoft.Firebase;
 
 import android.graphics.LinearGradient;
 import android.util.Log;

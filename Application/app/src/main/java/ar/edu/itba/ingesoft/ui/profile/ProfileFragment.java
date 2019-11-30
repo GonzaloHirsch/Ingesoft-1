@@ -18,11 +18,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
-import java.util.List;
-import java.util.Map;
-
-import ar.edu.itba.ingesoft.Authentication.Authenticator;
-import ar.edu.itba.ingesoft.Classes.Course;
+import ar.edu.itba.ingesoft.Firebase.Authenticator;
 import ar.edu.itba.ingesoft.Classes.User;
 import ar.edu.itba.ingesoft.R;
 import ar.edu.itba.ingesoft.ui.coursestaught.CoursesTaughtActivity;
