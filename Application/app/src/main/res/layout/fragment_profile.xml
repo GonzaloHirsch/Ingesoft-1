@@ -47,7 +47,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
 
-            <de.hdodenhof.circleimageview.CircleImageView
+           <!-- <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/profileImage"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
@@ -55,7 +55,7 @@
                 android:layout_marginTop="20dp"
                 android:src="@drawable/baseline_person_24"
                 app:civ_border_color="@color/colorAccent"
-                app:civ_border_width="1dp" />
+                app:civ_border_width="1dp" />-->
 
             <TextView
                 android:id="@+id/profileNameTextView"
@@ -63,9 +63,19 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
-                android:layout_marginBottom="20dp"
+                android:layout_marginBottom="10dp"
                 android:fontFamily="@font/roboto_light"
                 android:textSize="30sp" />
+
+            <TextView
+                android:id="@+id/profileStatusTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:fontFamily="@font/roboto_light"
+                android:textSize="20sp" />
 
             <View
                 android:id="@+id/profileDivider"

@@ -41,6 +41,7 @@ public class ProfileFragment extends Fragment {
     private SearchViewModel searchViewModel;
 
     private TextView nameTextView;
+    private TextView statusTextView;
     private TextView emailTextView;
     private TextView universityTextView;
     private TextView coursesTextView;
@@ -84,6 +85,7 @@ public class ProfileFragment extends Fragment {
 
         //Name TextView
         nameTextView = root.findViewById(R.id.profileNameTextView);
+        statusTextView = root.findViewById(R.id.profileStatusTextView);
 
         //Email
         LinearLayout ll = root.findViewById(R.id.profileEmail);
@@ -118,7 +120,7 @@ public class ProfileFragment extends Fragment {
             public void onChanged(User u) {
                 nameTextView.setText(u.getName());
                 emailTextView.setText(u.getMail());
-                //todo
+                statusTextView.setText(u.getCourses().size() > 0 ? "Teacher" : "Student");
                 universityTextView.setText(u.getUniversidad());
                 coursesTextView.setText(u.getCourses().size() + " courses");
             }
