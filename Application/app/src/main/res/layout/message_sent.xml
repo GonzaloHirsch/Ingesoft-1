@@ -9,7 +9,7 @@
     app:cardPreventCornerOverlap="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:background="@android:color/white"
+        android:background="@color/backgroundColor"
         android:layout_width="match_parent"
         android:padding="8dp"
         android:layout_height="wrap_content">
@@ -21,6 +21,7 @@
             android:background="@drawable/message_item_sent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="16sp"
             android:maxWidth="240dp"
             android:padding="8dp"
             android:textColor="@color/textColor" />
@@ -30,8 +31,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="12sp"
-            app:layout_constraintRight_toLeftOf="@+id/text_message_body"
-            app:layout_constraintBottom_toBottomOf="@+id/text_message_body" />
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_message_body" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

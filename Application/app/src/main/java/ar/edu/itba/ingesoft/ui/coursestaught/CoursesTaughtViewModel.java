@@ -12,7 +12,7 @@ import java.util.Map;
 
 import ar.edu.itba.ingesoft.Classes.Course;
 import ar.edu.itba.ingesoft.Classes.User;
-import ar.edu.itba.ingesoft.Database.DatabaseConnection;
+import ar.edu.itba.ingesoft.Firebase.DatabaseConnection;
 
 import ar.edu.itba.ingesoft.Interfaces.Adapters.OnSelectionModeListener;
 import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnCourseEventListener;
@@ -74,6 +74,7 @@ public class CoursesTaughtViewModel extends ViewModel {
     public MutableLiveData<AddCourseAdapter> getAddCourseAdapterLiveData(OnSelectionModeListener listener) {
         if(addCourseAdapterMutableLiveData.getValue()==null)
             addCourseAdapterMutableLiveData.setValue(new AddCourseAdapter(listener));
+        addCourseAdapterMutableLiveData.getValue().setListener(listener);
         return addCourseAdapterMutableLiveData;
     }
 }

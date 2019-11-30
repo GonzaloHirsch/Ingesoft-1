@@ -1,12 +1,15 @@
 package ar.edu.itba.ingesoft.Classes;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.Map;
 import java.util.Objects;
 
 import ar.edu.itba.ingesoft.Interfaces.Adapters.Selectable;
 import ar.edu.itba.ingesoft.Interfaces.DatabaseObject;
 
-public class Course extends Selectable implements DatabaseObject {
+public class Course extends Selectable implements DatabaseObject, Parcelable {
 
     private String name;
     private String code;
@@ -56,5 +59,35 @@ public class Course extends Selectable implements DatabaseObject {
     @Override
     public int hashCode() {
         return Objects.hash(name, code);
+    }
+
+    @Override
+    public int describeContents() {
+        return hashCode();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(name);
+        dest.writeString(code);
+    }
+
+    public static final Creator<Course> CREATOR = new Creator<Course>() {
+        @Override
+        public Course createFromParcel(Parcel in) {
+            Course c = new Course();
+            c.name = in.readString();
+            c.code = in.readString();
+            return c;
+        }
+
+        @Override
+        public Course[] newArray(int size) {
+            return new Course[size];
+        }
+    };
+
+    public static Creator<Course> getCREATOR(){
+        return CREATOR;
     }
 }

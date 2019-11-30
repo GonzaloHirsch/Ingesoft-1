@@ -1,7 +1,9 @@
 package ar.edu.itba.ingesoft.ui.login.fragments;
 
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -14,15 +16,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthCredential;
@@ -30,19 +32,19 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
-import com.google.firebase.auth.FirebaseAuthUserCollisionException;
-import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
-import ar.edu.itba.ingesoft.Authentication.Authenticator;
+import ar.edu.itba.ingesoft.Firebase.AnalyticsConnection;
+import ar.edu.itba.ingesoft.Firebase.Authenticator;
 import ar.edu.itba.ingesoft.Classes.Universidad;
 import ar.edu.itba.ingesoft.Classes.User;
-import ar.edu.itba.ingesoft.Database.DatabaseConnection;
+import ar.edu.itba.ingesoft.Firebase.DatabaseConnection;
 import ar.edu.itba.ingesoft.MainActivity;
 import ar.edu.itba.ingesoft.R;
-import ar.edu.itba.ingesoft.ui.login.LoginActivity;
 import ar.edu.itba.ingesoft.utils.Validations;
+
+import static android.content.Context.MODE_PRIVATE;
 
 
 public class LoginFragmentMain extends Fragment {
@@ -84,6 +86,8 @@ public class LoginFragmentMain extends Fragment {
 
         this.emailLayout = view.findViewById(R.id.signInUsernameTextInputLayout);
         this.passwordLayout = view.findViewById(R.id.signInPasswordTextInputLayout);
+
+
 
         //Regular Login with email and password
         view.findViewById(R.id.regular_signin_button).setOnClickListener(new View.OnClickListener() {
@@ -132,17 +136,11 @@ public class LoginFragmentMain extends Fragment {
             }
         });
 
-        //Login with Google Account
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
-        GoogleSignInClient client = GoogleSignIn.getClient(getActivity(), gso);
         view.findViewById(R.id.google_signin_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Authenticator authenticator = new Authenticator();
-                Intent intent = client.getSignInIntent();
+                Intent intent = authenticator.generateGoogleClient(getActivity()).getSignInIntent();
                 startActivityForResult(intent, RC_SIGN_IN_GOOGLE);
             }
         });
@@ -162,7 +160,28 @@ public class LoginFragmentMain extends Fragment {
         continueWithoutLoggingInTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                navController.navigate(R.id.action_loginFragmentMain_to_continueWithoutSigningInFragment);
+                new Authenticator().signInAnonymousUser().addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()){
+                            AnalyticsConnection.LogEvent_SignUp(AnalyticsConnection.SIGNUP_ANON);
+                            Intent intent = new Intent(getContext(), MainActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                            if (getActivity() != null)
+                                getActivity().finish();
+                            Log.e(TAG, "Logged user anonymously");
+                        } else {
+                            Log.e(TAG, task.getException().getMessage());
+                        }
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getContext(), "An error occurred", Toast.LENGTH_SHORT).show();
+                        Log.e(TAG, e.getMessage());
+                    }
+                });
             }
         });
 
@@ -198,7 +217,15 @@ public class LoginFragmentMain extends Fragment {
                 if(task.isSuccessful()){
                     Log.d(TAG,"sign_in_with_google:success");
                     FirebaseUser user = new Authenticator().getSignedInUser();
-                    User newUser = new User(user.getDisplayName(), user.getEmail(), new Universidad("itba"));
+                    AnalyticsConnection.LogEvent_SignUp(AnalyticsConnection.SIGNUP_GOOGLE);
+
+                    String univ = "N/a";
+                    if (getContext() != null){
+                        SharedPreferences sharedPreferences = getContext().getSharedPreferences(MainActivity.SP, MODE_PRIVATE);
+                        univ = sharedPreferences.getString(MainActivity.UNIV_SP, "");
+                    }
+
+                    User newUser = new User(user.getDisplayName(), user.getEmail(), univ);
                     new DatabaseConnection().InsertUser(newUser);
 
                     Intent intent = new Intent(getContext(), MainActivity.class);

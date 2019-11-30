@@ -8,5 +8,5 @@ import ar.edu.itba.ingesoft.Classes.User;
 public interface OnUniversityEventListener {
 
     void onUniversitiesRetrieved(List<Universidad> universities);
-    void onUnievrsityRetrieved(Universidad university);
+    void onUniversityRetrieved(Universidad university);
 }

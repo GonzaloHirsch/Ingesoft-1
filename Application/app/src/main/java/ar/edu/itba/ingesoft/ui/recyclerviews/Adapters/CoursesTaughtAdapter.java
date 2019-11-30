@@ -1,27 +1,15 @@
 package ar.edu.itba.ingesoft.ui.recyclerviews.Adapters;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
-
-import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.recyclerview.widget.DiffUtil;
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import ar.edu.itba.ingesoft.Classes.Course;
-import ar.edu.itba.ingesoft.Database.DatabaseConnection;
+import ar.edu.itba.ingesoft.Firebase.DatabaseConnection;
 import ar.edu.itba.ingesoft.Interfaces.Adapters.OnCoursesTaughtEventListener;
 import ar.edu.itba.ingesoft.Interfaces.Adapters.OnListContentUpdatedListener;
 import ar.edu.itba.ingesoft.Interfaces.Adapters.OnSelectionModeListener;
-import ar.edu.itba.ingesoft.R;
-import ar.edu.itba.ingesoft.ui.recyclerviews.diffutil_callbacks.CourseListDiffUtil;
 
 
 public class CoursesTaughtAdapter extends  CourseListAdapter {

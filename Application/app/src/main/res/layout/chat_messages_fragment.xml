@@ -16,6 +16,7 @@
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/list_of_messages"
+            android:background="@color/backgroundColor"
             android:paddingTop="1dp"
             android:paddingBottom="1dp"
             android:layout_width="match_parent"
@@ -27,6 +28,7 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/messages_recycler_view"
+                android:background="@color/backgroundColor"
                 android:layout_weight="1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
@@ -41,6 +43,7 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.Tutory.Message.TextInputLayout"
+                android:id="@+id/chat_message_input_layout"
                 android:layout_width="match_parent"
                 android:layout_weight="1"
                 android:layout_height="wrap_content">
@@ -50,7 +53,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Write a message"
-                    android:id="@+id/chat_message_input"
+                    android:id="@+id/chat_message_input_edit_text"
                     />
             </com.google.android.material.textfield.TextInputLayout>
 

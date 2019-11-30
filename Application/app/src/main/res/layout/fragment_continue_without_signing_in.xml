@@ -11,39 +11,35 @@
         android:id="@+id/continueWithoutSigningInSelectUniversity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
         android:text="@string/select_university"
-        android:textSize="50sp"
+        android:textSize="45sp"
         app:layout_constraintBottom_toTopOf="@+id/continueWithoutSigningInTextInputLayout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.545"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/continueWithoutSigningInTextInputLayout"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
         app:layout_constraintBottom_toTopOf="@+id/continueWithoutSigningInButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/continueWithoutSigningInSelectUniversity">
 
-        <EditText
-            android:id="@+id/signUpUniversityEditText"
+        <AutoCompleteTextView
+            android:id="@+id/univ_cont_with_sign_up"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/colorEditTextBlue"
-            android:ems="10"
-            android:hint="@string/university_name"
-            android:inputType="textPersonName"
-            android:textColorHint="@color/colorEditTextTextBlue" />
+            android:editable="false"
+             />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <Button
+   <!-- <Button
         android:id="@+id/goBackButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -55,7 +51,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/continueWithoutSigningInTextInputLayout"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/continueWithoutSigningInButton" />
+        app:layout_constraintEnd_toStartOf="@id/continueWithoutSigningInButton" />-->
 
     <Button
         android:id="@+id/continueWithoutSigningInButton"
@@ -68,7 +64,7 @@
         app:layout_constraintTop_toBottomOf="@id/continueWithoutSigningInTextInputLayout"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/goBackButton" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

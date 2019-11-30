@@ -12,7 +12,6 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,23 +26,19 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.SearchView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import ar.edu.itba.ingesoft.CachedData.CoursesTeachersCache;
 import ar.edu.itba.ingesoft.Classes.Course;
 import ar.edu.itba.ingesoft.Classes.User;
-import ar.edu.itba.ingesoft.Database.DatabaseConnection;
+import ar.edu.itba.ingesoft.Firebase.DatabaseConnection;
 import ar.edu.itba.ingesoft.Interfaces.Adapters.OnListContentUpdatedListener;
 import ar.edu.itba.ingesoft.Interfaces.Adapters.OnSelectionModeListener;
 import ar.edu.itba.ingesoft.R;
 import ar.edu.itba.ingesoft.ui.recyclerviews.Adapters.AddCourseAdapter;
-import ar.edu.itba.ingesoft.ui.recyclerviews.Adapters.CoursesTaughtAdapter;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -51,10 +46,10 @@ import ar.edu.itba.ingesoft.ui.recyclerviews.Adapters.CoursesTaughtAdapter;
 public class AddCourseFragment extends Fragment implements OnListContentUpdatedListener<String>, OnSelectionModeListener {
 
 
-    CoursesTaughtViewModel viewModel;
-    AddCourseAdapter addCourseAdapter;
-    LinearLayoutManager linearLayoutManager;
-    Button addCourseButton;
+    private CoursesTaughtViewModel viewModel;
+    private AddCourseAdapter addCourseAdapter;
+    private LinearLayoutManager linearLayoutManager;
+    private Button addCourseButton;
 
     private SearchView searchView=null;
     private SearchView.OnQueryTextListener queryTextListener;
@@ -180,9 +175,15 @@ public class AddCourseFragment extends Fragment implements OnListContentUpdatedL
 
     @Override
     public void onContentUpdated(List<String> newList) {
-        viewModel.getUser().getValue().getCourses().addAll(newList);
+        for(String c : newList) {
+            if(!viewModel.getUser().getValue().getCourses().contains(c))
+                viewModel.getUser().getValue().getCourses().add(c);
+        }
+//        UserCache.GetUser().getChats().clear();
+//        UserCache.GetUser().getChats().addAll(newList);
         (new DatabaseConnection()).UpdateCourses(FirebaseAuth.getInstance().getCurrentUser().getEmail(), viewModel.getUser().getValue().getCourses());
         Navigation.findNavController(getActivity(), R.id.coursesTaughtNavHost).popBackStack();
+
     }
 
 
