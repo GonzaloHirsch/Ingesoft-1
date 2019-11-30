@@ -3,6 +3,7 @@ package ar.edu.itba.ingesoft.ui.search;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -28,9 +29,12 @@ import java.util.List;
 
 import ar.edu.itba.ingesoft.CachedData.CoursesTeachersCache;
 import ar.edu.itba.ingesoft.Classes.Course;
+import ar.edu.itba.ingesoft.MainActivity;
 import ar.edu.itba.ingesoft.R;
 import ar.edu.itba.ingesoft.ui.courseview.CourseViewActivity;
 import ar.edu.itba.ingesoft.ui.recyclerviews.Adapters.SearchCoursesAdapter;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class SearchFragment extends Fragment {
 
@@ -45,6 +49,8 @@ public class SearchFragment extends Fragment {
 
     private ProgressBar progressBar;
     private TextView loadingTextView;
+
+    private String university;
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
@@ -110,6 +116,8 @@ public class SearchFragment extends Fragment {
                 ViewModelProviders.of(getActivity()).get(SearchViewModel.class);
         View root = inflater.inflate(R.layout.fragment_search, container, false);
 
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences(MainActivity.SP, MODE_PRIVATE);
+        this.university = sharedPreferences.getString(MainActivity.UNIV_SP, "");
 
         searchRecyclerView = root.findViewById(R.id.searchRecyclerView);
         layoutManager = new LinearLayoutManager(getContext());
@@ -145,7 +153,7 @@ public class SearchFragment extends Fragment {
         });
 
 
-        searchViewModel.getDisplayedData().observe(this, new Observer<List<Course>>() {
+        searchViewModel.getDisplayedData(this.university).observe(this, new Observer<List<Course>>() {
             @Override
             public void onChanged(List<Course> courses) {
                 searchCoursesAdapter.update(courses);

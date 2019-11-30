@@ -1,5 +1,6 @@
 package ar.edu.itba.ingesoft.ui.coursestaught;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -27,8 +28,11 @@ import java.util.List;
 import ar.edu.itba.ingesoft.Classes.Course;
 import ar.edu.itba.ingesoft.Interfaces.Adapters.OnListContentUpdatedListener;
 import ar.edu.itba.ingesoft.Interfaces.Adapters.OnSelectionModeListener;
+import ar.edu.itba.ingesoft.MainActivity;
 import ar.edu.itba.ingesoft.R;
 import ar.edu.itba.ingesoft.ui.recyclerviews.Adapters.CoursesTaughtAdapter;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class CoursesTaughtListFragment extends Fragment implements OnSelectionModeListener, OnListContentUpdatedListener<String> {
 
@@ -42,6 +46,8 @@ public class CoursesTaughtListFragment extends Fragment implements OnSelectionMo
     boolean selectionMode = false;
 
     //Lifecycle methods
+
+    private String university;
 
     public CoursesTaughtListFragment() {
         // Required empty public constructor
@@ -59,6 +65,8 @@ public class CoursesTaughtListFragment extends Fragment implements OnSelectionMo
         View root =  inflater.inflate(R.layout.fragment_courses_taught_list, container, false);
         viewModel = (CoursesTaughtViewModel) ViewModelProviders.of(getActivity()).get(CoursesTaughtViewModel.class);
 
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences(MainActivity.SP, MODE_PRIVATE);
+        this.university = sharedPreferences.getString(MainActivity.UNIV_SP, "");
 
         navController = Navigation.findNavController(getActivity(), R.id.coursesTaughtNavHost);
 
@@ -76,7 +84,7 @@ public class CoursesTaughtListFragment extends Fragment implements OnSelectionMo
 
         //RecyclerView
         RecyclerView rV = root.findViewById(R.id.coursesTaughtRecyclerView);
-        coursesTaughtAdapter = viewModel.getCoursesTaughtAdapterLiveData(this).getValue();
+        coursesTaughtAdapter = viewModel.getCoursesTaughtAdapterLiveData(this.university, this).getValue();
         rV.setAdapter(coursesTaughtAdapter);
         linearLayoutManager = new LinearLayoutManager(getActivity());
         rV.setLayoutManager(linearLayoutManager);
@@ -103,7 +111,7 @@ public class CoursesTaughtListFragment extends Fragment implements OnSelectionMo
         //Log.v("Courses Taught", us.getCourses().get(0));
 
         //observar cambios en la lista total de cursos
-        viewModel.getCourses().observe(this, new Observer<List<Course>>() {
+        viewModel.getCourses(this.university).observe(this, new Observer<List<Course>>() {
             @Override
             public void onChanged(List<Course> courses) {
                 List<Course> aux = new ArrayList<>();

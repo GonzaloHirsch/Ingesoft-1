@@ -26,12 +26,12 @@ public class SearchViewModel extends ViewModel {
 
     public SearchViewModel() {}
 
-    public MutableLiveData<List<Course>> getDisplayedData() {
+    public MutableLiveData<List<Course>> getDisplayedData(String university) {
 
         if(displayedData.getValue()==null){
             loading.postValue(true);
             Log.v("SearchViewModel", "MutableLiveDataCreation");
-            dbc.GetAllCourses(new OnCourseEventListener() {
+            dbc.GetAllCourses(university, new OnCourseEventListener() {
                 @Override
                 public void onCourseRetrieved(Course course) {                }
 

@@ -34,10 +34,10 @@ public class CoursesTaughtViewModel extends ViewModel {
         dbc = new DatabaseConnection();
     }
 
-    public MutableLiveData<List<Course>> getCourses() {
+    public MutableLiveData<List<Course>> getCourses(String university) {
 
         if(courses.getValue()==null){
-            dbc.GetAllCourses(new OnCourseEventListener() {
+            dbc.GetAllCourses(university, new OnCourseEventListener() {
                 @Override
                 public void onCourseRetrieved(Course course) {
 
@@ -66,9 +66,9 @@ public class CoursesTaughtViewModel extends ViewModel {
         return user;
     }
 
-    public MutableLiveData<CoursesTaughtAdapter> getCoursesTaughtAdapterLiveData(OnSelectionModeListener listener) {
+    public MutableLiveData<CoursesTaughtAdapter> getCoursesTaughtAdapterLiveData(String university, OnSelectionModeListener listener) {
         if(coursesTaughtAdapterLiveData.getValue()==null)
-            coursesTaughtAdapterLiveData.setValue(new CoursesTaughtAdapter(listener));
+            coursesTaughtAdapterLiveData.setValue(new CoursesTaughtAdapter(university, listener));
         return coursesTaughtAdapterLiveData;
     }
     public MutableLiveData<AddCourseAdapter> getAddCourseAdapterLiveData(OnSelectionModeListener listener) {

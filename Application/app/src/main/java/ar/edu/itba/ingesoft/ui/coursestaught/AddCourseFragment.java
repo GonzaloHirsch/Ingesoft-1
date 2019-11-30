@@ -3,6 +3,7 @@ package ar.edu.itba.ingesoft.ui.coursestaught;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -37,8 +38,11 @@ import ar.edu.itba.ingesoft.Classes.User;
 import ar.edu.itba.ingesoft.Firebase.DatabaseConnection;
 import ar.edu.itba.ingesoft.Interfaces.Adapters.OnListContentUpdatedListener;
 import ar.edu.itba.ingesoft.Interfaces.Adapters.OnSelectionModeListener;
+import ar.edu.itba.ingesoft.MainActivity;
 import ar.edu.itba.ingesoft.R;
 import ar.edu.itba.ingesoft.ui.recyclerviews.Adapters.AddCourseAdapter;
+
+import static android.content.Context.MODE_PRIVATE;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -50,6 +54,8 @@ public class AddCourseFragment extends Fragment implements OnListContentUpdatedL
     private AddCourseAdapter addCourseAdapter;
     private LinearLayoutManager linearLayoutManager;
     private Button addCourseButton;
+
+    private String university;
 
     private SearchView searchView=null;
     private SearchView.OnQueryTextListener queryTextListener;
@@ -127,7 +133,8 @@ public class AddCourseFragment extends Fragment implements OnListContentUpdatedL
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_add_course, container, false);
 
-
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences(MainActivity.SP, MODE_PRIVATE);
+        this.university = sharedPreferences.getString(MainActivity.UNIV_SP, "");
 
         viewModel = (CoursesTaughtViewModel) ViewModelProviders.of(getActivity()).get(CoursesTaughtViewModel.class);
 
@@ -138,7 +145,7 @@ public class AddCourseFragment extends Fragment implements OnListContentUpdatedL
         linearLayoutManager = new LinearLayoutManager(getActivity());
         rV.setLayoutManager(linearLayoutManager);
 
-        viewModel.getCourses().observe(this, new Observer<List<Course>>() {
+        viewModel.getCourses(university).observe(this, new Observer<List<Course>>() {
             @Override
             public void onChanged(List<Course> courses) {
                 addCourseAdapter.update(courses);
@@ -179,9 +186,8 @@ public class AddCourseFragment extends Fragment implements OnListContentUpdatedL
             if(!viewModel.getUser().getValue().getCourses().contains(c))
                 viewModel.getUser().getValue().getCourses().add(c);
         }
-//        UserCache.GetUser().getChats().clear();
-//        UserCache.GetUser().getChats().addAll(newList);
-        (new DatabaseConnection()).UpdateCourses(FirebaseAuth.getInstance().getCurrentUser().getEmail(), viewModel.getUser().getValue().getCourses());
+
+        (new DatabaseConnection()).UpdateCourses(this.university, FirebaseAuth.getInstance().getCurrentUser().getEmail(), viewModel.getUser().getValue().getCourses());
         Navigation.findNavController(getActivity(), R.id.coursesTaughtNavHost).popBackStack();
 
     }

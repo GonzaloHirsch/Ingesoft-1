@@ -482,18 +482,19 @@ public class DatabaseConnection {
      * @param listener for the event to use the data.
      * @return
      */
-    public Task<QuerySnapshot> GetAllCourses(OnCourseEventListener listener){
+    public Task<QuerySnapshot> GetAllCourses(String university, OnCourseEventListener listener){
         return db.collection("Courses").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     QuerySnapshot document = task.getResult();
-
                     List<Course> courses = new ArrayList<>();
 
                     if (document != null){
                         for (DocumentSnapshot ds : document) {
-                            if (ds.getData() != null){
+                            // Getting the university part of the ID
+                            String uniPartId = ds.getId().split("-")[0];
+                            if (uniPartId.equals(university) && ds.getData() != null){
                                 courses.add(new Course(ds.getData()));
                             }
                         }
@@ -509,12 +510,12 @@ public class DatabaseConnection {
         });
     }
 
-    public void UpdateCourses(String email, List<String> courses){
+    public void UpdateCourses(String university, String email, List<String> courses){
 
         db.collection("Users").document(email).update("courses", courses).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                CoursesTeachersCache.refreshCourseTeachers();
+                CoursesTeachersCache.refreshCourseTeachers(university);
             }
         });
     }

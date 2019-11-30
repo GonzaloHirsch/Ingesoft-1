@@ -49,7 +49,7 @@ public class CoursesTeachersCache{
     }
 
     //updatear el hash
-    public static void refreshCourseTeachers(){
+    public static void refreshCourseTeachers(String university){
         synchronized(courseTeachers) {
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             DatabaseConnection databaseConnection = new DatabaseConnection();
@@ -66,7 +66,7 @@ public class CoursesTeachersCache{
                     public void onUsersRetrieved(List<User> users) {
                         usersList = users;
                         if (coursesList == null || coursesList.size() == 0) {
-                            databaseConnection.GetAllCourses(new OnCourseEventListener() {
+                            databaseConnection.GetAllCourses(university, new OnCourseEventListener() {
                                 @Override
                                 public void onCourseRetrieved(Course course) {
                                 }
@@ -95,7 +95,7 @@ public class CoursesTeachersCache{
                     }
                 });
             } else if (coursesList == null || coursesList.size() == 0) {
-                databaseConnection.GetAllCourses(new OnCourseEventListener() {
+                databaseConnection.GetAllCourses(university, new OnCourseEventListener() {
                     @Override
                     public void onCourseRetrieved(Course course) {
                     }

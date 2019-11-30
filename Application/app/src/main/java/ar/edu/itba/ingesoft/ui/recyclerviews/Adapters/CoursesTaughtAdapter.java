@@ -12,15 +12,18 @@ import ar.edu.itba.ingesoft.Interfaces.Adapters.OnListContentUpdatedListener;
 import ar.edu.itba.ingesoft.Interfaces.Adapters.OnSelectionModeListener;
 
 
-public class CoursesTaughtAdapter extends  CourseListAdapter {
+public class CoursesTaughtAdapter extends CourseListAdapter {
+
+    private String university;
 
     public CoursesTaughtAdapter(){
         //todo complete/delete?
     }
 
 
-    public CoursesTaughtAdapter(OnCoursesTaughtEventListener listener){
+    public CoursesTaughtAdapter(String university, OnCoursesTaughtEventListener listener){
         this.listener = listener;
+        this.university = university;
     }
 
     //todo hacer una clase abstracta con este metodo... Ya lo use en SearchCoursesAdapter y el comportamiento es el mismo
@@ -40,7 +43,7 @@ public class CoursesTaughtAdapter extends  CourseListAdapter {
         ((OnListContentUpdatedListener<String>)listener).onContentUpdated(courseIds);
 
         //update firebase
-        (new DatabaseConnection()).UpdateCourses(FirebaseAuth.getInstance().getCurrentUser().getEmail(), courseIds);
+        (new DatabaseConnection()).UpdateCourses(this.university, FirebaseAuth.getInstance().getCurrentUser().getEmail(), courseIds);
 
         update(newCourses);
         //notifyDataSetChanged();
