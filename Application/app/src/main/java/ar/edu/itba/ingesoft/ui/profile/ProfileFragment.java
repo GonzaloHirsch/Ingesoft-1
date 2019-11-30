@@ -1,6 +1,7 @@
 package ar.edu.itba.ingesoft.ui.profile;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -11,6 +12,9 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseUser;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,10 +28,13 @@ import java.util.Map;
 import ar.edu.itba.ingesoft.Authentication.Authenticator;
 import ar.edu.itba.ingesoft.Classes.Course;
 import ar.edu.itba.ingesoft.Classes.User;
+import ar.edu.itba.ingesoft.MainActivity;
 import ar.edu.itba.ingesoft.R;
 import ar.edu.itba.ingesoft.ui.coursestaught.CoursesTaughtActivity;
 import ar.edu.itba.ingesoft.ui.login.LoginActivity;
 import ar.edu.itba.ingesoft.ui.search.SearchViewModel;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class ProfileFragment extends Fragment {
 
@@ -48,7 +55,6 @@ public class ProfileFragment extends Fragment {
         inflater.inflate(R.menu.profile_appbar_menu, menu);
     }
 
-
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch(item.getItemId()){
@@ -58,10 +64,8 @@ public class ProfileFragment extends Fragment {
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 getActivity().finish();
-
                 break;
         }
-
         return true;
     }
 
@@ -73,11 +77,14 @@ public class ProfileFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        profileViewModel =
-                ViewModelProviders.of(getActivity()).get(ProfileViewModel.class);
+        profileViewModel = ViewModelProviders.of(getActivity()).get(ProfileViewModel.class);
         searchViewModel = ViewModelProviders.of(getActivity()).get(SearchViewModel.class);
 
         View root = inflater.inflate(R.layout.fragment_profile, container, false);
+
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(MainActivity.SP, MODE_PRIVATE);
+        String univ = sharedPreferences.getString(MainActivity.UNIV_SP, "");
+        this.profileViewModel.setUniversity(univ);
 
         //Name TextView
         nameTextView = root.findViewById(R.id.profileNameTextView);
@@ -95,15 +102,20 @@ public class ProfileFragment extends Fragment {
         coursesTextView = ll.findViewById(R.id.itemProfileDataDescription);
         ((TextView)ll.findViewById(R.id.itemProfileDataTitle)).setText(R.string.courses_taught);
         ll.setOnClickListener(x->{
-            Intent intent = new Intent(getContext(), CoursesTaughtActivity.class);
-            intent.putExtra(getActivity().getString(R.string.user_parcel), profileViewModel.getCurrentUserLiveData().getValue());
-            startActivity(intent);
+            FirebaseUser firebaseUser = new Authenticator().getSignedInUser();
+
+            if (firebaseUser.isAnonymous()){
+                Toast.makeText(getContext(), "An account is needed", Toast.LENGTH_SHORT).show();
+            } else {
+                Intent intent = new Intent(getContext(), CoursesTaughtActivity.class);
+                intent.putExtra(getActivity().getString(R.string.user_parcel), profileViewModel.getCurrentUserLiveData().getValue());
+                startActivity(intent);
+            }
         });
 
         //ProgressBar + Loading TextView
         theProgressBar = root.findViewById(R.id.profileProgressBar);
         loadingTextView = root.findViewById(R.id.loadingTextView);
-
 
         profileViewModel.getCurrentUserLiveData().observe(getActivity(), new Observer<User>(){
             @Override
@@ -111,7 +123,7 @@ public class ProfileFragment extends Fragment {
                 nameTextView.setText(u.getName());
                 emailTextView.setText(u.getMail());
                 //todo
-                universityTextView.setText("No University");
+                universityTextView.setText(u.getUniversidad());
                 coursesTextView.setText(u.getCourses().size() + " courses");
             }
         });

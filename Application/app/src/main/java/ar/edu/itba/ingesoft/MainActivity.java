@@ -2,7 +2,9 @@ package ar.edu.itba.ingesoft;
 
 import android.os.Bundle;
 
+import com.google.android.gms.auth.api.Auth;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,60 +37,68 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         BottomNavigationView navView = findViewById(R.id.nav_view);
 
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_search, R.id.navigation_chats, R.id.navigation_profile)
-                .build();
+        FirebaseUser firebaseUser = new Authenticator().getSignedInUser();
+        AppBarConfiguration appBarConfiguration;
+
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-        NavigationUI.setupWithNavController(navView, navController);
 
-        new DatabaseConnection().GetUser(new Authenticator().getSignedInUser().getEmail(), new OnUserEventListener() {
-            @Override
-            public void onUserRetrieved(User user) {
-                if (user != null){
-                    UserCache.SetUser(user);
-                    List<Chat> chats = new ArrayList<>();
-                    for (String id : user.getChats()){
-                        new DatabaseConnection().GetChat(id, new OnChatEventListener() {
-                            @Override
-                            public void onChatRetrieved(Chat chat) {
-                                chats.add(chat);
-                                // Verify the amount of chats recovered is correct
-                                if (chats.size() == user.getChats().size())
-                                    UserCache.SetChats(chats);
-                            }
+        if (firebaseUser.isAnonymous()){
+            // Passing each menu ID as a set of Ids because each
+            // menu should be considered as top level destinations.
+            appBarConfiguration = new AppBarConfiguration.Builder(
+                    R.id.navigation_search, R.id.navigation_profile)
+                    .build();
 
-                            @Override
-                            public void onChatChanged(Chat chat) {
-                                throw new RuntimeException("Not Implemented");
-                            }
-                        });
+            navView.inflateMenu(R.menu.bottom_nav_menu_alt);
+            NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+            NavigationUI.setupWithNavController(navView, navController);
+        } else {
+            // Passing each menu ID as a set of Ids because each
+            // menu should be considered as top level destinations.
+            appBarConfiguration = new AppBarConfiguration.Builder(
+                    R.id.navigation_search, R.id.navigation_chats, R.id.navigation_profile)
+                    .build();
+
+            navView.inflateMenu(R.menu.bottom_nav_menu);
+            NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+            NavigationUI.setupWithNavController(navView, navController);
+
+            new DatabaseConnection().GetUser(new Authenticator().getSignedInUser().getEmail(), new OnUserEventListener() {
+                @Override
+                public void onUserRetrieved(User user) {
+                    if (user != null){
+                        UserCache.SetUser(user);
+                        List<Chat> chats = new ArrayList<>();
+                        for (String id : user.getChats()){
+                            new DatabaseConnection().GetChat(id, new OnChatEventListener() {
+                                @Override
+                                public void onChatRetrieved(Chat chat) {
+                                    chats.add(chat);
+                                    // Verify the amount of chats recovered is correct
+                                    if (chats.size() == user.getChats().size())
+                                        UserCache.SetChats(chats);
+                                }
+
+                                @Override
+                                public void onChatChanged(Chat chat) {
+                                    throw new RuntimeException("Not Implemented");
+                                }
+                            });
+                        }
                     }
                 }
-            }
 
-            @Override
-            public void onUsersRetrieved(List<User> users) {
-                //
-            }
+                @Override
+                public void onUsersRetrieved(List<User> users) {
+                    //
+                }
 
-            @Override
-            public void onTeachersRetrieved(List<User> teachers) {
-                //
-            }
-        });
-        //CoursesTeachersCache.refreshCourseTeachers();
-
-
-        /*
-        Intent intent = new Intent(this, ChatMessagesActivity.class);
-        intent.putExtra(MainActivity.CHAT_ID_EXTRA, (String)null);
-        intent.putExtra(MainActivity.CHAT_RECIPIENT_EXTRA, "hirschroberto71@gmail.com");
-        intent.putExtra(MainActivity.CHAT_RECIPIENT_NAME_EXTRA, "Roberto Hirsch");
-        startActivity(intent);
-*/
+                @Override
+                public void onTeachersRetrieved(List<User> teachers) {
+                    //
+                }
+            });
+        }
     }
 
     @Override

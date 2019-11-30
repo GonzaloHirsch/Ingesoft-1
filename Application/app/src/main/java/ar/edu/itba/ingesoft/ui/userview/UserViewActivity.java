@@ -32,6 +32,8 @@ public class UserViewActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         User u = getIntent().getParcelableExtra("SelectedUser");
 
         courseViewTeachersRecyclerView = findViewById(R.id.userViewRecyclerView);
@@ -40,7 +42,12 @@ public class UserViewActivity extends AppCompatActivity {
         courseViewTeachersRecyclerView.setAdapter(adapter);
 
         ((TextView) findViewById(R.id.userViewNameTextView)).setText(u.getName());
-        //((TextView) findViewById(R.id.userViewExtraTextView1)).setText(u.getUniversidad().getName());
+        ((TextView) findViewById(R.id.userViewExtraTextView1)).setText(u.getUniversidad());
     }
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
 }

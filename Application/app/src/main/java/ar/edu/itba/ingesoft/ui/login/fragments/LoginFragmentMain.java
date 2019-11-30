@@ -18,13 +18,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthCredential;
@@ -45,6 +48,8 @@ import ar.edu.itba.ingesoft.MainActivity;
 import ar.edu.itba.ingesoft.R;
 import ar.edu.itba.ingesoft.ui.login.LoginActivity;
 import ar.edu.itba.ingesoft.utils.Validations;
+
+import static android.content.Context.MODE_PRIVATE;
 
 
 public class LoginFragmentMain extends Fragment {
@@ -160,8 +165,27 @@ public class LoginFragmentMain extends Fragment {
         continueWithoutLoggingInTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getContext(), MainActivity.class);
-                startActivity(intent);
+                new Authenticator().signInAnonymousUser().addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()){
+                            Intent intent = new Intent(getContext(), MainActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                            if (getActivity() != null)
+                                getActivity().finish();
+                            Log.e(TAG, "Logged user anonymously");
+                        } else {
+                            Log.e(TAG, task.getException().getMessage());
+                        }
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getContext(), "An error occurred", Toast.LENGTH_SHORT).show();
+                        Log.e(TAG, e.getMessage());
+                    }
+                });
             }
         });
 
@@ -197,7 +221,14 @@ public class LoginFragmentMain extends Fragment {
                 if(task.isSuccessful()){
                     Log.d(TAG,"sign_in_with_google:success");
                     FirebaseUser user = new Authenticator().getSignedInUser();
-                    User newUser = new User(user.getDisplayName(), user.getEmail(), new Universidad("itba"));
+
+                    String univ = "N/a";
+                    if (getContext() != null){
+                        SharedPreferences sharedPreferences = getContext().getSharedPreferences(MainActivity.SP, MODE_PRIVATE);
+                        univ = sharedPreferences.getString(MainActivity.UNIV_SP, "");
+                    }
+
+                    User newUser = new User(user.getDisplayName(), user.getEmail(), univ);
                     new DatabaseConnection().InsertUser(newUser);
 
                     Intent intent = new Intent(getContext(), MainActivity.class);

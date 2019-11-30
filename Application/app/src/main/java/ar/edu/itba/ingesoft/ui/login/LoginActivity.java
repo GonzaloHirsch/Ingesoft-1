@@ -32,23 +32,17 @@ public class LoginActivity extends AppCompatActivity {
 
         navController = Navigation.findNavController(this, R.id.login_navHostFragment);
 
+        // First check for the logged user
+        updateUI(new Authenticator().getSignedInUser());
 
+        // Check if there is a university in the SP
         SharedPreferences sp = getSharedPreferences(MainActivity.SP, MODE_PRIVATE);
         String univ = sp.getString(MainActivity.UNIV_SP, "");
 
-
-        if(!univ.equals("")){
+        // Navigate to the log in window
+        if(univ != null && !univ.equals("")){
             navController.navigate(R.id.action_continueWithoutSigningInFragment_to_loginFragmentMain);
         }
-
-
-
-
-
-
-
-
-        updateUI(new Authenticator().getSignedInUser());
     }
 
     private void updateUI(FirebaseUser fu){
