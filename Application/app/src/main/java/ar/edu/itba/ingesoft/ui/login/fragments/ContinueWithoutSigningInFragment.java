@@ -16,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -83,15 +84,24 @@ public class ContinueWithoutSigningInFragment extends Fragment {
         continue_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SharedPreferences sharedPreferences = getContext().getSharedPreferences(MainActivity.SP, MODE_PRIVATE);
+                if(univ_select.getText().toString().equals("")){
+                    Toast.makeText(getContext(), "University has to be selected", Toast.LENGTH_SHORT).show();
+                }
+                else {
 
-                SharedPreferences.Editor editor = sharedPreferences.edit();
 
-                System.out.println(univ_select.getText().toString());
-                editor.putString(MainActivity.UNIV_SP, univ_select.getText().toString());
-                editor.apply();
+                    SharedPreferences sharedPreferences = getContext().getSharedPreferences(MainActivity.SP, MODE_PRIVATE);
 
-                navController.navigate(R.id.action_continueWithoutSigningInFragment_to_loginFragmentMain);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+
+                    System.out.println(univ_select.getText().toString());
+                    editor.putString(MainActivity.UNIV_SP, univ_select.getText().toString());
+                    editor.apply();
+
+                    navController.navigate(R.id.action_continueWithoutSigningInFragment_to_loginFragmentMain);
+                }
+
+
 
 
 

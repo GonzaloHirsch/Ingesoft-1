@@ -46,6 +46,8 @@ public class LoginActivity extends AppCompatActivity {
 
 
 
+
+
         updateUI(new Authenticator().getSignedInUser());
     }
 
