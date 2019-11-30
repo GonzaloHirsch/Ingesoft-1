@@ -35,7 +35,7 @@ public class User implements DatabaseObject, Parcelable {
 
     @SuppressWarnings("unchecked")
     public User(Map<String, Object> data){
-        this.name = (String) data.get("name");
+        this.name = this.normalizeName((String) data.get("name"));
         this.mail = (String) data.get("mail");
         if(data.get("isProfessor") != null)
             this.isProfessor = (Boolean) data.get("isProfessor");
@@ -53,7 +53,7 @@ public class User implements DatabaseObject, Parcelable {
     }
 
     public User(String name, String mail, String universidad){
-        this.name = name;
+        this.name = this.normalizeName(name);
         this.mail = mail;
         this.isProfessor = false;
         this.courses = new ArrayList<>();
@@ -87,7 +87,7 @@ public class User implements DatabaseObject, Parcelable {
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name = this.normalizeName(name);
     }
 
     public boolean isProfessor() {
@@ -201,4 +201,31 @@ public class User implements DatabaseObject, Parcelable {
             return new User[size];
         }
     };
+
+    private String normalizeName(String name){
+        if (name != null){
+            boolean isFirst = true;
+            StringBuilder sb = new StringBuilder();
+
+            for(char c : name.toCharArray()){
+                if (c == ' '){
+                    isFirst = true;
+                    sb.append(c);
+                } else if (Character.isAlphabetic(c)){
+                    if (isFirst){
+                        sb.append(Character.toUpperCase(c));
+                        isFirst = false;
+                    } else {
+                        sb.append(Character.toLowerCase(c));
+                    }
+                } else {
+                    sb.append(c);
+                }
+            }
+
+            return sb.toString();
+        } else {
+            return "N/a";
+        }
+    }
 }

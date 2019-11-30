@@ -120,7 +120,7 @@ public class SearchCoursesAdapter extends RecyclerView.Adapter<SearchCoursesAdap
                 else{
                     List<Course> filteredList = new ArrayList<Course>();
                     for(Course c : courseList){
-                        if(c.getName().toLowerCase().contains(query))
+                        if(c.getName().toLowerCase().contains(query) || c.getCode().toLowerCase().contains(query))
                             filteredList.add(c);
                     }
                     courseListFiltered = filteredList;
@@ -146,7 +146,7 @@ public class SearchCoursesAdapter extends RecyclerView.Adapter<SearchCoursesAdap
         TextView universityTextView;
         TextView courseNameTextView;
         TextView teachersTextView;
-        TextView specialTextView;
+        //TextView specialTextView;
         ConstraintLayout clickable;
 
         public SearchCoursesViewHolder(@NonNull View itemView) {
@@ -156,7 +156,7 @@ public class SearchCoursesAdapter extends RecyclerView.Adapter<SearchCoursesAdap
             universityTextView = itemView.findViewById(R.id.universityNameTextView);
             courseNameTextView = itemView.findViewById(R.id.courseNameTextView);
             teachersTextView = itemView.findViewById(R.id.courseTeachersTextView);
-            specialTextView = itemView.findViewById(R.id.courseSpecialTextView);
+            //specialTextView = itemView.findViewById(R.id.courseSpecialTextView);
             clickable = itemView.findViewById(R.id.itemSearchCourseClickable);
         }
 

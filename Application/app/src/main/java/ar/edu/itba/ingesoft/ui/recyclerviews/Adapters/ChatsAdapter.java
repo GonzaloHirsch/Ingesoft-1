@@ -86,13 +86,18 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
         Message lastMessage;
         if (messages.size() > 0){
             lastMessage = messages.get(messages.size() - 1);
+            String lastMessageText = lastMessage.getMessage();
+
+            if (lastMessageText.length() > 45){
+                lastMessageText = lastMessageText.substring(0, 40) + "...";
+            }
 
             DateFormat df = new SimpleDateFormat("dd/MM HH:mm", Locale.FRANCE);
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(lastMessage.getTimestamp());
             String date = df.format(calendar.getTime());
 
-            holder.subtitleTextView.setText(lastMessage.getMessage());
+            holder.subtitleTextView.setText(lastMessageText);
             holder.timestampTextView.setText(date);
         } else {
             holder.subtitleTextView.setText("");

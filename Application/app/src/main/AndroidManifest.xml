@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ar.edu.itba.ingesoft">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -9,11 +11,34 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <!-- Set custom default icon. This is used when no icon is set for incoming notification
+    messages.See README(https://github.com/firebase/quickstart-android/tree/master/messaging#custom-default-icon) for more. -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_message_black_24dp" />
+
+        <!-- Set color used with incoming notification messages.
+        This is used when no color is set for the incoming notification message. See README
+        (https://github.com/firebase/quickstart-android/tree/master/messaging#custom-default-color) for more. -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/colorPrimary" />
+
+        <service
+            android:name=".Services.NotificationService"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
         <activity
             android:name=".ui.userview.UserViewActivity"
             android:label="@string/title_activity_user_view"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:parentActivityName=".ui.courseview.CourseViewActivity">
+            android:parentActivityName=".ui.courseview.CourseViewActivity"
+            android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ar.edu.itba.ingesoft.MainActivity" />
@@ -21,9 +46,7 @@
         <activity
             android:name=".ui.courseview.CourseViewActivity"
             android:label="@string/title_activity_course_view"
-            android:theme="@style/AppTheme">
-
-        </activity>
+            android:theme="@style/AppTheme"></activity>
         <activity
             android:name=".ui.chats.ChatMessagesActivity"
             android:parentActivityName=".MainActivity">

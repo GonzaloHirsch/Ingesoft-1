@@ -65,6 +65,8 @@ public class CourseViewActivity extends AppCompatActivity {
 
                 if (firebaseUser.isAnonymous()){
                     Toast.makeText(getApplicationContext(), "An account is needed", Toast.LENGTH_SHORT).show();
+                } else if (firebaseUser.getEmail().equals(u.getMail())) {
+                    Toast.makeText(getApplicationContext(), "Can't send a message to yourself", Toast.LENGTH_SHORT).show();
                 } else {
                     Intent intent = new Intent(getApplicationContext(), ChatMessagesActivity.class);
 

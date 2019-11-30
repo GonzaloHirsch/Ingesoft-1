@@ -112,7 +112,7 @@ public class ChatMessagesFragment extends Fragment {
                             //adapter.addMessage(newMessage);
 
                         // Notify the view model of the new message
-                        mViewModel.addMessage(newMessage, new OnChatEventListener() {
+                        mViewModel.addMessage(getContext(), newMessage, new OnChatEventListener() {
                             @Override
                             public void onChatRetrieved(Chat chat) {
                                 throw new RuntimeException("Not Implemented");

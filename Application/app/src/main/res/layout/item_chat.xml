@@ -3,6 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/itemChatLayout"
+    android:background="@drawable/ripple_white"
+    android:clickable="true"
+    android:fadingEdge="horizontal|vertical"
+    android:focusable="true"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -13,8 +17,8 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:text="TextView"
-        android:textSize="20sp"
-        app:layout_constraintStart_toEndOf="@+id/itemChatImage"
+        android:textSize="17sp"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -22,9 +26,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="@+id/itemChatImage"
-        app:layout_constraintStart_toEndOf="@+id/itemChatImage" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/itemChatTitleTextView"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/itemChatTimestapmTextView"
@@ -38,6 +45,7 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/itemChatImage"
+        android:visibility="gone"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginStart="10dp"

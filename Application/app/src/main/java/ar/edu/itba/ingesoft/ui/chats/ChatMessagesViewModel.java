@@ -1,6 +1,9 @@
 package ar.edu.itba.ingesoft.ui.chats;
 
+import android.content.Context;
 import android.util.Log;
+
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -9,7 +12,9 @@ import androidx.lifecycle.ViewModel;
 import ar.edu.itba.ingesoft.Classes.Chat;
 import ar.edu.itba.ingesoft.Classes.Message;
 import ar.edu.itba.ingesoft.Classes.User;
+import ar.edu.itba.ingesoft.Firebase.Authenticator;
 import ar.edu.itba.ingesoft.Firebase.DatabaseConnection;
+import ar.edu.itba.ingesoft.Firebase.MessagingConnection;
 import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnChatEventListener;
 import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnUserEventListener;
 
@@ -18,6 +23,8 @@ public class ChatMessagesViewModel extends ViewModel {
     public static final String TAG = "CHAT MESSAGE VIEW MODEL";
     private Chat chatObj = null;
     private String chatID = null;
+
+    private MessagingConnection mc = new MessagingConnection();
 
     public ChatMessagesViewModel(){
     }
@@ -46,9 +53,16 @@ public class ChatMessagesViewModel extends ViewModel {
      * Method to notify the view model about the new message the logged user sent
      * @param message
      */
-    public void addMessage(Message message, OnChatEventListener eventListener){
+    public void addMessage(Context ctx, Message message, OnChatEventListener eventListener){
         // Store the new message in the object
         this.chatObj.addMessage(message);
+
+        FirebaseUser fu = new Authenticator().getSignedInUser();
+        if (chatObj.getFrom().equals(fu.getEmail())){
+            mc.sendMessage(ctx, this.chatID, this.chatObj.getFromName(), this.chatObj.getFrom(), this.chatObj.getToName(), this.chatObj.getTo(), message.getMessage());
+        } else {
+            mc.sendMessage(ctx, this.chatID, this.chatObj.getToName(), this.chatObj.getTo(), this.chatObj.getFromName(), this.chatObj.getFrom(), message.getMessage());
+        }
 
         // Update the database with the new message
         new DatabaseConnection().UpdateChat(this.chatObj, new OnChatEventListener() {

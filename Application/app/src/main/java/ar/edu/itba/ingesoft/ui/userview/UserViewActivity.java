@@ -29,12 +29,14 @@ public class UserViewActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_view);
+
+        User u = getIntent().getParcelableExtra("SelectedUser");
+
         Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle(u.getName());
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        User u = getIntent().getParcelableExtra("SelectedUser");
 
         courseViewTeachersRecyclerView = findViewById(R.id.userViewRecyclerView);
         courseViewTeachersRecyclerView.setLayoutManager(llm);
