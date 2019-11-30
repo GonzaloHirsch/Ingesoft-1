@@ -59,9 +59,9 @@ public class ChatMessagesViewModel extends ViewModel {
 
         FirebaseUser fu = new Authenticator().getSignedInUser();
         if (chatObj.getFrom().equals(fu.getEmail())){
-            mc.sendMessage(ctx, this.chatID, fu.getDisplayName(), fu.getEmail(), this.chatObj.getToName(), this.chatObj.getTo(), message.getMessage());
+            mc.sendMessage(ctx, this.chatID, this.chatObj.getFromName(), this.chatObj.getFrom(), this.chatObj.getToName(), this.chatObj.getTo(), message.getMessage());
         } else {
-            mc.sendMessage(ctx, this.chatID, fu.getDisplayName(), fu.getEmail(), this.chatObj.getFromName(), this.chatObj.getFrom(), message.getMessage());
+            mc.sendMessage(ctx, this.chatID, this.chatObj.getToName(), this.chatObj.getTo(), this.chatObj.getFromName(), this.chatObj.getFrom(), message.getMessage());
         }
 
         // Update the database with the new message
