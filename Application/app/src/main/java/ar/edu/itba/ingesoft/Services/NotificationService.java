@@ -10,6 +10,7 @@ import com.google.firebase.messaging.RemoteMessage;
 
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -20,6 +21,9 @@ import ar.edu.itba.ingesoft.ui.chats.ChatMessagesActivity;
 
 public class NotificationService extends FirebaseMessagingService {
     public static final String TAG = "NOTIFICATION SERVICE";
+
+    private AtomicInteger atomicInteger = new AtomicInteger(1);
+    private final int MAX_VALUE = 1000000000;
 
     public NotificationService() {
     }
@@ -57,14 +61,15 @@ public class NotificationService extends FirebaseMessagingService {
 
             if (!data.get("email").equals(fu.getEmail())){
 
-                Intent intent = new Intent(getApplicationContext(), ChatMessagesActivity.class);
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                intent.putExtra(MainActivity.CHAT_DIRECT_EXTRA, true);
                 intent.putExtra(MainActivity.CHAT_ID_EXTRA, data.get("id"));
                 intent.putExtra(MainActivity.CHAT_RECIPIENT_NAME_EXTRA, data.get("receiver_name"));
                 intent.putExtra(MainActivity.CHAT_RECIPIENT_EXTRA, data.get("receiver_email"));
                 PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "MSG")
-                        .setSmallIcon(R.drawable.ic_send_black_24dp)
+                        .setSmallIcon(R.mipmap.ic_launcher_round)
                         .setContentTitle(data.get("name"))
                         .setContentText(data.get("message"))
                         .setStyle(new NotificationCompat.BigTextStyle()
@@ -74,7 +79,8 @@ public class NotificationService extends FirebaseMessagingService {
 
                 NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
 
-                notificationManager.notify(1, builder.build());
+                notificationManager.notify(this.atomicInteger.getAndIncrement(), builder.build());
+                this.atomicInteger.compareAndSet(MAX_VALUE, 1);
             }
         }
 

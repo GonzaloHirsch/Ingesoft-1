@@ -2,6 +2,7 @@ package ar.edu.itba.ingesoft;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
@@ -27,12 +28,14 @@ import ar.edu.itba.ingesoft.Firebase.MessagingConnection;
 import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnChatEventListener;
 import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnUserEventListener;
 import ar.edu.itba.ingesoft.Services.NotificationService;
+import ar.edu.itba.ingesoft.ui.chats.ChatMessagesActivity;
 
 public class MainActivity extends AppCompatActivity {
 
     public static final String SP = "sharedPrefs";
     public static final String UNIV_SP = "univSharedPrefs";
 
+    public static final String CHAT_DIRECT_EXTRA = "chat_direct_extra";
     public static final String CHAT_ID_EXTRA = "chat_id_extra";
     public static final String CHAT_RECIPIENT_EXTRA = "chat_recipient_extra";
     public static final String CHAT_RECIPIENT_NAME_EXTRA = "chat_recipient_name_extra";
@@ -108,6 +111,22 @@ public class MainActivity extends AppCompatActivity {
                     //
                 }
             });
+
+            Intent intent = getIntent();
+
+            // Parse the chat id from the intent
+            boolean isChatIntent = intent.getBooleanExtra(MainActivity.CHAT_DIRECT_EXTRA, false);
+            String chatID = intent.getStringExtra(MainActivity.CHAT_ID_EXTRA);
+            String chatRecipient = intent.getStringExtra(MainActivity.CHAT_RECIPIENT_EXTRA);
+            String chatRecipientName = intent.getStringExtra(MainActivity.CHAT_RECIPIENT_NAME_EXTRA);
+
+            if (isChatIntent){
+                Intent newIntent = new Intent(getApplicationContext(), ChatMessagesActivity.class);
+                newIntent.putExtra(MainActivity.CHAT_ID_EXTRA, chatID);
+                newIntent.putExtra(MainActivity.CHAT_RECIPIENT_NAME_EXTRA, chatRecipientName);
+                newIntent.putExtra(MainActivity.CHAT_RECIPIENT_EXTRA, chatRecipient);
+                startActivity(intent);
+            }
         }
     }
 
