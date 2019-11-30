@@ -111,22 +111,6 @@ public class MainActivity extends AppCompatActivity {
                     //
                 }
             });
-
-            Intent intent = getIntent();
-
-            // Parse the chat id from the intent
-            boolean isChatIntent = intent.getBooleanExtra(MainActivity.CHAT_DIRECT_EXTRA, false);
-            String chatID = intent.getStringExtra(MainActivity.CHAT_ID_EXTRA);
-            String chatRecipient = intent.getStringExtra(MainActivity.CHAT_RECIPIENT_EXTRA);
-            String chatRecipientName = intent.getStringExtra(MainActivity.CHAT_RECIPIENT_NAME_EXTRA);
-
-            if (isChatIntent){
-                Intent newIntent = new Intent(getApplicationContext(), ChatMessagesActivity.class);
-                newIntent.putExtra(MainActivity.CHAT_ID_EXTRA, chatID);
-                newIntent.putExtra(MainActivity.CHAT_RECIPIENT_NAME_EXTRA, chatRecipientName);
-                newIntent.putExtra(MainActivity.CHAT_RECIPIENT_EXTRA, chatRecipient);
-                startActivity(intent);
-            }
         }
     }
 
