@@ -60,7 +60,7 @@ public abstract class CourseListAdapter extends RecyclerView.Adapter<CourseListA
                 else{
                     List<Course> filteredList = new ArrayList<Course>();
                     for(Course c : courses){
-                        if(c.getName().toLowerCase().contains(query))
+                        if(c.getName().toLowerCase().contains(query) || c.getCode()!=null && c.getCode().contains(query))
                             filteredList.add(c);
                     }
                     courseListFiltered = filteredList;

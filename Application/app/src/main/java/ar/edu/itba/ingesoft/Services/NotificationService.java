@@ -61,7 +61,7 @@ public class NotificationService extends FirebaseMessagingService {
 
             if (!data.get("email").equals(fu.getEmail())){
 
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                Intent intent = new Intent(getApplicationContext(), ChatMessagesActivity.class);
                 intent.putExtra(MainActivity.CHAT_DIRECT_EXTRA, true);
                 intent.putExtra(MainActivity.CHAT_ID_EXTRA, data.get("id"));
                 intent.putExtra(MainActivity.CHAT_RECIPIENT_NAME_EXTRA, data.get("receiver_name"));
