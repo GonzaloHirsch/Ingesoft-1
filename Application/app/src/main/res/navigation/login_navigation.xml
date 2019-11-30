@@ -3,24 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/login_navigation"
-    app:startDestination="@id/loginFragmentMain">
+    app:startDestination="@+id/continueWithoutSigningInFragment">
 
     <fragment
         android:id="@+id/loginFragmentMain"
         android:name="ar.edu.itba.ingesoft.ui.login.fragments.LoginFragmentMain"
         android:label="login_fragment_main"
-        tools:layout="@layout/login_fragment_main"
-        app:startDestination="@id/action_loginFragmentMain_to_signUpFragment">
+        tools:layout="@layout/login_fragment_main">
         <action
             android:id="@+id/action_loginFragmentMain_to_signUpFragment"
             app:destination="@id/signUpFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right" />
-        <action
-            android:id="@+id/action_loginFragmentMain_to_continueWithoutSigningInFragment"
-            app:destination="@id/continueWithoutSigningInFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
@@ -35,5 +27,13 @@
         android:id="@+id/continueWithoutSigningInFragment"
         android:name="ar.edu.itba.ingesoft.ui.login.fragments.ContinueWithoutSigningInFragment"
         android:label="fragment_continue_without_signing_in"
-        tools:layout="@layout/fragment_continue_without_signing_in" />
+        app:startDestination="@id/action_loginFragmentMain_to_signUpFragment"
+        tools:layout="@layout/fragment_continue_without_signing_in" >
+        <action
+            android:id="@+id/action_continueWithoutSigningInFragment_to_loginFragmentMain"
+            app:destination="@id/loginFragmentMain" />
+        <action
+            android:id="@+id/action_continueWithoutSigningInFragment_to_loginFragmentMain2"
+            app:destination="@+id/loginFragmentMain" />
+    </fragment>
 </navigation>

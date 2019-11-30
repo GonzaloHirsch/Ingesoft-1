@@ -21,7 +21,7 @@ import java.util.Date;
 
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import ar.edu.itba.ingesoft.Authentication.Authenticator;
+import ar.edu.itba.ingesoft.Firebase.Authenticator;
 import ar.edu.itba.ingesoft.Classes.Chat;
 import ar.edu.itba.ingesoft.Classes.Message;
 import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnChatEventListener;
@@ -40,6 +40,7 @@ public class ChatMessagesFragment extends Fragment {
 
     private String chatID;
     private String recipient;
+    private String recipientName;
 
     private boolean isNewChat = false;
 
@@ -54,15 +55,18 @@ public class ChatMessagesFragment extends Fragment {
         View root = inflater.inflate(R.layout.chat_messages_fragment, container, false);
 
         this.messagesRecyclerView = (RecyclerView) root.findViewById(R.id.messages_recycler_view);
-        this.messageInputEditText = (TextInputEditText) root.findViewById(R.id.chat_message_input);
+        this.messageInputEditText = (TextInputEditText) root.findViewById(R.id.chat_message_input_edit_text);
         this.sendFloatingActionButton = (FloatingActionButton) root.findViewById(R.id.chat_message_send_button);
 
         // When the message input is clicked, the rv is scrolled to the last message
-        this.messageInputEditText.setOnClickListener(new View.OnClickListener() {
+        root.findViewById(R.id.chat_message_input_layout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!isNewChat)
-                    messagesRecyclerView.smoothScrollToPosition(mViewModel.getChatMessageCount() - 1);
+                if (!isNewChat && mViewModel.retrieveMessages() != null && mViewModel.retrieveMessages().size() > 0){
+                    messagesRecyclerView.scrollToPosition(mViewModel.retrieveMessages().size() - 1);
+                    //messagesRecyclerView.smoothScrollToPosition(0);
+                    Log.d(TAG, "smooth scrolling on message input edit text");
+                }
             }
         });
 
@@ -77,7 +81,7 @@ public class ChatMessagesFragment extends Fragment {
                         FirebaseUser fu = new Authenticator().getSignedInUser();
 
                         if (isNewChat){
-                            chatID = mViewModel.createChat(fu.getEmail(), recipient);
+                            chatID = mViewModel.createChat(fu.getEmail(), recipient, fu.getDisplayName(), recipientName);
                             isNewChat = false;
                             mViewModel.setUpChatChangeListener(chatID, new OnChatEventListener(){
 
@@ -102,13 +106,31 @@ public class ChatMessagesFragment extends Fragment {
                         // Generating the new message instance
                         Message newMessage = new Message(fu.getEmail(), message, new Date());
 
-                        // Notify the view model of the new message
-                        mViewModel.addMessage(newMessage);
-
                         // Notify the adapter of the new message
                         ChatsMessagesAdapter adapter = ((ChatsMessagesAdapter)messagesRecyclerView.getAdapter());
-                        if (adapter != null)
-                            adapter.addMessage(newMessage);
+                        //if (adapter != null)
+                            //adapter.addMessage(newMessage);
+
+                        // Notify the view model of the new message
+                        mViewModel.addMessage(newMessage, new OnChatEventListener() {
+                            @Override
+                            public void onChatRetrieved(Chat chat) {
+                                throw new RuntimeException("Not Implemented");
+                            }
+
+                            @Override
+                            public void onChatChanged(Chat chat) {
+                                getActivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if (adapter != null){
+                                            adapter.updateData(chat.getMessages());
+                                            messagesRecyclerView.scrollToPosition(chat.getMessages().size() - 1);
+                                        }
+                                    }
+                                });
+                            }
+                        });
 
                         // Clearing the message text
                         messageInputEditText.setText("");
@@ -127,7 +149,12 @@ public class ChatMessagesFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
         this.mViewModel = ViewModelProviders.of(this).get(ChatMessagesViewModel.class);
+
+        if (this.chatID != null && !this.isNewChat){
+            this.mViewModel.setChatID(chatID);
+        }
 
         // Set up of the recycler view
         this.messagesRecyclerView.setHasFixedSize(true);
@@ -155,7 +182,7 @@ public class ChatMessagesFragment extends Fragment {
                 }
             });
             // Scroll the rv to the last message
-            this.messagesRecyclerView.smoothScrollToPosition(this.mViewModel.getChatMessageCount() - 1);
+            //this.messagesRecyclerView.smoothScrollToPosition(this.mViewModel.getChatMessageCount() - 1);
         }
     }
 
@@ -166,8 +193,6 @@ public class ChatMessagesFragment extends Fragment {
     public void setChatID(String chatID){
         if (chatID != null){
             this.chatID = chatID;
-            if (this.mViewModel != null)
-                this.mViewModel.setChatID(chatID);
         }
         this.isNewChat = chatID == null;
     }
@@ -176,8 +201,9 @@ public class ChatMessagesFragment extends Fragment {
      * Method to set the recipient of the message
      * @param recipient of the message
      */
-    public void setRecipient(String recipient){
+    public void setRecipient(String recipient, String recipientName){
         this.recipient = recipient;
+        this.recipientName = recipientName;
     }
 
 }

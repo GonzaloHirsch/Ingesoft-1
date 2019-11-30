@@ -4,7 +4,7 @@
     android:color="@android:color/darker_gray"> <!-- ripple effect color -->
     <item android:id="@android:id/background">
         <shape android:shape="rectangle">
-            <solid android:color="#1166ff" /> <!-- background color -->
+            <solid android:color="@color/colorAccent" /> <!-- background color -->
         </shape>
     </item>
 </ripple>

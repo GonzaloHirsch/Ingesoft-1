@@ -1,9 +1,11 @@
 package ar.edu.itba.ingesoft.ui.recyclerviews.Adapters;
 
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
@@ -18,7 +20,9 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.ArrayList;
 import java.util.List;
 
+import ar.edu.itba.ingesoft.CachedData.CoursesTeachersCache;
 import ar.edu.itba.ingesoft.Classes.Course;
+import ar.edu.itba.ingesoft.Classes.User;
 import ar.edu.itba.ingesoft.R;
 import ar.edu.itba.ingesoft.ui.recyclerviews.diffutil_callbacks.CourseListDiffUtil;
 
@@ -27,11 +31,17 @@ public class SearchCoursesAdapter extends RecyclerView.Adapter<SearchCoursesAdap
     private List<Course> courseList;
     private List<Course> courseListFiltered;
     private List<Course> currentList;
+    private SearchCoursesAdapter.OnItemClickListener listener;
 
-    public SearchCoursesAdapter(List<Course> courseList){
+    public SearchCoursesAdapter(List<Course> courseList, SearchCoursesAdapter.OnItemClickListener listener){
         this.courseList = courseList;
         this.currentList = new ArrayList<>(courseList);
         courseListFiltered = new ArrayList<>();
+        this.listener = listener;
+    }
+
+    public interface OnItemClickListener{
+        void onItemClicked(Course c);
     }
 
     //displaying updates to list contents
@@ -67,11 +77,27 @@ public class SearchCoursesAdapter extends RecyclerView.Adapter<SearchCoursesAdap
     }
 
     @Override
-    public void onBindViewHolder(@NonNull SearchCoursesViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull SearchCoursesViewHolder holder, int position)
+    {
             Log.v("SearchCAdapter", "onBindViewHolder" + currentList.get(position).getName());
             Course aux = currentList.get(position);
+
+            holder.bind(aux, listener);
             holder.courseNameTextView.setText(aux.getName());
             holder.universityTextView.setText(aux.getCode());
+            List<User> usrList = CoursesTeachersCache.getCourseTeachers().get(aux.getCode());
+            if(usrList!=null){/*
+                StringBuilder sb = new StringBuilder();
+                for(int i = 0; i<usrList.size(); i++){
+                    sb.append(usrList.get(i));
+                    if(i==usrList.size()-1){
+
+                    }
+                }
+                holder.teachersTextView.setText(sb.toString());*/
+                holder.teachersTextView.setText(usrList.size() + " tutors");
+            }
+
     }
 
     @Override
@@ -132,10 +158,13 @@ public class SearchCoursesAdapter extends RecyclerView.Adapter<SearchCoursesAdap
             teachersTextView = itemView.findViewById(R.id.courseTeachersTextView);
             specialTextView = itemView.findViewById(R.id.courseSpecialTextView);
             clickable = itemView.findViewById(R.id.itemSearchCourseClickable);
+        }
+
+        public void bind(Course c, SearchCoursesAdapter.OnItemClickListener listener){
             clickable.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Snackbar.make(v, courseNameTextView.getText(), Snackbar.LENGTH_SHORT).show();
+                    listener.onItemClicked(c);
                 }
             });
         }

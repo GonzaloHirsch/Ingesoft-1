@@ -2,6 +2,7 @@ package ar.edu.itba.ingesoft.ui.search;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -9,6 +10,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -24,8 +26,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
+import ar.edu.itba.ingesoft.CachedData.CoursesTeachersCache;
 import ar.edu.itba.ingesoft.Classes.Course;
 import ar.edu.itba.ingesoft.R;
+import ar.edu.itba.ingesoft.ui.courseview.CourseViewActivity;
 import ar.edu.itba.ingesoft.ui.recyclerviews.Adapters.SearchCoursesAdapter;
 
 public class SearchFragment extends Fragment {
@@ -94,21 +98,32 @@ public class SearchFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        //CoursesTeachersCache.refreshCourseTeachers();
     }
 
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+
         searchViewModel =
                 ViewModelProviders.of(getActivity()).get(SearchViewModel.class);
         View root = inflater.inflate(R.layout.fragment_search, container, false);
+
 
         searchRecyclerView = root.findViewById(R.id.searchRecyclerView);
         layoutManager = new LinearLayoutManager(getContext());
 
         searchRecyclerView.setLayoutManager(layoutManager);
-        searchCoursesAdapter = new SearchCoursesAdapter(new ArrayList<>());
+        searchCoursesAdapter = new SearchCoursesAdapter(new ArrayList<>(), new SearchCoursesAdapter.OnItemClickListener() {
+
+            @Override
+            public void onItemClicked(Course c) {
+                Intent intent = new Intent(getContext(), CourseViewActivity.class);
+                intent.putExtra("SelectedCourse", c);
+                startActivity(intent);
+            }
+        });
         searchRecyclerView.setAdapter(searchCoursesAdapter);
 
 

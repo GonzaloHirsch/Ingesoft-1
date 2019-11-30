@@ -1,5 +1,6 @@
-package ar.edu.itba.ingesoft.Database;
+package ar.edu.itba.ingesoft.Firebase;
 
+import android.graphics.LinearGradient;
 import android.util.Log;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -13,6 +14,7 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.Transaction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +22,8 @@ import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import ar.edu.itba.ingesoft.CachedData.CoursesTeachersCache;
 import ar.edu.itba.ingesoft.CachedData.UserCache;
 import ar.edu.itba.ingesoft.Classes.Chat;
 import ar.edu.itba.ingesoft.Classes.Course;
@@ -154,6 +158,8 @@ public class DatabaseConnection {
                                         users.add(new User(ds.getData()));
                                     }
                                 }
+                                if(CoursesTeachersCache.getUsersList() == null)
+                                    CoursesTeachersCache.setUsersList(users);
                                 eventListener.onUsersRetrieved(users);
                             } else {
                                 Log.d(TAG, "Query GetUsers returned null");
@@ -248,7 +254,7 @@ public class DatabaseConnection {
                                 if (data != null){
                                     // Stores all the info in the class
                                     Universidad uni = new Universidad(data);
-                                    eventListener.onUnievrsityRetrieved(uni);
+                                    eventListener.onUniversityRetrieved(uni);
                                 } else {
                                     Log.d(TAG, "No data in document");
                                 }
@@ -385,8 +391,42 @@ public class DatabaseConnection {
      * Updates the given chat.
      * @param chat to be updated.
      */
-    public void UpdateChat(final Chat chat){
-        db.collection("Chats")
+    public void UpdateChat(final Chat chat, OnChatEventListener eventListener){
+        DocumentReference ref = db.collection("Chats").document(chat.getChatID());
+        db.runTransaction(new Transaction.Function<Chat>() {
+            @Nullable
+            @Override
+            public Chat apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
+
+                if (transaction.get(ref).getData() != null){
+                    Chat transactionVersion = new Chat(transaction.get(ref).getData());
+
+                    Chat newVersion = Chat.Merge(transactionVersion, chat);
+
+                    transaction.update(ref, newVersion.generateDataToUpdate());
+
+                    eventListener.onChatChanged(newVersion);
+
+                    Log.v(TAG, "Chat " + chat.getChatID() + " updated");
+                } else {
+                    Log.e(TAG, "Error updating " + chat.getChatID() + " user");
+                }
+
+                return null;
+            }
+
+        }).addOnSuccessListener(new OnSuccessListener<Chat>() {
+            @Override
+            public void onSuccess(Chat chat) {
+                Log.v(TAG, "Chat update transaction success");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Transaction failure.", e);
+                    }
+                });
+        /*db.collection("Chats")
                 .document(chat.getChatID())
                 .update(chat.generateDataToUpdate())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -401,6 +441,8 @@ public class DatabaseConnection {
                         Log.w(TAG, "Error updating " + chat.getChatID() + " user", e);
                     }
                 });
+
+         */
     }
 
     public void SetUpChatListener(String chatID, OnChatEventListener eventListener){
@@ -455,6 +497,7 @@ public class DatabaseConnection {
                                 courses.add(new Course(ds.getData()));
                             }
                         }
+                        CoursesTeachersCache.setCoursesList(courses);
                         listener.onCoursesRetrieved(courses);
                     } else {
                         Log.d(TAG, "Query GetAllCourses returned null");
@@ -468,7 +511,12 @@ public class DatabaseConnection {
 
     public void UpdateCourses(String email, List<String> courses){
 
-        db.collection("Users").document(email).update("courses", courses);
+        db.collection("Users").document(email).update("courses", courses).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                CoursesTeachersCache.refreshCourseTeachers();
+            }
+        });
     }
 
     public void AddCourse(String email, DocumentReference ref, final OnCourseEventListener listener){

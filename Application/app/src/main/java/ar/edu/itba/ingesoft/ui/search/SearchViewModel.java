@@ -2,25 +2,20 @@ package ar.edu.itba.ingesoft.ui.search;
 
 import android.util.Log;
 
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import ar.edu.itba.ingesoft.CachedData.CoursesTeachersCache;
 import ar.edu.itba.ingesoft.Classes.Course;
-import ar.edu.itba.ingesoft.Classes.Universidad;
 import ar.edu.itba.ingesoft.Classes.User;
-import ar.edu.itba.ingesoft.Database.DatabaseConnection;
+import ar.edu.itba.ingesoft.Firebase.DatabaseConnection;
 import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnCourseEventListener;
+import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnUserEventListener;
 
 public class SearchViewModel extends ViewModel {
 
@@ -42,8 +37,32 @@ public class SearchViewModel extends ViewModel {
 
                 @Override
                 public void onCoursesRetrieved(List<Course> courses) {
-                    displayedData.postValue(courses);
-                    loading.postValue(false);
+                   // List<Course> finalList = CoursesTeachersCache.getCoursesWithTutors(courses);
+
+                    CoursesTeachersCache.setCoursesList(courses);
+
+                    dbc.GetUsers(new OnUserEventListener() {
+                        @Override
+                        public void onUserRetrieved(User user) {
+
+                        }
+
+                        @Override
+                        public void onUsersRetrieved(List<User> users) {
+                            CoursesTeachersCache.setUsersList(users);
+                            CoursesTeachersCache.generateCourseTeachersHashMap();
+                            displayedData.postValue(CoursesTeachersCache.getCoursesWithTutors(courses));
+                            loading.postValue(false);
+                        }
+
+                        @Override
+                        public void onTeachersRetrieved(List<User> teachers) {
+
+                        }
+                    });
+
+
+
                 }
                 @Override
                 public void onCoursesReferencesRetrieved(List<DocumentReference> courses) {                }

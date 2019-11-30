@@ -12,23 +12,14 @@ import ar.edu.itba.ingesoft.Interfaces.DatabaseObject;
 public class Universidad implements DatabaseObject {
 
     private String name;
-    private List<Course> courses;
 
     @SuppressWarnings("unchecked")
     public Universidad(Map<String, Object> data){
-        if(this.name!=null)
-            this.name = (String) data.get("name");
-        else //todo change this
-            this.name = "NoUniversityName";
-        if(this.courses !=null)
-            this.courses = (List<Course>) data.get("courses");
-        else //todo change this
-            this.courses = new ArrayList<Course>();
+        this.name = (String) data.get("name");
     }
 
     public Universidad(String name){
         this.name = name;
-        this.courses = new ArrayList<>();
     }
 
     public String getName() {
@@ -37,22 +28,6 @@ public class Universidad implements DatabaseObject {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public List<Course> getCourses() {
-        return courses;
-    }
-
-    public void addCourses(List<Course> courses) {
-        this.courses.addAll(courses);
-    }
-
-    public void addCourse(Course course) {
-        this.courses.add(course);
-    }
-
-    public void deleteCourse(Course courses) {
-        this.courses.remove(courses);
     }
 
     @Override
