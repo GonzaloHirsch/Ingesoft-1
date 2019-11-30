@@ -25,10 +25,12 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 
+import ar.edu.itba.ingesoft.Firebase.AnalyticsConnection;
 import ar.edu.itba.ingesoft.Firebase.Authenticator;
 import ar.edu.itba.ingesoft.Classes.Universidad;
 import ar.edu.itba.ingesoft.Classes.User;
 import ar.edu.itba.ingesoft.Firebase.DatabaseConnection;
+import ar.edu.itba.ingesoft.MainActivity;
 import ar.edu.itba.ingesoft.R;
 import ar.edu.itba.ingesoft.ui.login.LoginActivity;
 import ar.edu.itba.ingesoft.utils.Validations;
@@ -97,6 +99,7 @@ public class SignUpFragment extends Fragment {
                                     errorTV.setVisibility(View.INVISIBLE);
 
                                     new DatabaseConnection().InsertUser(user);
+                                    AnalyticsConnection.LogEvent_SignUp(AnalyticsConnection.SIGNUP_CREATE);
 
                                     Intent intent = new Intent(getContext(), LoginActivity.class);
                                     startActivity(intent);

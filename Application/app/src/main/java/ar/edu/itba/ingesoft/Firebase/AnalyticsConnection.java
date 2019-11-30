@@ -9,19 +9,13 @@ public class AnalyticsConnection {
 
     private static FirebaseAnalytics mFirebaseAnalytics;
 
+    public static final String SIGNUP_CREATE = "EMAIL CREATE ACCOUNT";
+    public static final String SIGNUP_GOOGLE = "GOOGLE CREATE ACCOUNT";
+    public static final String SIGNUP_ANON = "ANON CREATE ACCOUNT";
+
     public static void GenerateInstance(Context ctx){
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(ctx);
     }
-
-    /*
-    public static void LogEvent(FirebaseAnalytics.Event event, FirebaseAnalytics.Param itemID, FirebaseAnalytics.Param itemName){
-        Bundle bundle = new Bundle();
-        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, id);
-        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, name);
-        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
-    }
-
-     */
 
     public static boolean LogEvent_SignUp(String type){
         if (mFirebaseAnalytics != null){

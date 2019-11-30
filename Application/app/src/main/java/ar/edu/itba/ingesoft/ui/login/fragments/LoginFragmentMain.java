@@ -35,6 +35,7 @@ import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
+import ar.edu.itba.ingesoft.Firebase.AnalyticsConnection;
 import ar.edu.itba.ingesoft.Firebase.Authenticator;
 import ar.edu.itba.ingesoft.Classes.Universidad;
 import ar.edu.itba.ingesoft.Classes.User;
@@ -163,6 +164,7 @@ public class LoginFragmentMain extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()){
+                            AnalyticsConnection.LogEvent_SignUp(AnalyticsConnection.SIGNUP_ANON);
                             Intent intent = new Intent(getContext(), MainActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(intent);
@@ -215,6 +217,7 @@ public class LoginFragmentMain extends Fragment {
                 if(task.isSuccessful()){
                     Log.d(TAG,"sign_in_with_google:success");
                     FirebaseUser user = new Authenticator().getSignedInUser();
+                    AnalyticsConnection.LogEvent_SignUp(AnalyticsConnection.SIGNUP_GOOGLE);
 
                     String univ = "N/a";
                     if (getContext() != null){

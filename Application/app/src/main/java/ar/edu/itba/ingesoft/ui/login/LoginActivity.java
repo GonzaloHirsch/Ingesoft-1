@@ -14,6 +14,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import ar.edu.itba.ingesoft.Firebase.AnalyticsConnection;
 import ar.edu.itba.ingesoft.Firebase.Authenticator;
 import ar.edu.itba.ingesoft.MainActivity;
 import ar.edu.itba.ingesoft.R;
@@ -28,6 +29,8 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity);
+
+        AnalyticsConnection.GenerateInstance(this);
 
         navController = Navigation.findNavController(this, R.id.login_navHostFragment);
 

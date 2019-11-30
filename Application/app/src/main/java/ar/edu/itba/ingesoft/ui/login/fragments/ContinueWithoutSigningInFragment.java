@@ -24,7 +24,7 @@ import java.util.List;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import ar.edu.itba.ingesoft.Classes.Universidad;
-import ar.edu.itba.ingesoft.Database.DatabaseConnection;
+import ar.edu.itba.ingesoft.Firebase.DatabaseConnection;
 import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnUniversityEventListener;
 import ar.edu.itba.ingesoft.MainActivity;
 import ar.edu.itba.ingesoft.R;
