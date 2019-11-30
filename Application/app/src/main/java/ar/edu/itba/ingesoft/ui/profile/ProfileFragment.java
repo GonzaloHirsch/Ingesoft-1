@@ -111,7 +111,7 @@ public class ProfileFragment extends Fragment {
                 nameTextView.setText(u.getName());
                 emailTextView.setText(u.getMail());
                 //todo
-                universityTextView.setText("No University");
+                universityTextView.setText(u.getUniversidad().getName());
                 coursesTextView.setText(u.getCourses().size() + " courses");
             }
         });
