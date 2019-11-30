@@ -1,6 +1,9 @@
 package ar.edu.itba.ingesoft;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.google.android.gms.auth.api.Auth;
@@ -20,8 +23,10 @@ import ar.edu.itba.ingesoft.CachedData.UserCache;
 import ar.edu.itba.ingesoft.Classes.Chat;
 import ar.edu.itba.ingesoft.Classes.User;
 import ar.edu.itba.ingesoft.Firebase.DatabaseConnection;
+import ar.edu.itba.ingesoft.Firebase.MessagingConnection;
 import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnChatEventListener;
 import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnUserEventListener;
+import ar.edu.itba.ingesoft.Services.NotificationService;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -37,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         BottomNavigationView navView = findViewById(R.id.nav_view);
+
+        createNotificationChannel();
 
         FirebaseUser firebaseUser = new Authenticator().getSignedInUser();
         AppBarConfiguration appBarConfiguration;
@@ -70,11 +77,13 @@ public class MainActivity extends AppCompatActivity {
                     if (user != null){
                         UserCache.SetUser(user);
                         List<Chat> chats = new ArrayList<>();
+                        MessagingConnection mc = new MessagingConnection();
                         for (String id : user.getChats()){
                             new DatabaseConnection().GetChat(id, new OnChatEventListener() {
                                 @Override
                                 public void onChatRetrieved(Chat chat) {
                                     chats.add(chat);
+                                    mc.subscribeToChat(id);
                                     // Verify the amount of chats recovered is correct
                                     if (chats.size() == user.getChats().size())
                                         UserCache.SetChats(chats);
@@ -99,6 +108,22 @@ public class MainActivity extends AppCompatActivity {
                     //
                 }
             });
+        }
+    }
+
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "TEST";
+            String description = "TEST";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel("test", name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
         }
     }
 

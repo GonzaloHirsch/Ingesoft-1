@@ -10,6 +10,7 @@ import ar.edu.itba.ingesoft.Classes.Chat;
 import ar.edu.itba.ingesoft.Classes.Message;
 import ar.edu.itba.ingesoft.Classes.User;
 import ar.edu.itba.ingesoft.Firebase.DatabaseConnection;
+import ar.edu.itba.ingesoft.Firebase.MessagingConnection;
 import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnChatEventListener;
 import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnUserEventListener;
 
@@ -18,6 +19,8 @@ public class ChatMessagesViewModel extends ViewModel {
     public static final String TAG = "CHAT MESSAGE VIEW MODEL";
     private Chat chatObj = null;
     private String chatID = null;
+
+    private MessagingConnection mc = new MessagingConnection();
 
     public ChatMessagesViewModel(){
     }
@@ -49,6 +52,8 @@ public class ChatMessagesViewModel extends ViewModel {
     public void addMessage(Message message, OnChatEventListener eventListener){
         // Store the new message in the object
         this.chatObj.addMessage(message);
+
+        mc.sendMessage(this.chatID, message.getSentBy(), message.getMessage());
 
         // Update the database with the new message
         new DatabaseConnection().UpdateChat(this.chatObj, new OnChatEventListener() {
