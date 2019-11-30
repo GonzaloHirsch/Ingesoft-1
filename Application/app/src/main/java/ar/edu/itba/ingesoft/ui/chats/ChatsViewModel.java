@@ -2,25 +2,17 @@ package ar.edu.itba.ingesoft.ui.chats;
 
 import android.util.Log;
 
-import com.google.firebase.firestore.DocumentReference;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-import ar.edu.itba.ingesoft.CachedData.CoursesTeachersCache;
 import ar.edu.itba.ingesoft.CachedData.UserCache;
 import ar.edu.itba.ingesoft.Classes.Chat;
-import ar.edu.itba.ingesoft.Classes.Course;
 import ar.edu.itba.ingesoft.Classes.User;
-import ar.edu.itba.ingesoft.Database.DatabaseConnection;
+import ar.edu.itba.ingesoft.Firebase.DatabaseConnection;
 import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnChatEventListener;
-import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnCourseEventListener;
 import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnUserEventListener;
-import ar.edu.itba.ingesoft.Interfaces.GeneralListeners.OnObjectEventListener;
 
 public class ChatsViewModel extends ViewModel {
 

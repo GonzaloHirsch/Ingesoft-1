@@ -1,4 +1,4 @@
-package ar.edu.itba.ingesoft.Authentication;
+package ar.edu.itba.ingesoft.Firebase;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -21,7 +21,6 @@ import com.google.firebase.auth.SignInMethodQueryResult;
 import androidx.annotation.NonNull;
 import ar.edu.itba.ingesoft.Classes.Universidad;
 import ar.edu.itba.ingesoft.Classes.User;
-import ar.edu.itba.ingesoft.Database.DatabaseConnection;
 import ar.edu.itba.ingesoft.R;
 
 public class Authenticator {

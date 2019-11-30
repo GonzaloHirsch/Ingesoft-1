@@ -1,4 +1,4 @@
-package ar.edu.itba.ingesoft.Database;
+package ar.edu.itba.ingesoft.Firebase;
 
 import android.graphics.LinearGradient;
 import android.util.Log;
@@ -511,7 +511,12 @@ public class DatabaseConnection {
 
     public void UpdateCourses(String email, List<String> courses){
 
-        db.collection("Users").document(email).update("courses", courses);
+        db.collection("Users").document(email).update("courses", courses).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                CoursesTeachersCache.refreshCourseTeachers();
+            }
+        });
     }
 
     public void AddCourse(String email, DocumentReference ref, final OnCourseEventListener listener){
