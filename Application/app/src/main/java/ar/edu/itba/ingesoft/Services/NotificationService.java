@@ -75,7 +75,8 @@ public class NotificationService extends FirebaseMessagingService {
                         .setStyle(new NotificationCompat.BigTextStyle()
                                 .bigText(data.get("message")))
                         .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                        .setContentIntent(pendingIntent);
+                        .setContentIntent(pendingIntent)
+                        .setAutoCancel(true);
 
                 NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
 
