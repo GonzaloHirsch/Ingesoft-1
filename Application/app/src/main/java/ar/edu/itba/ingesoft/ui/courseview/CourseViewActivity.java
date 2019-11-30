@@ -80,6 +80,7 @@ public class CourseViewActivity extends AppCompatActivity {
                     intent.putExtra(MainActivity.CHAT_ID_EXTRA, id);
                     intent.putExtra(MainActivity.CHAT_RECIPIENT_EXTRA, u.getName());
                     intent.putExtra(MainActivity.CHAT_RECIPIENT_NAME_EXTRA, currentUser.getMail());
+                    startActivity(intent);
                 }
             }
         });
