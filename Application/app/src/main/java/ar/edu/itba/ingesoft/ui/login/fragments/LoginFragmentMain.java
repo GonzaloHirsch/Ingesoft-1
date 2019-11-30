@@ -160,7 +160,8 @@ public class LoginFragmentMain extends Fragment {
         continueWithoutLoggingInTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                navController.navigate(R.id.action_loginFragmentMain_to_continueWithoutSigningInFragment);
+                Intent intent = new Intent(getContext(), MainActivity.class);
+                startActivity(intent);
             }
         });
 

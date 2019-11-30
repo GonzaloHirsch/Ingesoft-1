@@ -22,6 +22,8 @@ import androidx.navigation.Navigation;
 import ar.edu.itba.ingesoft.MainActivity;
 import ar.edu.itba.ingesoft.R;
 
+import static android.content.Context.MODE_PRIVATE;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -42,9 +44,14 @@ public class ContinueWithoutSigningInFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
+
+
+
         View view = inflater.inflate(R.layout.fragment_continue_without_signing_in, container, false);
 
         navController = Navigation.findNavController(getActivity(), R.id.login_navHostFragment);
+
 
         view.findViewById(R.id.continueWithoutSigningInButton).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,13 +83,15 @@ public class ContinueWithoutSigningInFragment extends Fragment {
         continue_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SharedPreferences sharedPreferences = getContext().getSharedPreferences(MainActivity.SP, Context.MODE_PRIVATE);
+                SharedPreferences sharedPreferences = getContext().getSharedPreferences(MainActivity.SP, MODE_PRIVATE);
 
                 SharedPreferences.Editor editor = sharedPreferences.edit();
 
                 System.out.println(univ_select.getText().toString());
                 editor.putString(MainActivity.UNIV_SP, univ_select.getText().toString());
                 editor.apply();
+
+                navController.navigate(R.id.action_continueWithoutSigningInFragment_to_loginFragmentMain);
 
 
 
