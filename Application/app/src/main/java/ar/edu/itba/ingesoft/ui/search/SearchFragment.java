@@ -114,8 +114,6 @@ public class SearchFragment extends Fragment {
         //CoursesTeachersCache.refreshCourseTeachers();
     }
 
-
-
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
@@ -158,6 +156,12 @@ public class SearchFragment extends Fragment {
         User user = UserCache.GetUser();
         if (user != null){
             this.university = user.getUniversidad();
+            searchViewModel.getDisplayedData(university).observe(getViewLifecycleOwner(), new Observer<List<Course>>() {
+                @Override
+                public void onChanged(List<Course> courses) {
+                    searchCoursesAdapter.update(courses);
+                }
+            });
         } else {
             new DatabaseConnection().GetUser(firebaseUser.getEmail(), new OnUserEventListener() {
                 @Override
