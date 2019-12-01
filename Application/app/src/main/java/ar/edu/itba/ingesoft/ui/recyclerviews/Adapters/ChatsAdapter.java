@@ -133,7 +133,6 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
         TextView titleTextView;
         TextView subtitleTextView;
         TextView timestampTextView;
-        CircleImageView imageView;
 
         public ChatsViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -141,7 +140,6 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
             titleTextView = itemView.findViewById(R.id.itemChatTitleTextView);
             subtitleTextView = itemView.findViewById(R.id.itemChatSubtitleTextView);
             timestampTextView = itemView.findViewById(R.id.itemChatTimestapmTextView);
-            imageView = itemView.findViewById(R.id.itemChatImage);
         }
     }
 

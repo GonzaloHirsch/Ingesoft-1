@@ -62,6 +62,8 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UsersViewHol
 
     @Override
     public int getItemCount() {
+        if (users == null)
+            return 0;
         return users.size();
     }
 

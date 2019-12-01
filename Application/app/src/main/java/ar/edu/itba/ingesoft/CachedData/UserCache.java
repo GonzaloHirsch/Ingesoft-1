@@ -10,16 +10,19 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
 import ar.edu.itba.ingesoft.Classes.Chat;
+import ar.edu.itba.ingesoft.Classes.Message;
 import ar.edu.itba.ingesoft.Classes.User;
 
 public class UserCache {
 
     private static User user;
-    private static List<Chat> chats = new ArrayList<>();
+    private final static Map<String, Chat> chatsMap = new HashMap();
 
     public static void SetUser(User userToStore){
         user = userToStore;
@@ -41,13 +44,29 @@ public class UserCache {
 //        });
     }
 
-    public static void SetChats(List<Chat> chats1){
-        chats.clear();
-        chats.addAll(chats1);
+    public synchronized static void SetChats(List<Chat> chats){
+        synchronized (chatsMap){
+            chatsMap.clear();
+            for (Chat chat : chats){
+                chatsMap.put(chat.getChatID(), chat);
+            }
+        }
     }
 
     public static List<Chat> GetChats(){
-        return chats;
+        return new ArrayList<>(chatsMap.values());
+    }
+
+    public static void AddMessage(String chatID, Message message){
+        synchronized (chatsMap){
+            chatsMap.get(chatID).addMessage(message);
+        }
+    }
+
+    public static void AddChat(Chat chat){
+        synchronized (chatsMap){
+            chatsMap.put(chat.getChatID(), chat);
+        }
     }
 
     public static User GetUser(){

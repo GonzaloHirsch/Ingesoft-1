@@ -8,6 +8,7 @@ import com.google.firebase.firestore.DocumentReference;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -23,6 +24,8 @@ public class User implements DatabaseObject, Parcelable {
     private List<String> courses;
     private List<String> chats;
     private String universidad;
+
+    private HashSet<String> coursesHashSet = new HashSet<>();
 
     public static User GenerateAnonymousUser(String universidad){
         User user = new User();
@@ -45,6 +48,7 @@ public class User implements DatabaseObject, Parcelable {
         this.chats = (List<String>) data.get("chats");
         this.universidad = (String) data.get("universidad");
 
+        this.buildHashSet();
     }
 
     public User(){
@@ -116,39 +120,18 @@ public class User implements DatabaseObject, Parcelable {
 
     public void setCourses(List<String> courses){
         this.courses = courses;
+        this.buildHashSet();
     }
 
     public List<String> getChats(){ return this.chats; }
 
     public void addChat(String chatID){ this.chats.add(chatID); }
-    /*
-    public Map<Long, Appointment> getAppointments() {
-        return appointments;
-    }
 
-    public void addAppointment(Date date, Appointment appointment) {
-        //this.appointments.put(date.getTime(), appointment);
-    }
+    public HashSet<String> getCoursesHashSet(){ return this.coursesHashSet; }
 
-    public boolean hasAppointment(Date date) {
-        return this.appointments.containsKey(date.getTime());
+    public void buildHashSet(){
+        this.coursesHashSet.addAll(this.courses);
     }
-
-    public Set<Long> getAppointmentDates() {
-        return this.appointments.keySet();
-    }
-*/
-    /*
-    public Map<Long, Chat> getChats() {
-        return chats;
-    }
-
-    public void addChat(Chat chat) {
-        this.chats.put(chat.getChatID(), chat);
-    }
-
-
-     */
 
     public String getUniversidad() {
         return universidad;
@@ -189,6 +172,7 @@ public class User implements DatabaseObject, Parcelable {
         this.mail = in.readString();
         this.courses = in.createStringArrayList();
         this.universidad = in.readString();
+        this.buildHashSet();
     }
 
     public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>(){

@@ -3,7 +3,10 @@ package ar.edu.itba.ingesoft.CachedData;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,18 +20,24 @@ import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnUserEventListene
 public class CoursesTeachersCache{
 
     static final Map<String, List<User>> courseTeachers=new HashMap<>();
-    static List<Course> coursesList = new ArrayList<>();
+    static Map<String, Course> coursesMap = new HashMap<>();
     static List<User> usersList = new ArrayList<>();
 
     public static List<Course> getCoursesList() {
-        return coursesList;
+        return (List<Course>)coursesMap.values();
     }
 
     public static synchronized List<User> getUsersList() {
         return usersList;
     }
+
     public static synchronized void setCoursesList(List<Course> coursesList) {
-        CoursesTeachersCache.coursesList = coursesList;
+        synchronized(coursesMap){
+            coursesMap.clear();
+            for (Course c : coursesList){
+                coursesMap.put(c.getCode(), c);
+            }
+        }
     }
     public static synchronized void setUsersList(List<User> usersList) {
         CoursesTeachersCache.usersList = usersList;
@@ -63,7 +72,7 @@ public class CoursesTeachersCache{
                     @Override
                     public void onUsersRetrieved(List<User> users) {
                         usersList = users;
-                        if (coursesList == null || coursesList.size() == 0) {
+                        if (coursesMap == null || coursesMap.size() == 0) {
                             databaseConnection.GetAllCourses(university, new OnCourseEventListener() {
                                 @Override
                                 public void onCourseRetrieved(Course course) {
@@ -71,7 +80,7 @@ public class CoursesTeachersCache{
 
                                 @Override
                                 public void onCoursesRetrieved(List<Course> courses) {
-                                    coursesList = courses;
+                                    setCoursesList(courses);
                                     generateCourseTeachersHashMap();
                                 }
 
@@ -92,7 +101,7 @@ public class CoursesTeachersCache{
                     public void onTeachersRetrieved(List<User> teachers) {
                     }
                 });
-            } else if (coursesList == null || coursesList.size() == 0) {
+            } else if (coursesMap == null || coursesMap.size() == 0) {
                 databaseConnection.GetAllCourses(university, new OnCourseEventListener() {
                     @Override
                     public void onCourseRetrieved(Course course) {
@@ -100,7 +109,7 @@ public class CoursesTeachersCache{
 
                     @Override
                     public void onCoursesRetrieved(List<Course> courses) {
-                        coursesList = courses;
+                        setCoursesList(courses);
                         generateCourseTeachersHashMap();
                     }
 
@@ -120,25 +129,45 @@ public class CoursesTeachersCache{
 
     public static void generateCourseTeachersHashMap(){
         synchronized(courseTeachers){
-        courseTeachers.clear();
-        for (Course c : coursesList) {
+            courseTeachers.clear();
+            for (User u : usersList){
+                for (String code : u.getCourses()){
+                    List<User> aux = new ArrayList<>();
+                    if (courseTeachers.containsKey(code)){
+                        aux = courseTeachers.get(code);
+                        aux.add(u);
+                        courseTeachers.put(code, aux);
+                    } else {
+                        aux.add(u);
+                        courseTeachers.put(code, aux);
+                    }
+                }
+            }
+
+        /*
+                for (Course c : coursesList) {
             ArrayList<User> aux = new ArrayList<>();
             for (User u : usersList) {
-                if (u.getCourses().contains(c.getCode()))
+                if (u.getCoursesHashSet().contains(c.getCode()))
                     aux.add(u);
             }
             courseTeachers.put(c.getCode(), aux);
-        }
+        }*/
         }
     }
 
     public static List<Course> getCoursesWithTutors(List<Course> courses){
         synchronized (courseTeachers){
             List<Course> finalList = new ArrayList<>();
+            for (String key : courseTeachers.keySet()){
+                if (coursesMap.get(key) != null)
+                    finalList.add(coursesMap.get(key));
+            }
+            /*
             for(Course c : courses){
                 if(courseTeachers.get(c.getCode()) != null && courseTeachers.get(c.getCode()).size()>0)
                     finalList.add(c);
-            }
+            }*/
             return finalList;
         }
     }

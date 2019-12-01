@@ -58,7 +58,7 @@ public class ChatMessagesViewModel extends ViewModel {
     public void addMessage(Context ctx, Message message, OnChatEventListener eventListener){
         // Store the new message in the object
         this.chatObj.addMessage(message);
-
+        UserCache.AddMessage(this.chatObj.getChatID(), message);
 
         // Notifies the receiver
         User user = UserCache.GetUser();
@@ -136,6 +136,7 @@ public class ChatMessagesViewModel extends ViewModel {
     public String createChat(String userFrom, String userTo, String userFromName, String userToName){
         this.chatObj = new Chat(userFrom, userTo, userFromName, userToName);
         this.chatID = this.chatObj.getChatID();
+        UserCache.AddChat(this.chatObj);
 
         new DatabaseConnection().InsertChat(this.chatObj);
         Log.v(TAG, "Created chat");
