@@ -31,41 +31,52 @@ public class SearchViewModel extends ViewModel {
         if(displayedData.getValue()==null){
             loading.postValue(true);
             Log.v("SearchViewModel", "MutableLiveDataCreation");
-            dbc.GetAllCourses(university, new OnCourseEventListener() {
-                @Override
-                public void onCourseRetrieved(Course course) {                }
 
-                @Override
-                public void onCoursesRetrieved(List<Course> courses) {
-                   // List<Course> finalList = CoursesTeachersCache.getCoursesWithTutors(courses);
+            if (CoursesTeachersCache.getCoursesWithTutors().size() == 0){
+                dbc.GetAllCourses(university, new OnCourseEventListener() {
+                    @Override
+                    public void onCourseRetrieved(Course course) {                }
 
-                    CoursesTeachersCache.setCoursesList(courses);
+                    @Override
+                    public void onCoursesRetrieved(List<Course> courses) {
+                        // List<Course> finalList = CoursesTeachersCache.getCoursesWithTutors(courses);
 
-                    dbc.GetUsers(new OnUserEventListener() {
-                        @Override
-                        public void onUserRetrieved(User user) {
+                        CoursesTeachersCache.setCoursesList(courses);
 
-                        }
+                        dbc.GetUsers(new OnUserEventListener() {
+                            @Override
+                            public void onUserRetrieved(User user) {
 
-                        @Override
-                        public void onUsersRetrieved(List<User> users) {
-                            CoursesTeachersCache.setUsersList(users);
-                            CoursesTeachersCache.generateCourseTeachersHashMap();
-                            displayedData.postValue(CoursesTeachersCache.getCoursesWithTutors(courses));
-                            loading.postValue(false);
-                        }
+                            }
 
-                        @Override
-                        public void onTeachersRetrieved(List<User> teachers) {
+                            @Override
+                            public void onUsersRetrieved(List<User> users) {
+                                CoursesTeachersCache.setUsersList(users);
+                                CoursesTeachersCache.generateCourseTeachersHashMap();
+                                displayedData.postValue(CoursesTeachersCache.getCoursesWithTutors());
+                                loading.postValue(false);
+                            }
 
-                        }
-                    });
-                }
-                @Override
-                public void onCoursesReferencesRetrieved(List<DocumentReference> courses) {                }
-                @Override
-                public void onTeachersPerCourseRetrieved(Map<Course, List<User>> drToUser) {                }
-            });
+                            @Override
+                            public void onTeachersRetrieved(List<User> teachers) {
+
+                            }
+                        });
+                    }
+                    @Override
+                    public void onCoursesReferencesRetrieved(List<DocumentReference> courses) {                }
+                    @Override
+                    public void onTeachersPerCourseRetrieved(Map<Course, List<User>> drToUser) {                }
+                });
+            } else {
+                displayedData.postValue(CoursesTeachersCache.getCoursesWithTutors());
+                loading.postValue(false);
+            }
+        } else {
+            if (CoursesTeachersCache.getCoursesWithTutors().size() > 0){
+                displayedData.postValue(CoursesTeachersCache.getCoursesWithTutors());
+                loading.postValue(false);
+            }
         }
         return displayedData;
     }

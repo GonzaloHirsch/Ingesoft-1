@@ -29,6 +29,8 @@ import android.widget.SearchView;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -77,7 +79,7 @@ public class AddCourseFragment extends Fragment implements OnListContentUpdatedL
         MenuItem searchItem = menu.findItem(R.id.action_search);
 
         /*todo borrar esto es solo para probar persistencia de cache*/
-        for(Map.Entry<String, List<User>> e : CoursesTeachersCache.getCourseTeachers().entrySet()){
+        for(Map.Entry<String, HashSet<User>> e : CoursesTeachersCache.getCourseTeachers().entrySet()){
             Log.v("Cached_Users", e.getKey() + " " + e.getValue().stream().reduce("",
                     (accum, x) -> accum = accum + " " + x.getName(),
                     (accum, accum2) -> accum2 = accum2 + accum
@@ -183,8 +185,10 @@ public class AddCourseFragment extends Fragment implements OnListContentUpdatedL
     @Override
     public void onContentUpdated(List<String> newList) {
         for(String c : newList) {
-            if(!viewModel.getUser().getValue().getCourses().contains(c))
-                viewModel.getUser().getValue().getCourses().add(c);
+            if(!viewModel.getUser().getValue().getCoursesHashSet().contains(c)){
+                viewModel.getUser().getValue().addCourse(c);
+                //CoursesTeachersCache.addTeacherToCourse(viewModel.getUser().getValue(), c);
+            }
         }
 
         (new DatabaseConnection()).UpdateCourses(this.university, FirebaseAuth.getInstance().getCurrentUser().getEmail(), viewModel.getUser().getValue().getCourses());

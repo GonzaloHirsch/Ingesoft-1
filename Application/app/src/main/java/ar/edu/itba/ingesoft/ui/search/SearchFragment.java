@@ -21,6 +21,7 @@ import com.google.firebase.auth.FirebaseUser;
 import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -28,6 +29,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import ar.edu.itba.ingesoft.CachedData.CoursesTeachersCache;
 import ar.edu.itba.ingesoft.CachedData.UserCache;
@@ -152,49 +154,45 @@ public class SearchFragment extends Fragment {
             }
         });
 
+        LifecycleOwner lo = getViewLifecycleOwner();
+
         FirebaseUser firebaseUser = new Authenticator().getSignedInUser();
-        User user = UserCache.GetUser();
-        if (user != null){
-            this.university = user.getUniversidad();
-            searchViewModel.getDisplayedData(university).observe(getViewLifecycleOwner(), new Observer<List<Course>>() {
-                @Override
-                public void onChanged(List<Course> courses) {
-                    searchCoursesAdapter.update(courses);
+        new DatabaseConnection().GetUser(firebaseUser.getEmail(), new OnUserEventListener() {
+            @Override
+            public void onUserRetrieved(User user) {
+                if (user == null){
+                    SharedPreferences sharedPreferences = getContext().getSharedPreferences(MainActivity.SP, MODE_PRIVATE);
+                    university = sharedPreferences.getString(MainActivity.UNIV_SP, "");
+                } else {
+                    university = user.getUniversidad();
                 }
-            });
-        } else {
-            new DatabaseConnection().GetUser(firebaseUser.getEmail(), new OnUserEventListener() {
-                @Override
-                public void onUserRetrieved(User user) {
-                    if (user == null){
-                        SharedPreferences sharedPreferences = getContext().getSharedPreferences(MainActivity.SP, MODE_PRIVATE);
-                        university = sharedPreferences.getString(MainActivity.UNIV_SP, "");
-                    } else {
-                        university = user.getUniversidad();
+
+                searchViewModel.getDisplayedData(university).observe(lo, new Observer<List<Course>>() {
+                    @Override
+                    public void onChanged(List<Course> courses) {
+                        searchCoursesAdapter.update(courses);
                     }
+                });
+            }
 
-                    searchViewModel.getDisplayedData(university).observe(getViewLifecycleOwner(), new Observer<List<Course>>() {
-                        @Override
-                        public void onChanged(List<Course> courses) {
-                            searchCoursesAdapter.update(courses);
-                        }
-                    });
-                }
+            @Override
+            public void onUsersRetrieved(List<User> users) {
+                //
+            }
 
-                @Override
-                public void onUsersRetrieved(List<User> users) {
-                    //
-                }
-
-                @Override
-                public void onTeachersRetrieved(List<User> teachers) {
-                    //
-                }
-            });
-        }
+            @Override
+            public void onTeachersRetrieved(List<User> teachers) {
+                //
+            }
+        });
 
         return root;
     }
 
-
+    @Override
+    public void onStart() {
+        super.onStart();
+        //searchCoursesAdapter.update(CoursesTeachersCache.getCoursesWithTutors());
+        //searchCoursesAdapter.notifyDataSetChanged();
+    }
 }

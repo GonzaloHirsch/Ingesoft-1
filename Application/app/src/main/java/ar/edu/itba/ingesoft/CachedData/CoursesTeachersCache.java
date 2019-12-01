@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -19,12 +20,12 @@ import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnUserEventListene
 
 public class CoursesTeachersCache{
 
-    static final Map<String, List<User>> courseTeachers=new HashMap<>();
+    static final Map<String, HashSet<User>> courseTeachers = new HashMap<>();
     static Map<String, Course> coursesMap = new HashMap<>();
     static List<User> usersList = new ArrayList<>();
 
     public static List<Course> getCoursesList() {
-        return (List<Course>)coursesMap.values();
+        return new ArrayList<>(coursesMap.values());
     }
 
     public static synchronized List<User> getUsersList() {
@@ -42,16 +43,28 @@ public class CoursesTeachersCache{
     public static synchronized void setUsersList(List<User> usersList) {
         CoursesTeachersCache.usersList = usersList;
     }
-    public static synchronized Map<String, List<User>> getCourseTeachers(){
+
+    public static synchronized Map<String, HashSet<User>> getCourseTeachers(){
         synchronized (courseTeachers) {
+            purgeCourseTeachers();
             return courseTeachers;
         }
     }
 
-    public static void setCourseTeachers(Map<String, List<User>> courseTeachers1){
+    public static synchronized void purgeCourseTeachers(){
+        synchronized (courseTeachers) {
+            for (String key : courseTeachers.keySet()){
+                if (courseTeachers.get(key) == null){
+                    courseTeachers.remove(key);
+                }
+            }
+        }
+    }
+
+    public static void setCourseTeachers(Map<String, HashSet<User>> courseTeachers1){
         //todo chequear si esto funciona
         courseTeachers.clear();
-        for(Map.Entry<String, List<User>> e : courseTeachers1.entrySet()){
+        for(Map.Entry<String, HashSet<User>> e : courseTeachers1.entrySet()){
             courseTeachers.put(e.getKey(), e.getValue());
         };
     }
@@ -61,68 +74,62 @@ public class CoursesTeachersCache{
         synchronized(courseTeachers) {
             DatabaseConnection databaseConnection = new DatabaseConnection();
 
-            // todo esto duele a la vista, pero encadenar los tasks implicaba repetir el código
-            // de DatabaseConnection...
-            if (true /*usersList == null || usersList.size() == 0*/) {
-                databaseConnection.GetUsers(new OnUserEventListener() {
-                    @Override
-                    public void onUserRetrieved(User user) {
-                    }
+            databaseConnection.GetUsers(new OnUserEventListener() {
+                @Override
+                public void onUserRetrieved(User user) {
+                }
 
-                    @Override
-                    public void onUsersRetrieved(List<User> users) {
-                        usersList = users;
-                        if (coursesMap == null || coursesMap.size() == 0) {
-                            databaseConnection.GetAllCourses(university, new OnCourseEventListener() {
-                                @Override
-                                public void onCourseRetrieved(Course course) {
-                                }
+                @Override
+                public void onUsersRetrieved(List<User> users) {
+                    usersList = users;
+                    if (coursesMap == null || coursesMap.size() == 0) {
+                        databaseConnection.GetAllCourses(university, new OnCourseEventListener() {
+                            @Override
+                            public void onCourseRetrieved(Course course) {
+                            }
 
-                                @Override
-                                public void onCoursesRetrieved(List<Course> courses) {
-                                    setCoursesList(courses);
-                                    generateCourseTeachersHashMap();
-                                }
+                            @Override
+                            public void onCoursesRetrieved(List<Course> courses) {
+                                setCoursesList(courses);
+                                generateCourseTeachersHashMap();
+                            }
 
-                                @Override
-                                public void onCoursesReferencesRetrieved(List<DocumentReference> courses) {
-                                }
+                            @Override
+                            public void onCoursesReferencesRetrieved(List<DocumentReference> courses) {
+                            }
 
-                                @Override
-                                public void onTeachersPerCourseRetrieved(Map<Course, List<User>> drToUser) {
-                                }
-                            });
-                        } else {
-                            generateCourseTeachersHashMap();
-                        }
-                    }
-
-                    @Override
-                    public void onTeachersRetrieved(List<User> teachers) {
-                    }
-                });
-            } else if (coursesMap == null || coursesMap.size() == 0) {
-                databaseConnection.GetAllCourses(university, new OnCourseEventListener() {
-                    @Override
-                    public void onCourseRetrieved(Course course) {
-                    }
-
-                    @Override
-                    public void onCoursesRetrieved(List<Course> courses) {
-                        setCoursesList(courses);
+                            @Override
+                            public void onTeachersPerCourseRetrieved(Map<Course, List<User>> drToUser) {
+                            }
+                        });
+                    } else {
                         generateCourseTeachersHashMap();
                     }
+                }
 
-                    @Override
-                    public void onCoursesReferencesRetrieved(List<DocumentReference> courses) {
-                    }
+                @Override
+                public void onTeachersRetrieved(List<User> teachers) {
+                }
+            });
+        }
+    }
 
-                    @Override
-                    public void onTeachersPerCourseRetrieved(Map<Course, List<User>> drToUser) {
-                    }
-                });
+    public static void addTeacherToCourse(User u, String course){
+        synchronized(courseTeachers){
+            if (courseTeachers.containsKey(course)){
+                courseTeachers.get(course).add(u);
             } else {
-                generateCourseTeachersHashMap();
+                HashSet<User> aux = new HashSet<>();
+                aux.add(u);
+                courseTeachers.put(course, aux);
+            }
+        }
+    }
+
+    public static void removeTeacherFromCourse(User u, String course){
+        synchronized(courseTeachers){
+            if (courseTeachers.containsKey(course)){
+                courseTeachers.get(course).remove(u);
             }
         }
     }
@@ -132,12 +139,12 @@ public class CoursesTeachersCache{
             courseTeachers.clear();
             for (User u : usersList){
                 for (String code : u.getCourses()){
-                    List<User> aux = new ArrayList<>();
                     if (courseTeachers.containsKey(code)){
-                        aux = courseTeachers.get(code);
-                        aux.add(u);
-                        courseTeachers.put(code, aux);
+                        courseTeachers.get(code).add(u);
+                        //aux.add(u);
+                        //courseTeachers.put(code, aux);
                     } else {
+                        HashSet<User> aux = new HashSet<>();
                         aux.add(u);
                         courseTeachers.put(code, aux);
                     }
@@ -156,7 +163,7 @@ public class CoursesTeachersCache{
         }
     }
 
-    public static List<Course> getCoursesWithTutors(List<Course> courses){
+    public static List<Course> getCoursesWithTutors(){
         synchronized (courseTeachers){
             List<Course> finalList = new ArrayList<>();
             for (String key : courseTeachers.keySet()){

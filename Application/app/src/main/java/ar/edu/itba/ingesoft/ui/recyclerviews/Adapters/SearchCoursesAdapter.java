@@ -46,7 +46,6 @@ public class SearchCoursesAdapter extends RecyclerView.Adapter<SearchCoursesAdap
 
     //displaying updates to list contents
     public void update(List<Course> newList){
-
         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new CourseListDiffUtil(this.currentList, newList));
         Log.v("SearchCAdapter", "new List");
 
@@ -57,7 +56,6 @@ public class SearchCoursesAdapter extends RecyclerView.Adapter<SearchCoursesAdap
             courseList.addAll(newList);
         }
         diffResult.dispatchUpdatesTo(this);
-
     }
 
     public void updateFilter(List<Course> newList){
@@ -85,7 +83,7 @@ public class SearchCoursesAdapter extends RecyclerView.Adapter<SearchCoursesAdap
             holder.bind(aux, listener);
             holder.courseNameTextView.setText(aux.getName());
             holder.universityTextView.setText(aux.getCode());
-            List<User> usrList = CoursesTeachersCache.getCourseTeachers().get(aux.getCode());
+            List<User> usrList = new ArrayList<>(CoursesTeachersCache.getCourseTeachers().get(aux.getCode()));
             if(usrList!=null){/*
                 StringBuilder sb = new StringBuilder();
                 for(int i = 0; i<usrList.size(); i++){

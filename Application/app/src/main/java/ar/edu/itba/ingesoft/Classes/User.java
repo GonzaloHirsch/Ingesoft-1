@@ -112,6 +112,7 @@ public class User implements DatabaseObject, Parcelable {
 
     public void addCourse(String course) {
         this.courses.add(course);
+        this.coursesHashSet.add(course);
     }
 
     public void deleteCourse(String course) {

@@ -27,7 +27,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UsersViewHol
 
     public UsersAdapter(String courseId, UsersAdapter.OnItemClickListener listener){
         //todo ver la fucking race condition
-        users = CoursesTeachersCache.getCourseTeachers().get(courseId);
+        users = new ArrayList<>(CoursesTeachersCache.getCourseTeachers().get(courseId));
         this.listener = listener;
     }
 
