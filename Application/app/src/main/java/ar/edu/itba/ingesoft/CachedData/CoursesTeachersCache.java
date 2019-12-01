@@ -20,7 +20,6 @@ public class CoursesTeachersCache{
     static List<Course> coursesList = new ArrayList<>();
     static List<User> usersList = new ArrayList<>();
 
-
     public static List<Course> getCoursesList() {
         return coursesList;
     }
@@ -51,7 +50,6 @@ public class CoursesTeachersCache{
     //updatear el hash
     public static void refreshCourseTeachers(String university){
         synchronized(courseTeachers) {
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
             DatabaseConnection databaseConnection = new DatabaseConnection();
 
             // todo esto duele a la vista, pero encadenar los tasks implicaba repetir el código

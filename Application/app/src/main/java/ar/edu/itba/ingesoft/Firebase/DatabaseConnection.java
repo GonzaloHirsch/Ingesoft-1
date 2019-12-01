@@ -13,10 +13,12 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.Transaction;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -36,8 +38,28 @@ import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnUserEventListene
 
 public class DatabaseConnection {
 
+    public static final HashSet<ListenerRegistration> listeners = new HashSet<>();
+
     public static final String TAG = "DATABASE_CONNECTION";
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+    public static synchronized void AddListener(ListenerRegistration listenerRegistration){
+        synchronized (listeners){
+            if (listeners.add(listenerRegistration))
+                Log.v(TAG, "Successful registration");
+            else
+                Log.v(TAG, "Error regristrating");
+        }
+    }
+
+    public static synchronized void RemoveListeners(){
+        synchronized (listeners){
+            for(ListenerRegistration lr : listeners){
+                lr.remove();
+            }
+            listeners.clear();
+        }
+    }
 
     /*--------------------------------------USERS----------------------------------------*/
 
@@ -442,7 +464,7 @@ public class DatabaseConnection {
     public void SetUpChatListener(String chatID, OnChatEventListener eventListener){
         DocumentReference ref = db.collection("Chats").document(chatID);
 
-        ref.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+        ListenerRegistration lr = ref.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                 if (e != null) {
@@ -467,6 +489,8 @@ public class DatabaseConnection {
                 }
             }
         });
+
+        AddListener(lr);
     }
 
     /*--------------------------------------COURSES----------------------------------------*/
@@ -521,92 +545,6 @@ public class DatabaseConnection {
     public void RemoveCourse(String email, DocumentReference ref, final OnCourseEventListener listener){
         db.collection("Users").document(email).update("courses", FieldValue.arrayRemove(ref));
     }
-
-    /**
-     * Getter for the teacher for each course, grouped by course.
-     * @param listener for the event.
-     */
-   /* public void GetTeachersPerCourse(OnCourseEventListener listener){
-        db.collection("Users").whereEqualTo("professor", true).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    QuerySnapshot document = task.getResult();
-
-                    List<User> teachers = new ArrayList<>();
-
-                    Map<String, List<User>> refToUsers = new HashMap<>();
-                    Map<Course, List<User>> coursesToUsers = new HashMap<>();
-
-                    // Fill the user list
-                    if (document != null){
-                        for (DocumentSnapshot ds : document) {
-                            if (ds.getData() != null){
-                                teachers.add(new User(ds.getData()));
-                            }
-                        }
-
-                        for (User teacher : teachers){
-                            for (DocumentReference dr : teacher.getCourses()){
-                                List<User> aux;
-                                if (refToUsers.containsKey(dr.toString())){
-                                    aux = refToUsers.get(dr.toString());
-                                } else {
-                                    aux = new ArrayList<>();
-                                }
-                                aux.add(teacher);
-                                refToUsers.put(dr.toString(), aux);
-                            }
-                        }
-
-
-
-                        List<Task<DocumentSnapshot>> tasks = new ArrayList<>();
-
-                        for (DocumentReference dr : refToUsers.keySet()){
-                            Task<DocumentSnapshot> documentSnapshotTask = dr.get();
-                            tasks.add(documentSnapshotTask);
-                        }
-
-                        Tasks.whenAllComplete(tasks).addOnSuccessListener(new OnSuccessListener<List<Task<?>>>() {
-                            @Override
-                            public void onSuccess(List<Task<?>> tasks) {
-
-                            }
-                        })
-
-                        // Recupera el curso para cada una
-                        for (DocumentReference dr : refToUsers.keySet()){
-                            GetCourseByReference(dr.toString(), new OnCourseEventListener() {
-                                @Override
-                                public void onCourseRetrieved(Course course) {
-                                    coursesToUsers.put(course, refToUsers.get(dr));
-                                }
-
-                                @Override
-                                public void onCoursesRetrieved(List<Course> courses) {}
-
-                                @Override
-                                public void onCoursesReferencesRetrieved(List<DocumentReference> courses) {}
-
-                                @Override
-                                public void onTeachersPerCourseRetrieved(Map<Course, List<User>> drToUser) {}
-                            });
-                        }
-
-                        listener.onTeachersPerCourseRetrieved(coursesToUsers);
-
-                    } else {
-                        Log.d(TAG, "Query GetAllCoursesReferences returned null");
-                    }
-                } else {
-                    Log.d(TAG, "get failed with ", task.getException());
-                }
-            }
-        });
-    }
-
-    */
 
     /**
      * Getter for all the courses, by reference to the document.

@@ -44,13 +44,16 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ar.edu.itba.ingesoft.MainActivity" />
         </activity>
+
         <activity
             android:name=".ui.courseview.CourseViewActivity"
             android:label="@string/title_activity_course_view"
             android:theme="@style/AppTheme"></activity>
+
         <activity
             android:name=".ui.chats.ChatMessagesActivity"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".ui.chats.ChatMessagesActivity"
+            android:label="@string/title_activity_chat_message_view">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />

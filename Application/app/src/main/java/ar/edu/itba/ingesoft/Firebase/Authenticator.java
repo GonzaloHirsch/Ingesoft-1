@@ -95,6 +95,8 @@ public class Authenticator {
     }
 
     public void signOut(Activity activity){
+        DatabaseConnection.RemoveListeners();
+
         // Normal sign out
         auth.signOut();
 

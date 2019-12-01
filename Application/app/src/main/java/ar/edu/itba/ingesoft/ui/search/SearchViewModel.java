@@ -60,9 +60,6 @@ public class SearchViewModel extends ViewModel {
 
                         }
                     });
-
-
-
                 }
                 @Override
                 public void onCoursesReferencesRetrieved(List<DocumentReference> courses) {                }
