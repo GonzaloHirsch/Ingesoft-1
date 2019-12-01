@@ -120,7 +120,7 @@ public class ProfileFragment extends Fragment {
             public void onChanged(User u) {
                 nameTextView.setText(u.getName());
                 emailTextView.setText(u.getMail());
-                statusTextView.setText(u.getCourses().size() > 0 ? "Teacher" : "Student");
+                statusTextView.setText(u.getCourses().size() > 0 ? "Tutor" : "Student");
                 universityTextView.setText(u.getUniversidad());
                 coursesTextView.setText(u.getCourses().size() + " courses");
             }
