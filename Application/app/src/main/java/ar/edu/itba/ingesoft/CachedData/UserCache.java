@@ -65,7 +65,7 @@ public class UserCache {
 
     public static void AddChat(Chat chat){
         synchronized (chatsMap){
-            chatsMap.put(chat.getChatID(), chat);
+            chatsMap.put(chat.getChatID(), chat.clone());
         }
     }
 

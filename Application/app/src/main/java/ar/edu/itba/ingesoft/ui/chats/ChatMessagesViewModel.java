@@ -52,7 +52,7 @@ public class ChatMessagesViewModel extends ViewModel {
     }
 
     /**
-     * Method to notify the view model about the new message the logged user sent
+     * Method to notifyx the view model about the new message the logged user sent
      * @param message
      */
     public void addMessage(Context ctx, Message message, OnChatEventListener eventListener){
@@ -133,7 +133,7 @@ public class ChatMessagesViewModel extends ViewModel {
         return count;
     }
 
-    public String createChat(String userFrom, String userTo, String userFromName, String userToName){
+    public String createChat(String userFrom, String userTo, String userFromName, String userToName) throws CloneNotSupportedException {
         this.chatObj = new Chat(userFrom, userTo, userFromName, userToName);
         this.chatID = this.chatObj.getChatID();
         UserCache.AddChat(this.chatObj);

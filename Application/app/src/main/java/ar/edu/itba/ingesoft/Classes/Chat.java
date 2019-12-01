@@ -34,6 +34,14 @@ public class Chat implements DatabaseObject {
         }
     }
 
+    public Chat clone()
+    {
+        Chat clone = new Chat(this.from, this.to, this.fromName, this.toName);
+        clone.setChatID(this.chatID);
+        clone.messages = new ArrayList<>(this.messages);
+        return clone;
+    }
+
     public Chat(String from, String to, String fromName, String toName){
         this.chatID = UUID.randomUUID().toString();
         this.from = from;

@@ -84,10 +84,13 @@ public class ChatMessagesFragment extends Fragment {
                         // Getting the logged user
                         User u = UserCache.GetUser();
                         if (isNewChat){
-                            chatID = mViewModel.createChat(u.getMail(), recipient, u.getName(), recipientName);
+                            try {
+                                chatID = mViewModel.createChat(u.getMail(), recipient, u.getName(), recipientName);
+                            } catch (CloneNotSupportedException e) {
+                                Log.e(TAG, e.getMessage());
+                            }
                             isNewChat = false;
                             mViewModel.setUpChatChangeListener(chatID, new OnChatEventListener(){
-
                                 @Override
                                 public void onChatRetrieved(Chat chat) {
                                     throw new RuntimeException("Not Implemented");
@@ -98,7 +101,7 @@ public class ChatMessagesFragment extends Fragment {
                                     ChatsMessagesAdapter adapter = (ChatsMessagesAdapter)messagesRecyclerView.getAdapter();
 
                                     if (adapter != null){
-                                        adapter.messagesChanged(chat.getMessages());
+                                        adapter.updateData(chat.getMessages());
                                     } else {
                                         Log.e(TAG, "Null adapter");
                                     }
@@ -176,9 +179,8 @@ public class ChatMessagesFragment extends Fragment {
                 @Override
                 public void onChatChanged(Chat chat) {
                     ChatsMessagesAdapter adapter = (ChatsMessagesAdapter)messagesRecyclerView.getAdapter();
-
                     if (adapter != null){
-                        adapter.messagesChanged(chat.getMessages());
+                        adapter.updateData(chat.getMessages());
                     } else {
                         Log.e(TAG, "Null adapter");
                     }
