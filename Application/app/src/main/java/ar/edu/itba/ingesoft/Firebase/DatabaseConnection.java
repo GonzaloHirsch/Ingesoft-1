@@ -127,7 +127,7 @@ public class DatabaseConnection {
                             DocumentSnapshot document = task.getResult();
                             if (document != null && document.exists()) {
                                 Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-
+                                AnalyticsConnection.LogEvent_UserRead();
                                 Map<String, Object> data = document.getData();
 
                                 if (data != null){
@@ -165,7 +165,7 @@ public class DatabaseConnection {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             QuerySnapshot document = task.getResult();
-
+                            AnalyticsConnection.LogEvent_UsersRead();
                             List<User> users = new ArrayList<>();
 
                             if (document != null){
@@ -231,7 +231,7 @@ public class DatabaseConnection {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             QuerySnapshot document = task.getResult();
-
+                            AnalyticsConnection.LogEvent_UniversityRead();
                             List<Universidad> universities = new ArrayList<>();
 
                             if (document != null){
@@ -264,7 +264,7 @@ public class DatabaseConnection {
                             DocumentSnapshot document = task.getResult();
                             if (document != null && document.exists()) {
                                 Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-
+                                AnalyticsConnection.LogEvent_UniversityRead();
                                 Map<String, Object> data = document.getData();
 
                                 if (data != null){
@@ -382,7 +382,7 @@ public class DatabaseConnection {
                             DocumentSnapshot document = task.getResult();
                             if (document != null && document.exists()) {
                                 Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-
+                                AnalyticsConnection.LogEvent_ChatRead(chatID);
                                 Map<String, Object> data = document.getData();
 
                                 if (data != null){
@@ -474,7 +474,7 @@ public class DatabaseConnection {
 
                 if (documentSnapshot != null){
                     Map<String, Object> data = documentSnapshot.getData();
-
+                    AnalyticsConnection.LogEvent_ChatListenerRead(chatID);
                     if (data != null){
                         //Recover the chat in the database
                         Chat chat = new Chat(data);
@@ -507,7 +507,7 @@ public class DatabaseConnection {
                 if (task.isSuccessful()) {
                     QuerySnapshot document = task.getResult();
                     List<Course> courses = new ArrayList<>();
-
+                    AnalyticsConnection.LogEvent_CoursesRead();
                     if (document != null){
                         for (DocumentSnapshot ds : document) {
                             // Getting the university part of the ID
