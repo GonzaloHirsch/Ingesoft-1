@@ -5,11 +5,12 @@
 ## 2do Cuatrimestre 2019
 
 ### Nombre del Grupo
-HOUSEITBA
+Tutory
 
 ### Integrantes
 * Gonzalo Hirsch (Team Lead)
 * Ignacio Ribas
 * Augusto Henestrosa
+* Francisco Choi
 * Agustín Roca
 * Saskia Keet
