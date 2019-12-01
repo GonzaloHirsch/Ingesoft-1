@@ -35,7 +35,7 @@ public class Chat implements DatabaseObject {
     }
 
     public Chat(String from, String to, String fromName, String toName){
-        this.chatID = UUID.randomUUID().toString();;
+        this.chatID = UUID.randomUUID().toString();
         this.from = from;
         this.fromName = fromName;
         this.to = to;

@@ -9,6 +9,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import androidx.lifecycle.ViewModel;
+
+import ar.edu.itba.ingesoft.CachedData.UserCache;
 import ar.edu.itba.ingesoft.Classes.Chat;
 import ar.edu.itba.ingesoft.Classes.Message;
 import ar.edu.itba.ingesoft.Classes.User;
@@ -20,7 +22,7 @@ import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnUserEventListene
 
 public class ChatMessagesViewModel extends ViewModel {
 
-    public static final String TAG = "CHAT MESSAGE VIEW MODEL";
+    public static final String TAG = "CHAT_MESSAGE_VIEW_MODEL";
     private Chat chatObj = null;
     private String chatID = null;
 
@@ -57,8 +59,10 @@ public class ChatMessagesViewModel extends ViewModel {
         // Store the new message in the object
         this.chatObj.addMessage(message);
 
-        FirebaseUser fu = new Authenticator().getSignedInUser();
-        if (chatObj.getFrom().equals(fu.getEmail())){
+
+        // Notifies the receiver
+        User user = UserCache.GetUser();
+        if (chatObj.getFrom().equals(user.getMail())){
             mc.sendMessage(ctx, this.chatID, this.chatObj.getFromName(), this.chatObj.getFrom(), this.chatObj.getToName(), this.chatObj.getTo(), message.getMessage());
         } else {
             mc.sendMessage(ctx, this.chatID, this.chatObj.getToName(), this.chatObj.getTo(), this.chatObj.getFromName(), this.chatObj.getFrom(), message.getMessage());

@@ -16,11 +16,15 @@ import android.view.ViewGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Date;
 
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import ar.edu.itba.ingesoft.CachedData.UserCache;
+import ar.edu.itba.ingesoft.Classes.User;
 import ar.edu.itba.ingesoft.Firebase.Authenticator;
 import ar.edu.itba.ingesoft.Classes.Chat;
 import ar.edu.itba.ingesoft.Classes.Message;
@@ -78,10 +82,9 @@ public class ChatMessagesFragment extends Fragment {
                     String message = messageInputEditText.getText().toString();
                     if (message.length() > 0){
                         // Getting the logged user
-                        FirebaseUser fu = new Authenticator().getSignedInUser();
-
+                        User u = UserCache.GetUser();
                         if (isNewChat){
-                            chatID = mViewModel.createChat(fu.getEmail(), recipient, fu.getDisplayName(), recipientName);
+                            chatID = mViewModel.createChat(u.getMail(), recipient, u.getName(), recipientName);
                             isNewChat = false;
                             mViewModel.setUpChatChangeListener(chatID, new OnChatEventListener(){
 
@@ -104,7 +107,7 @@ public class ChatMessagesFragment extends Fragment {
                         }
 
                         // Generating the new message instance
-                        Message newMessage = new Message(fu.getEmail(), message, new Date());
+                        Message newMessage = new Message(u.getMail(), message, new Date());
 
                         // Notify the adapter of the new message
                         ChatsMessagesAdapter adapter = ((ChatsMessagesAdapter)messagesRecyclerView.getAdapter());

@@ -63,7 +63,7 @@
                 android:clickable="true"
                 android:src="@drawable/ic_send_black_24dp"
                 android:id="@+id/chat_message_send_button"
-                android:tint="@android:color/white"
+                app:tint="@null"
                 app:fabSize="mini"
                 android:focusable="true" />
         </LinearLayout>

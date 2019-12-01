@@ -104,7 +104,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
             holder.timestampTextView.setText("");
         }
 
-        if (this.user.equals(chat.getToName()))
+        if (this.user.equals(chat.getTo()))
             holder.titleTextView.setText(chat.getFromName());
         else
             holder.titleTextView.setText(chat.getToName());
