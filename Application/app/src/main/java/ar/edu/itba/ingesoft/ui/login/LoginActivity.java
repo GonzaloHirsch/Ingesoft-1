@@ -1,9 +1,13 @@
 package ar.edu.itba.ingesoft.ui.login;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseUser;
 
@@ -30,20 +34,23 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity);
 
-        AnalyticsConnection.GenerateInstance(this);
+        if (isNetworkAvailable()){
+            AnalyticsConnection.GenerateInstance(this);
 
-        navController = Navigation.findNavController(this, R.id.login_navHostFragment);
+            navController = Navigation.findNavController(this, R.id.login_navHostFragment);
 
-        // First check for the logged user
-        updateUI(new Authenticator().getSignedInUser());
+            // Check if there is a university in the SP
+            SharedPreferences sp = getSharedPreferences(MainActivity.SP, MODE_PRIVATE);
+            String univ = sp.getString(MainActivity.UNIV_SP, "");
 
-        // Check if there is a university in the SP
-        SharedPreferences sp = getSharedPreferences(MainActivity.SP, MODE_PRIVATE);
-        String univ = sp.getString(MainActivity.UNIV_SP, "");
-
-        // Navigate to the log in window
-        if(univ != null && !univ.equals("")){
-            navController.navigate(R.id.action_continueWithoutSigningInFragment_to_loginFragmentMain);
+            // Navigate to the log in window
+            if(univ != null && !univ.equals("")){
+                // First check for the logged user
+                updateUI(new Authenticator().getSignedInUser());
+                navController.navigate(R.id.action_continueWithoutSigningInFragment_to_loginFragmentMain);
+            }
+        } else {
+            Toast.makeText(this, "Network connection needed", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -56,4 +63,10 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
 }

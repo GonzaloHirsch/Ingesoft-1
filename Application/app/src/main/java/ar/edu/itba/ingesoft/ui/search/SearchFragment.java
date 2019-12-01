@@ -16,6 +16,8 @@ import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseUser;
+
 import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -28,7 +30,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ar.edu.itba.ingesoft.CachedData.CoursesTeachersCache;
+import ar.edu.itba.ingesoft.CachedData.UserCache;
 import ar.edu.itba.ingesoft.Classes.Course;
+import ar.edu.itba.ingesoft.Classes.User;
+import ar.edu.itba.ingesoft.Firebase.Authenticator;
+import ar.edu.itba.ingesoft.Firebase.DatabaseConnection;
+import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnUserEventListener;
 import ar.edu.itba.ingesoft.MainActivity;
 import ar.edu.itba.ingesoft.R;
 import ar.edu.itba.ingesoft.ui.courseview.CourseViewActivity;
@@ -112,12 +119,8 @@ public class SearchFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        searchViewModel =
-                ViewModelProviders.of(getActivity()).get(SearchViewModel.class);
+        searchViewModel = ViewModelProviders.of(getActivity()).get(SearchViewModel.class);
         View root = inflater.inflate(R.layout.fragment_search, container, false);
-
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences(MainActivity.SP, MODE_PRIVATE);
-        this.university = sharedPreferences.getString(MainActivity.UNIV_SP, "");
 
         searchRecyclerView = root.findViewById(R.id.searchRecyclerView);
         layoutManager = new LinearLayoutManager(getContext());
@@ -133,7 +136,6 @@ public class SearchFragment extends Fragment {
             }
         });
         searchRecyclerView.setAdapter(searchCoursesAdapter);
-
 
         progressBar = root.findViewById(R.id.searchProgressBar);
         loadingTextView = root.findViewById(R.id.searchLoadingTextView);
@@ -152,13 +154,40 @@ public class SearchFragment extends Fragment {
             }
         });
 
+        FirebaseUser firebaseUser = new Authenticator().getSignedInUser();
+        User user = UserCache.GetUser();
+        if (user != null){
+            this.university = user.getUniversidad();
+        } else {
+            new DatabaseConnection().GetUser(firebaseUser.getEmail(), new OnUserEventListener() {
+                @Override
+                public void onUserRetrieved(User user) {
+                    if (user == null){
+                        SharedPreferences sharedPreferences = getContext().getSharedPreferences(MainActivity.SP, MODE_PRIVATE);
+                        university = sharedPreferences.getString(MainActivity.UNIV_SP, "");
+                    } else {
+                        university = user.getUniversidad();
+                    }
 
-        searchViewModel.getDisplayedData(this.university).observe(this, new Observer<List<Course>>() {
-            @Override
-            public void onChanged(List<Course> courses) {
-                searchCoursesAdapter.update(courses);
-            }
-        });
+                    searchViewModel.getDisplayedData(university).observe(getViewLifecycleOwner(), new Observer<List<Course>>() {
+                        @Override
+                        public void onChanged(List<Course> courses) {
+                            searchCoursesAdapter.update(courses);
+                        }
+                    });
+                }
+
+                @Override
+                public void onUsersRetrieved(List<User> users) {
+                    //
+                }
+
+                @Override
+                public void onTeachersRetrieved(List<User> teachers) {
+                    //
+                }
+            });
+        }
 
         return root;
     }

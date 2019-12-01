@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
 
-        if (firebaseUser.isAnonymous()){
+        if (firebaseUser.isAnonymous() || firebaseUser.getEmail() == null || firebaseUser.getEmail().equals("")){
             // Passing each menu ID as a set of Ids because each
             // menu should be considered as top level destinations.
             appBarConfiguration = new AppBarConfiguration.Builder(
@@ -78,6 +78,12 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onUserRetrieved(User user) {
                     if (user != null){
+                        // Updating shared prefs to the selected user university
+                        SharedPreferences sharedPreferences = getSharedPreferences(MainActivity.SP, MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString(MainActivity.UNIV_SP, user.getUniversidad());
+                        editor.apply();
+
                         UserCache.SetUser(user);
                         List<Chat> chats = new ArrayList<>();
                         MessagingConnection mc = new MessagingConnection();

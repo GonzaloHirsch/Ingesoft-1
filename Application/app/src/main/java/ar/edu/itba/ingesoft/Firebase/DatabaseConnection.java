@@ -108,28 +108,22 @@ public class DatabaseConnection {
 
                                 Map<String, Object> data = document.getData();
 
-
-
                                 if (data != null){
-
-                                    //todo delete this test
-
-                                    for(Map.Entry e : data.entrySet()){
-                                        Log.v("DBC-GetUser", e.getKey() + e.getValue().toString());
-                                    }
-
                                     // Stores all the info in the class
                                     User user = new User(data);
                                     UserCache.SetUser(user);
                                     eventListener.onUserRetrieved(user);
                                 } else {
                                     Log.d(TAG, "No data in document");
+                                    eventListener.onUserRetrieved(null);
                                 }
                             } else {
                                 Log.d(TAG, "No such document");
+                                eventListener.onUserRetrieved(null);
                             }
                         } else {
                             Log.d(TAG, "get failed with ", task.getException());
+                            eventListener.onUserRetrieved(null);
                         }
                     }
                 });

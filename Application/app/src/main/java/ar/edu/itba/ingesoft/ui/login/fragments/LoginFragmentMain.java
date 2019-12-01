@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,11 +36,14 @@ import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
+import java.util.List;
+
 import ar.edu.itba.ingesoft.Firebase.AnalyticsConnection;
 import ar.edu.itba.ingesoft.Firebase.Authenticator;
 import ar.edu.itba.ingesoft.Classes.Universidad;
 import ar.edu.itba.ingesoft.Classes.User;
 import ar.edu.itba.ingesoft.Firebase.DatabaseConnection;
+import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnUserEventListener;
 import ar.edu.itba.ingesoft.MainActivity;
 import ar.edu.itba.ingesoft.R;
 import ar.edu.itba.ingesoft.utils.Validations;
@@ -86,8 +90,6 @@ public class LoginFragmentMain extends Fragment {
 
         this.emailLayout = view.findViewById(R.id.signInUsernameTextInputLayout);
         this.passwordLayout = view.findViewById(R.id.signInPasswordTextInputLayout);
-
-
 
         //Regular Login with email and password
         view.findViewById(R.id.regular_signin_button).setOnClickListener(new View.OnClickListener() {
@@ -188,8 +190,6 @@ public class LoginFragmentMain extends Fragment {
         return view;
     }
 
-
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -216,7 +216,7 @@ public class LoginFragmentMain extends Fragment {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
                     Log.d(TAG,"sign_in_with_google:success");
-                    FirebaseUser user = new Authenticator().getSignedInUser();
+                    FirebaseUser firebaseUser = new Authenticator().getSignedInUser();
                     AnalyticsConnection.LogEvent_SignUp(AnalyticsConnection.SIGNUP_GOOGLE);
 
                     String univ = "N/a";
@@ -225,8 +225,32 @@ public class LoginFragmentMain extends Fragment {
                         univ = sharedPreferences.getString(MainActivity.UNIV_SP, "");
                     }
 
-                    User newUser = new User(user.getDisplayName(), user.getEmail(), univ);
-                    new DatabaseConnection().InsertUser(newUser);
+                    String finalUniv = univ;
+                    new DatabaseConnection().GetUser(firebaseUser.getEmail(), new OnUserEventListener() {
+                        @Override
+                        public void onUserRetrieved(User user) {
+                            if (user == null){
+                                User newUser = new User(firebaseUser.getDisplayName(), firebaseUser.getEmail(), finalUniv);
+                                new DatabaseConnection().InsertUser(newUser);
+                            } else {
+                                // Updating shared prefs to the selected user university
+                                SharedPreferences sharedPreferences = getContext().getSharedPreferences(MainActivity.SP, MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                editor.putString(MainActivity.UNIV_SP, user.getUniversidad());
+                                editor.apply();
+                            }
+                        }
+
+                        @Override
+                        public void onUsersRetrieved(List<User> users) {
+                            //
+                        }
+
+                        @Override
+                        public void onTeachersRetrieved(List<User> teachers) {
+                            //
+                        }
+                    });
 
                     Intent intent = new Intent(getContext(), MainActivity.class);
                     startActivity(intent);
