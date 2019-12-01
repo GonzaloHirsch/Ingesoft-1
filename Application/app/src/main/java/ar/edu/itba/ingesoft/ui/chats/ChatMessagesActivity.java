@@ -56,5 +56,6 @@ public class ChatMessagesActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         DatabaseConnection.RemoveListeners();
+        super.onBackPressed();
     }
 }
