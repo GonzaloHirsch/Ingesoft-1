@@ -4,8 +4,13 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.Exclude;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -25,7 +30,8 @@ public class User implements DatabaseObject, Parcelable {
     private List<String> chats;
     private String universidad;
 
-    private HashSet<String> coursesHashSet = new HashSet<>();
+     private transient HashSet<String> coursesHashSet = new HashSet<>();
+
 
     public static User GenerateAnonymousUser(String universidad){
         User user = new User();
@@ -128,9 +134,11 @@ public class User implements DatabaseObject, Parcelable {
 
     public void addChat(String chatID){ this.chats.add(chatID); }
 
+    @Exclude
     public HashSet<String> getCoursesHashSet(){ return this.coursesHashSet; }
 
-    public void buildHashSet(){
+    @Exclude
+    private void buildHashSet(){
         this.coursesHashSet.addAll(this.courses);
     }
 
@@ -213,4 +221,6 @@ public class User implements DatabaseObject, Parcelable {
             return "N/a";
         }
     }
+
+
 }

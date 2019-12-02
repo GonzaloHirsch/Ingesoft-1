@@ -19,7 +19,7 @@ import ar.edu.itba.ingesoft.Classes.Chat;
 import ar.edu.itba.ingesoft.Classes.Message;
 import ar.edu.itba.ingesoft.Classes.User;
 
-public class UserCache {
+public class  UserCache {
 
     private static User user;
     private final static Map<String, Chat> chatsMap = new HashMap();
