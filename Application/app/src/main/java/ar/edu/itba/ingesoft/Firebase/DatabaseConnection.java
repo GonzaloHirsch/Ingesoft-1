@@ -1,6 +1,5 @@
 package ar.edu.itba.ingesoft.Firebase;
 
-import android.graphics.LinearGradient;
 import android.util.Log;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -347,9 +346,10 @@ public class DatabaseConnection {
     /**
      * Inserts the new chat in the chat documents.
      * @param chat to be inserted.
+     * @return
      */
-    public void InsertChat(Chat chat){
-        db.collection("Chats")
+    public Task<Void> InsertChat(Chat chat){
+        return db.collection("Chats")
                 .document(chat.getChatID())
                 .set(chat)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {

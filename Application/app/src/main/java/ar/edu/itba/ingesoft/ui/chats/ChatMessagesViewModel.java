@@ -3,7 +3,7 @@ package ar.edu.itba.ingesoft.ui.chats;
 import android.content.Context;
 import android.util.Log;
 
-import com.google.firebase.auth.FirebaseUser;
+import com.google.android.gms.tasks.Task;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -14,11 +14,11 @@ import ar.edu.itba.ingesoft.CachedData.UserCache;
 import ar.edu.itba.ingesoft.Classes.Chat;
 import ar.edu.itba.ingesoft.Classes.Message;
 import ar.edu.itba.ingesoft.Classes.User;
-import ar.edu.itba.ingesoft.Firebase.Authenticator;
 import ar.edu.itba.ingesoft.Firebase.DatabaseConnection;
 import ar.edu.itba.ingesoft.Firebase.MessagingConnection;
 import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnChatEventListener;
 import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnUserEventListener;
+import ar.edu.itba.ingesoft.utils.Pair;
 
 public class ChatMessagesViewModel extends ViewModel {
 
@@ -133,12 +133,12 @@ public class ChatMessagesViewModel extends ViewModel {
         return count;
     }
 
-    public String createChat(String userFrom, String userTo, String userFromName, String userToName) throws CloneNotSupportedException {
+    public Pair<String, Task<Void>> createChat(String userFrom, String userTo, String userFromName, String userToName) throws CloneNotSupportedException {
         this.chatObj = new Chat(userFrom, userTo, userFromName, userToName);
         this.chatID = this.chatObj.getChatID();
         UserCache.AddChat(this.chatObj);
 
-        new DatabaseConnection().InsertChat(this.chatObj);
+        Task<Void> task = new DatabaseConnection().InsertChat(this.chatObj);
         Log.v(TAG, "Created chat");
 
         new DatabaseConnection().GetUser(userTo, new OnUserEventListener() {
@@ -179,6 +179,6 @@ public class ChatMessagesViewModel extends ViewModel {
         });
         Log.v(TAG, "Added chat to " + userFrom);
 
-        return this.chatID;
+        return new Pair<String, Task<Void>>(this.chatID, task);
     }
 }

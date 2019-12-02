@@ -13,6 +13,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseUser;
@@ -31,6 +33,7 @@ import ar.edu.itba.ingesoft.Classes.Message;
 import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnChatEventListener;
 import ar.edu.itba.ingesoft.R;
 import ar.edu.itba.ingesoft.ui.recyclerviews.Adapters.ChatsMessagesAdapter;
+import ar.edu.itba.ingesoft.utils.Pair;
 
 public class ChatMessagesFragment extends Fragment {
 
@@ -78,18 +81,31 @@ public class ChatMessagesFragment extends Fragment {
         this.sendFloatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 if (messageInputEditText.getText() != null){
+
+
                     String message = messageInputEditText.getText().toString();
                     if (message.length() > 0){
+
                         // Getting the logged user
                         User u = UserCache.GetUser();
                         if (isNewChat){
+                            Pair<String, Task<Void>> pair = new Pair<>(null, null);
                             try {
-                                chatID = mViewModel.createChat(u.getMail(), recipient, u.getName(), recipientName);
+                                pair = mViewModel.createChat(u.getMail(), recipient, u.getName(), recipientName);
+                                chatID = pair.first;
                             } catch (CloneNotSupportedException e) {
                                 Log.e(TAG, e.getMessage());
                             }
                             isNewChat = false;
+                            pair.second.addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    sendMessageAux(u, message);
+                                }
+                            });
+
                             mViewModel.setUpChatChangeListener(chatID, new OnChatEventListener(){
                                 @Override
                                 public void onChatRetrieved(Chat chat) {
@@ -108,38 +124,9 @@ public class ChatMessagesFragment extends Fragment {
                                 }
                             });
                         }
-
-                        // Generating the new message instance
-                        Message newMessage = new Message(u.getMail(), message, new Date());
-
-                        // Notify the adapter of the new message
-                        ChatsMessagesAdapter adapter = ((ChatsMessagesAdapter)messagesRecyclerView.getAdapter());
-                        //if (adapter != null)
-                            //adapter.addMessage(newMessage);
-
-                        // Notify the view model of the new message
-                        mViewModel.addMessage(getContext(), newMessage, new OnChatEventListener() {
-                            @Override
-                            public void onChatRetrieved(Chat chat) {
-                                throw new RuntimeException("Not Implemented");
-                            }
-
-                            @Override
-                            public void onChatChanged(Chat chat) {
-                                getActivity().runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        if (adapter != null){
-                                            adapter.updateData(chat.getMessages());
-                                            messagesRecyclerView.scrollToPosition(chat.getMessages().size() - 1);
-                                        }
-                                    }
-                                });
-                            }
-                        });
-
-                        // Clearing the message text
-                        messageInputEditText.setText("");
+                        else {
+                           sendMessageAux(u, message);
+                        }
                     } else {
 
                     }
@@ -150,6 +137,41 @@ public class ChatMessagesFragment extends Fragment {
         });
 
         return root;
+    }
+
+    public void sendMessageAux(User u, String message){
+        // Generating the new message instance
+        Message newMessage = new Message(u.getMail(), message, new Date());
+
+        // Notify the adapter of the new message
+        ChatsMessagesAdapter adapter = ((ChatsMessagesAdapter) messagesRecyclerView.getAdapter());
+        //if (adapter != null)
+        //adapter.addMessage(newMessage);
+
+        // Notify the view model of the new message
+        mViewModel.addMessage(getContext(), newMessage, new OnChatEventListener() {
+            @Override
+            public void onChatRetrieved(Chat chat) {
+                throw new RuntimeException("Not Implemented");
+            }
+
+            @Override
+            public void onChatChanged(Chat chat) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (adapter != null) {
+                            adapter.updateData(chat.getMessages());
+                            messagesRecyclerView.scrollToPosition(chat.getMessages().size() - 1);
+                        }
+                    }
+                });
+            }
+        });
+
+        // Clearing the message text
+        messageInputEditText.setText("");
+
     }
 
     @Override
