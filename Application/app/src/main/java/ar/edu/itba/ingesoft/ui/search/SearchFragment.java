@@ -157,34 +157,45 @@ public class SearchFragment extends Fragment {
         LifecycleOwner lo = getViewLifecycleOwner();
 
         FirebaseUser firebaseUser = new Authenticator().getSignedInUser();
-        new DatabaseConnection().GetUser(firebaseUser.getEmail(), new OnUserEventListener() {
-            @Override
-            public void onUserRetrieved(User user) {
-                if (user == null){
-                    SharedPreferences sharedPreferences = getContext().getSharedPreferences(MainActivity.SP, MODE_PRIVATE);
-                    university = sharedPreferences.getString(MainActivity.UNIV_SP, "");
-                } else {
-                    university = user.getUniversidad();
+        if (firebaseUser.isAnonymous() || firebaseUser.getEmail() == null || firebaseUser.getEmail().equals("")){
+            SharedPreferences sharedPreferences = getContext().getSharedPreferences(MainActivity.SP, MODE_PRIVATE);
+            university = sharedPreferences.getString(MainActivity.UNIV_SP, "");
+            searchViewModel.getDisplayedData(university).observe(lo, new Observer<List<Course>>() {
+                @Override
+                public void onChanged(List<Course> courses) {
+                    searchCoursesAdapter.update(courses);
+                }
+            });
+        } else {
+            new DatabaseConnection().GetUser(firebaseUser.getEmail(), new OnUserEventListener() {
+                @Override
+                public void onUserRetrieved(User user) {
+                    if (user == null){
+                        SharedPreferences sharedPreferences = getContext().getSharedPreferences(MainActivity.SP, MODE_PRIVATE);
+                        university = sharedPreferences.getString(MainActivity.UNIV_SP, "");
+                    } else {
+                        university = user.getUniversidad();
+                    }
+
+                    searchViewModel.getDisplayedData(university).observe(lo, new Observer<List<Course>>() {
+                        @Override
+                        public void onChanged(List<Course> courses) {
+                            searchCoursesAdapter.update(courses);
+                        }
+                    });
                 }
 
-                searchViewModel.getDisplayedData(university).observe(lo, new Observer<List<Course>>() {
-                    @Override
-                    public void onChanged(List<Course> courses) {
-                        searchCoursesAdapter.update(courses);
-                    }
-                });
-            }
+                @Override
+                public void onUsersRetrieved(List<User> users) {
+                    //
+                }
 
-            @Override
-            public void onUsersRetrieved(List<User> users) {
-                //
-            }
-
-            @Override
-            public void onTeachersRetrieved(List<User> teachers) {
-                //
-            }
-        });
+                @Override
+                public void onTeachersRetrieved(List<User> teachers) {
+                    //
+                }
+            });
+        }
 
         return root;
     }

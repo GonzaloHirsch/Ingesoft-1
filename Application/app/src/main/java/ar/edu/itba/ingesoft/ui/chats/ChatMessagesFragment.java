@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -21,6 +22,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Date;
+import java.util.List;
 
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -30,7 +32,9 @@ import ar.edu.itba.ingesoft.Classes.User;
 import ar.edu.itba.ingesoft.Firebase.Authenticator;
 import ar.edu.itba.ingesoft.Classes.Chat;
 import ar.edu.itba.ingesoft.Classes.Message;
+import ar.edu.itba.ingesoft.Firebase.DatabaseConnection;
 import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnChatEventListener;
+import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnUserEventListener;
 import ar.edu.itba.ingesoft.R;
 import ar.edu.itba.ingesoft.ui.recyclerviews.Adapters.ChatsMessagesAdapter;
 import ar.edu.itba.ingesoft.utils.Pair;
@@ -89,44 +93,64 @@ public class ChatMessagesFragment extends Fragment {
                     if (message.length() > 0){
 
                         // Getting the logged user
-                        User u = UserCache.GetUser();
-                        if (isNewChat){
-                            Pair<String, Task<Void>> pair = new Pair<>(null, null);
-                            try {
-                                pair = mViewModel.createChat(u.getMail(), recipient, u.getName(), recipientName);
-                                chatID = pair.first;
-                            } catch (CloneNotSupportedException e) {
-                                Log.e(TAG, e.getMessage());
-                            }
-                            isNewChat = false;
-                            pair.second.addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    sendMessageAux(u, message);
-                                }
-                            });
+                        //User u = UserCache.GetUser();
+                        FirebaseUser fu = new Authenticator().getSignedInUser();
+                        new DatabaseConnection().GetUser(fu.getEmail(), new OnUserEventListener() {
+                            @Override
+                            public void onUserRetrieved(User user) {
+                                if (user != null){
+                                    if (isNewChat){
+                                        Pair<String, Task<Void>> pair = new Pair<>(null, null);
+                                        try {
+                                            pair = mViewModel.createChat(user.getMail(), recipient, user.getName(), recipientName);
+                                            chatID = pair.first;
+                                        } catch (CloneNotSupportedException e) {
+                                            Log.e(TAG, e.getMessage());
+                                        }
+                                        isNewChat = false;
+                                        pair.second.addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                sendMessageAux(user, message);
+                                            }
+                                        });
 
-                            mViewModel.setUpChatChangeListener(chatID, new OnChatEventListener(){
-                                @Override
-                                public void onChatRetrieved(Chat chat) {
-                                    throw new RuntimeException("Not Implemented");
-                                }
+                                        mViewModel.setUpChatChangeListener(chatID, new OnChatEventListener(){
+                                            @Override
+                                            public void onChatRetrieved(Chat chat) {
+                                                throw new RuntimeException("Not Implemented");
+                                            }
 
-                                @Override
-                                public void onChatChanged(Chat chat) {
-                                    ChatsMessagesAdapter adapter = (ChatsMessagesAdapter)messagesRecyclerView.getAdapter();
+                                            @Override
+                                            public void onChatChanged(Chat chat) {
+                                                ChatsMessagesAdapter adapter = (ChatsMessagesAdapter)messagesRecyclerView.getAdapter();
 
-                                    if (adapter != null){
-                                        adapter.updateData(chat.getMessages());
-                                    } else {
-                                        Log.e(TAG, "Null adapter");
+                                                if (adapter != null){
+                                                    adapter.updateData(chat.getMessages());
+                                                } else {
+                                                    Log.e(TAG, "Null adapter");
+                                                }
+                                            }
+                                        });
                                     }
+                                    else {
+                                        sendMessageAux(user, message);
+                                    }
+                                } else {
+                                    Toast.makeText(getContext(), "Error sending message", Toast.LENGTH_SHORT).show();
                                 }
-                            });
-                        }
-                        else {
-                           sendMessageAux(u, message);
-                        }
+                            }
+
+                            @Override
+                            public void onUsersRetrieved(List<User> users) {
+
+                            }
+
+                            @Override
+                            public void onTeachersRetrieved(List<User> teachers) {
+
+                            }
+                        });
                     } else {
 
                     }
