@@ -18,11 +18,17 @@ import ar.edu.itba.ingesoft.Firebase.DatabaseConnection;
 import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnCourseEventListener;
 import ar.edu.itba.ingesoft.Interfaces.DatabaseEventListeners.OnUserEventListener;
 
-public class CoursesTeachersCache{
+public class CoursesTeachersCache extends CacheData{
 
     static final Map<String, HashSet<User>> courseTeachers = new HashMap<>();
     static Map<String, Course> coursesMap = new HashMap<>();
     static List<User> usersList = new ArrayList<>();
+
+    public static void DeleteCache(){
+        courseTeachers.clear();
+        coursesMap.clear();
+        usersList.clear();
+    }
 
     public static List<Course> getCoursesList() {
         return new ArrayList<>(coursesMap.values());

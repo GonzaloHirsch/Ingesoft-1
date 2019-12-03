@@ -19,29 +19,13 @@ import ar.edu.itba.ingesoft.Classes.Chat;
 import ar.edu.itba.ingesoft.Classes.Message;
 import ar.edu.itba.ingesoft.Classes.User;
 
-public class  UserCache {
+public class  UserCache extends CacheData{
 
     private static User user;
     private final static Map<String, Chat> chatsMap = new HashMap();
 
     public static void SetUser(User userToStore){
         user = userToStore;
-        //todo para los chats
-//        FirebaseFirestore db = FirebaseFirestore.getInstance();
-//        List<Task<DocumentSnapshot>> tasks = new ArrayList<>();
-//        for(String s : user.getChats()) {
-//            tasks.add(db.collection("Chats")
-//                    .document(s)
-//                    .get());
-//
-//        }
-//        Tasks.whenAllSuccess(tasks).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DocumentSnapshot> tasks) {
-//                chats.clear();
-//
-//            }
-//        });
     }
 
     public synchronized static void SetChats(List<Chat> chats){
@@ -71,5 +55,10 @@ public class  UserCache {
 
     public static User GetUser(){
         return user;
+    }
+
+    public static void DeleteCache(){
+        user = null;
+        chatsMap.clear();
     }
 }

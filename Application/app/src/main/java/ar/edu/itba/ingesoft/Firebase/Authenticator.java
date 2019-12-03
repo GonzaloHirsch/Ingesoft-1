@@ -19,6 +19,8 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.SignInMethodQueryResult;
 
 import androidx.annotation.NonNull;
+import ar.edu.itba.ingesoft.CachedData.CoursesTeachersCache;
+import ar.edu.itba.ingesoft.CachedData.UserCache;
 import ar.edu.itba.ingesoft.Classes.Universidad;
 import ar.edu.itba.ingesoft.Classes.User;
 import ar.edu.itba.ingesoft.R;
@@ -108,5 +110,8 @@ public class Authenticator {
                         Log.v(TAG, "Signed user out of google");
                     }
                 });
+
+        CoursesTeachersCache.DeleteCache();
+        UserCache.DeleteCache();
     }
 }
