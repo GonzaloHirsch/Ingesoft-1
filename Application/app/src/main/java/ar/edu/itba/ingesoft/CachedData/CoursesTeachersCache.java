@@ -144,15 +144,17 @@ public class CoursesTeachersCache extends CacheData{
         synchronized(courseTeachers){
             courseTeachers.clear();
             for (User u : usersList){
-                for (String code : u.getCourses()){
-                    if (courseTeachers.containsKey(code)){
-                        courseTeachers.get(code).add(u);
-                        //aux.add(u);
-                        //courseTeachers.put(code, aux);
-                    } else {
-                        HashSet<User> aux = new HashSet<>();
-                        aux.add(u);
-                        courseTeachers.put(code, aux);
+                if (u.getCourses() != null){
+                    for (String code : u.getCourses()){
+                        if (courseTeachers.containsKey(code)){
+                            courseTeachers.get(code).add(u);
+                            //aux.add(u);
+                            //courseTeachers.put(code, aux);
+                        } else {
+                            HashSet<User> aux = new HashSet<>();
+                            aux.add(u);
+                            courseTeachers.put(code, aux);
+                        }
                     }
                 }
             }

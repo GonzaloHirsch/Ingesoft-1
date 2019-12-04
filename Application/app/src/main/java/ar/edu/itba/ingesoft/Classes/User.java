@@ -139,7 +139,8 @@ public class User implements DatabaseObject, Parcelable {
 
     @Exclude
     private void buildHashSet(){
-        this.coursesHashSet.addAll(this.courses);
+        if (this.courses != null)
+            this.coursesHashSet.addAll(this.courses);
     }
 
     public String getUniversidad() {
