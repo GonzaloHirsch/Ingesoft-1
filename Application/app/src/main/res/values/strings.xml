@@ -24,7 +24,7 @@
     <string name="error_email_used">Email already used</string>
     <string name="error_password_incorrect">Wrong password</string>
     <string name="error_email_not_registered">There is no account linked with that email</string>
-    <string name="error_unknown">Unknown error</string>
+    <string name="error_unknown">Unknown error, try again later</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->

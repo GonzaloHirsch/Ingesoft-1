@@ -73,10 +73,8 @@ public class SearchViewModel extends ViewModel {
                 loading.postValue(false);
             }
         } else {
-            if (CoursesTeachersCache.getCoursesWithTutors().size() > 0){
-                displayedData.postValue(CoursesTeachersCache.getCoursesWithTutors());
-                loading.postValue(false);
-            }
+            displayedData.postValue(CoursesTeachersCache.getCoursesWithTutors());
+            loading.postValue(false);
         }
         return displayedData;
     }

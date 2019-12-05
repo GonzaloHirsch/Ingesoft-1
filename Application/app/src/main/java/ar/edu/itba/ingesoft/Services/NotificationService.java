@@ -64,8 +64,8 @@ public class NotificationService extends FirebaseMessagingService {
                 Intent intent = new Intent(getApplicationContext(), ChatMessagesActivity.class);
                 intent.putExtra(MainActivity.CHAT_DIRECT_EXTRA, true);
                 intent.putExtra(MainActivity.CHAT_ID_EXTRA, data.get("id"));
-                intent.putExtra(MainActivity.CHAT_RECIPIENT_NAME_EXTRA, data.get("receiver_name"));
-                intent.putExtra(MainActivity.CHAT_RECIPIENT_EXTRA, data.get("receiver_email"));
+                intent.putExtra(MainActivity.CHAT_RECIPIENT_NAME_EXTRA, data.get("name"));
+                intent.putExtra(MainActivity.CHAT_RECIPIENT_EXTRA, data.get("email"));
                 PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "MSG")

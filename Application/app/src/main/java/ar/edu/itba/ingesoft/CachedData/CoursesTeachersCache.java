@@ -173,6 +173,7 @@ public class CoursesTeachersCache extends CacheData{
 
     public static List<Course> getCoursesWithTutors(){
         synchronized (courseTeachers){
+            //purgeCourseTeachers();
             List<Course> finalList = new ArrayList<>();
             for (String key : courseTeachers.keySet()){
                 if (coursesMap.get(key) != null)

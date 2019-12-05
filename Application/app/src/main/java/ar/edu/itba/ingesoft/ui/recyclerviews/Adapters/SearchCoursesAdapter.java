@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import ar.edu.itba.ingesoft.CachedData.CoursesTeachersCache;
@@ -77,25 +78,17 @@ public class SearchCoursesAdapter extends RecyclerView.Adapter<SearchCoursesAdap
     @Override
     public void onBindViewHolder(@NonNull SearchCoursesViewHolder holder, int position)
     {
-            Log.v("SearchCAdapter", "onBindViewHolder" + currentList.get(position).getName());
-            Course aux = currentList.get(position);
+        Log.v("SearchCAdapter", "onBindViewHolder" + currentList.get(position).getName());
+        Course aux = currentList.get(position);
 
-            holder.bind(aux, listener);
-            holder.courseNameTextView.setText(aux.getName());
-            holder.universityTextView.setText(aux.getCode());
-            List<User> usrList = new ArrayList<>(CoursesTeachersCache.getCourseTeachers().get(aux.getCode()));
-            if(usrList!=null){/*
-                StringBuilder sb = new StringBuilder();
-                for(int i = 0; i<usrList.size(); i++){
-                    sb.append(usrList.get(i));
-                    if(i==usrList.size()-1){
-
-                    }
-                }
-                holder.teachersTextView.setText(sb.toString());*/
-                holder.teachersTextView.setText(usrList.size() + " tutors");
-            }
-
+        holder.bind(aux, listener);
+        holder.courseNameTextView.setText(aux.getName());
+        holder.universityTextView.setText(aux.getCode());
+        HashSet<User> userAux = CoursesTeachersCache.getCourseTeachers().get(aux.getCode());
+        if (userAux != null){
+            List<User> usrList = new ArrayList<>(userAux);
+            holder.teachersTextView.setText(usrList.size() + " tutors");
+        }
     }
 
     @Override
